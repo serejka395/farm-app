@@ -20,7 +20,8 @@ body {
   background-color: var(--f2e-black);
   color: white;
   -webkit-font-smoothing: antialiased;
-  overflow: hidden; /* Prevent scroll on body, handle in app */
+  overflow: hidden;
+  /* Prevent scroll on body, handle in app */
 }
 
 /* Scrollbar */
@@ -28,35 +29,55 @@ body {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--f2e-dark);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--f2e-gray);
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--f2e-gold);
 }
 
 /* Farm2Earn Panel Style */
-.f2e-panel {
-  background: rgba(21, 21, 21, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.winter-glass {
+  background: rgba(21, 21, 21, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
+}
+
+.f2e-panel {
+  background: rgba(21, 21, 21, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .f2e-panel-gold {
-  background: rgba(21, 21, 21, 0.95);
+  background: rgba(21, 21, 21, 0.8);
+  backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 193, 7, 0.3);
   box-shadow: 0 0 20px rgba(255, 193, 7, 0.1);
 }
 
 /* Animations */
 @keyframes pulse-gold {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+  }
 }
 
 .animate-pulse-gold {

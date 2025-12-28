@@ -20,6 +20,7 @@ export default {
             },
             fontFamily: {
                 sans: ['Outfit', 'sans-serif'],
+                cartoon: ['Fredoka', 'cursive'],
             },
         },
     },

@@ -82,7 +82,7 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
     <motion.div
       whileHover={{ scale: 0.95, opacity: 0.8 }}
       onClick={() => onUnlock(plot.id)}
-      className="aspect-square bg-white/5 border border-white/10 border-dashed rounded-xl flex flex-col items-center justify-center opacity-60 cursor-pointer group hover:border-f2e-gold/50 hover:bg-white/10 transition-all"
+      className="aspect-square bg-white/10 backdrop-blur-[2px] border border-white/10 border-dashed rounded-xl flex flex-col items-center justify-center opacity-70 cursor-pointer group hover:border-f2e-gold/50 hover:bg-white/20 transition-all"
     >
       <i className="fas fa-lock text-white/30 mb-2 text-xl group-hover:text-f2e-gold transition-colors"></i>
       <span className="text-[9px] font-black uppercase tracking-widest text-white/30 group-hover:text-f2e-gold transition-colors">{t('unlock')}</span>
@@ -96,14 +96,21 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
         id={`plot-${plot.id}`}
         whileTap={{ scale: 0.95 }}
         onClick={handlePlotClick}
-        className={`absolute w-full h-full rounded-xl transition-all duration-300 cursor-pointer flex items-center justify-center overflow-hidden border ${plot.isWatered ? 'bg-[#1e1e1e] border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.1)]' : 'bg-[#111] border-white/10 hover:border-white/20'}`}
+        className="absolute w-full h-full cursor-pointer flex items-center justify-center overflow-visible group"
       >
-        {/* Subtle background texture or gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+        {/* 3D Plot Base */}
+        <img
+          src="/assets/cartoon_plot.png"
+          alt="Soil"
+          className={`w-[110%] h-[110%] max-w-none object-contain transition-all duration-300 ${plot.isWatered ? 'filter brightness-90 contrast-125 saturate-125' : 'filter brightness-100 hover:brightness-110'} drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]`}
+        />
+
+        {/* Highlight for interactivity */}
+        <div className="absolute inset-0 m-auto w-[60%] h-[60%] rounded-full bg-white/0 group-hover:bg-white/5 transition-colors pointer-events-none" />
 
         <AnimatePresence mode="wait">
           {!plot.crop && (
-            <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 0.3 }} className="text-4xl text-white/5 font-black">+</motion.div>
+            <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 0.5, y: -10 }} className="absolute z-10 text-3xl text-white/20 font-black pointer-events-none">+</motion.div>
           )}
         </AnimatePresence>
       </motion.div>
@@ -135,7 +142,7 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
                   type: 'spring',
                   stiffness: 100
                 }}
-                className="w-3/4 h-3/4 flex items-center justify-center select-none group relative"
+                className="w-[90%] h-[90%] flex items-center justify-center select-none group relative"
               >
                 {isReady && (
                   <motion.div
@@ -159,7 +166,7 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
                   return emoji.startsWith('/') ? (
                     <img
                       src={emoji}
-                      className="w-full h-full object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+                      className={`w-full h-full object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] ${['WHEAT', 'GARLIC', 'CARROT', 'WINTER_PEAS', 'CABBAGE', 'FROST_LETTUCE', 'TOMATO'].includes(plot.crop!) ? 'scale-[2.5] origin-top-left translate-x-3 translate-y-3' : ''}`}
                     />
                   ) : emoji;
                 })()}

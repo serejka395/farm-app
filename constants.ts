@@ -114,8 +114,39 @@ export const HOUSE_TITLES = [
   { en: 'Solana Empire', ru: 'Империя Solana' }
 ];
 
-// Note: HOUSE_VISUALS remains language agnostic as strictly emojis
-export const HOUSE_VISUALS = ['🛖', '🏠', '🏡', '🏰', '🏯', '🏛️', '⛪', '🕌', '🕍', '⛩️'];
+// Note: HOUSE_VISUALS uses 3D asset paths
+export const HOUSE_VISUALS = [
+  '/assets/houses/level_1.png',
+  '/assets/houses/level_2.png',
+  '/assets/houses/level_3.png',
+  '/assets/houses/level_4.png',
+  '/assets/houses/level_5.png',
+  '/assets/houses/level_6.png',
+  '/assets/houses/level_7.png',
+  '/assets/houses/level_8.png',
+  '/assets/houses/level_9.png',
+  '/assets/houses/level_10.png'
+];
+
+// VISUAL COORDINATES (Percentages for 16:9 Container)
+export const HOUSE_POSITION = { top: '15%', left: '50%', width: '18%' };
+
+export const PLOT_POSITIONS = [
+  // ROW 1 (Further back)
+  { id: 0, top: '46%', left: '26%', width: '14%', height: '10%' }, // Left
+  { id: 1, top: '46%', left: '50%', width: '14%', height: '10%' }, // Center
+  { id: 2, top: '46%', left: '74%', width: '14%', height: '10%' }, // Right
+
+  // ROW 2 (Middle)
+  { id: 3, top: '62%', left: '24%', width: '16%', height: '12%' },
+  { id: 4, top: '62%', left: '50%', width: '16%', height: '12%' },
+  { id: 5, top: '62%', left: '76%', width: '16%', height: '12%' },
+
+  // ROW 3 (Closest)
+  { id: 6, top: '82%', left: '20%', width: '18%', height: '15%' },
+  { id: 7, top: '82%', left: '50%', width: '18%', height: '15%' },
+  { id: 8, top: '82%', left: '80%', width: '18%', height: '15%' },
+];
 
 export const ADMIN_WALLET = '7eBHyFSTNuCCdvDhKYsvPJVB3ZYjKX5TUzsaXQrmNqFE';
 export const PLATFORM_FEE_PERCENT = 0.015; // 1.5%

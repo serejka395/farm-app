@@ -31,7 +31,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
         {(['seeds', 'sell', 'pets', 'upgrades', 'estate'] as const).map(tabName => (
           <button
             key={tabName} onClick={() => setTab(tabName)}
-            className={`px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${tab === tabName ? 'bg-f2e-gold text-black shadow-lg shadow-f2e-gold/20' : 'text-white/30 hover:text-white/50 bg-white/5'}`}
+            className={`px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:opacity-100 ${tab === tabName ? 'bg-f2e-gold text-black shadow-lg shadow-f2e-gold/20 active:text-black' : 'text-white/30 hover:text-white/50 bg-white/5 active:bg-white/10 active:text-white'}`}
           >
             {tabName === 'seeds' ? t('seeds') : tabName === 'sell' ? t('sell') : tabName === 'pets' ? t('livestock') : tabName === 'upgrades' ? t('upgrades') : t('farmstead')}
           </button>
@@ -54,8 +54,8 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                   return (
                     <div key={crop.id} className={`group relative p-4 rounded-xl flex flex-col gap-3 border transition-all duration-300 ${locked ? 'opacity-30 bg-black/40 border-transparent grayscale' : active ? 'bg-f2e-gold/5 border-f2e-gold' : `bg-white/5 border-white/5 hover:border-white/20`}`}>
                       <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 flex items-center justify-center drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] group-hover:scale-105 transition-transform bg-black/20 rounded-lg">
-                          {crop.emoji.startsWith('/') ? <img src={crop.emoji} className="w-10 h-10 object-contain" /> : <span className="text-3xl">{crop.emoji}</span>}
+                        <div className="w-24 h-24 flex items-center justify-center drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] group-hover:scale-105 transition-transform bg-black/20 rounded-lg overflow-hidden">
+                          {crop.emoji.startsWith('/') ? <img src={crop.emoji} className={`w-full h-full object-contain ${['WHEAT', 'GARLIC', 'CARROT', 'WINTER_PEAS', 'CABBAGE', 'FROST_LETTUCE', 'TOMATO'].includes(crop.id) ? 'scale-[2.5] origin-top-left translate-x-4 translate-y-4' : ''}`} /> : <span className="text-6xl">{crop.emoji}</span>}
                         </div>
                         <div className="flex-1">
                           <h4 className="font-black text-[12px] uppercase tracking-tighter leading-tight text-white">{crop.name[language]}</h4>
@@ -67,7 +67,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                       {!locked ? (
                         <button
                           onClick={() => onSelectSeed(crop.id)}
-                          className={`w-full py-2.5 rounded-lg text-[10px] font-black uppercase transition-all active:scale-95 ${active ? 'bg-f2e-gold text-black shadow-lg shadow-f2e-gold/20' : 'bg-white/10 hover:bg-white/20'}`}
+                          className={`w-full py-2.5 rounded-lg text-[10px] font-black uppercase transition-all active:scale-95 active:opacity-100 ${active ? 'bg-f2e-gold text-black shadow-lg shadow-f2e-gold/20 active:text-black' : 'bg-white/10 hover:bg-white/20 active:bg-white/20 active:text-white'}`}
                         >
                           {active ? 'SELECTED' : t('buy')}
                         </button>
@@ -100,8 +100,8 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                   return (
                     <div key={crop.id} className="bg-white/5 p-4 rounded-xl flex flex-col gap-3 border border-white/10 group hover:border-f2e-gold/30 transition-all duration-300">
                       <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 bg-black/20 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                          {crop.emoji.startsWith('/') ? <img src={crop.emoji} className="w-10 h-10 object-contain" /> : <span className="text-3xl">{crop.emoji}</span>}
+                        <div className="w-24 h-24 bg-black/20 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform overflow-hidden">
+                          {crop.emoji.startsWith('/') ? <img src={crop.emoji} className={`w-full h-full object-contain ${['WHEAT', 'GARLIC', 'CARROT', 'WINTER_PEAS', 'CABBAGE', 'FROST_LETTUCE', 'TOMATO'].includes(crop.id) ? 'scale-[2.5] origin-top-left translate-x-4 translate-y-4' : ''}`} /> : <span className="text-6xl">{crop.emoji}</span>}
                         </div>
                         <div className="flex-1">
                           <h4 className="font-black text-[12px] uppercase tracking-tighter leading-tight">{crop.name[language]}</h4>
@@ -110,7 +110,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                       </div>
                       <button
                         onClick={() => onSell(crop.id)}
-                        className="bg-f2e-gold text-black w-full py-2.5 rounded-lg text-[10px] font-black uppercase shadow-lg active:scale-95 transition-all hover:bg-yellow-400"
+                        className="bg-f2e-gold text-black w-full py-2.5 rounded-lg text-[10px] font-black uppercase shadow-lg active:scale-95 transition-all hover:bg-yellow-400 active:text-black active:bg-f2e-gold"
                       >
                         {t('sell')} (◎{Math.floor(count * crop.sellPrice)})
                       </button>
@@ -131,8 +131,8 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
               {Object.values(ANIMALS).map(animal => (
                 <div key={animal.id} className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col gap-4 group hover:border-f2e-gold/30 transition-all">
                   <div className="flex items-center gap-5">
-                    <div className="w-16 h-16 flex items-center justify-center drop-shadow-xl group-hover:scale-110 transition-transform">
-                      {animal.emoji.startsWith('/') ? <img src={animal.emoji} className="w-full h-full object-contain" /> : <span className="text-5xl">{animal.emoji}</span>}
+                    <div className="w-28 h-28 flex items-center justify-center drop-shadow-xl group-hover:scale-110 transition-transform bg-black/20 rounded-xl overflow-hidden">
+                      {animal.emoji.startsWith('/') ? <img src={animal.emoji} className="w-full h-full object-contain" /> : <span className="text-7xl">{animal.emoji}</span>}
                     </div>
                     <div className="flex-1">
                       <h4 className="font-black text-[15px] uppercase tracking-tighter">{animal.name[language]}</h4>
@@ -180,7 +180,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                 return (
                   <div key={up.id} className={`bg-white/5 p-6 rounded-xl border transition-all ${maxed ? 'border-transparent opacity-40' : 'border-white/10 hover:border-f2e-gold/50'}`}>
                     <div className="flex items-center gap-5 mb-5">
-                      <div className="w-16 h-16 bg-black/30 rounded-lg flex items-center justify-center text-2xl border border-white/5 text-f2e-gold"><i className={`fas ${up.icon}`}></i></div>
+                      <div className="w-20 h-20 bg-black/30 rounded-lg flex items-center justify-center text-4xl border border-white/5 text-f2e-gold"><i className={`fas ${up.icon}`}></i></div>
                       <div className="flex-1">
                         <h4 className="font-black text-[14px] uppercase tracking-tighter">{up.name[language]}</h4>
                         <p className="text-[9px] opacity-50 uppercase mt-0.5 leading-relaxed">{up.description[language]}</p>
