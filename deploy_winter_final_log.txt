@@ -1,0 +1,14 @@
+Vercel CLI 48.2.6
+Retrieving project…
+The `name` property in vercel.json is deprecated (https://vercel.link/name-prop)
+Deploying mor1nicreators-projects/farm-game-solana
+Uploading [--------------------] (0.0B/750.7KB)
+Uploading [=====---------------] (198.3KB/750.7KB)
+Uploading [==========----------] (390.3KB/750.7KB)
+Uploading [===============-----] (566.3KB/750.7KB)
+Uploading [====================] (750.7KB/750.7KB)
+Inspect: https://vercel.com/mor1nicreators-projects/farm-game-solana/GftaR8pRsjKQC6TrMavmyYnw98RB [4s]
+Production: https://farm-game-solana-2drhr2xjh-mor1nicreators-projects.vercel.app [4s]
+https://farm-game-solana-2drhr2xjh-mor1nicreators-projects.vercel.appQueued
+Building
+Completing

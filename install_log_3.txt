@@ -1,0 +1,64 @@
+npm warn ERESOLVE overriding peer dependency
+npm warn ERESOLVE overriding peer dependency
+npm warn ERESOLVE overriding peer dependency
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated lodash.isequal@4.5.0: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated uuidv4@6.2.13: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+npm warn deprecated @toruslabs/solana-embed@2.1.0: This sdk is now deprecated. Please use @web3auth/ws-embed instead
+npm warn deprecated @walletconnect/sign-client@2.19.1: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+npm warn deprecated @walletconnect/sign-client@2.19.0: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+npm warn deprecated @walletconnect/sign-client@2.19.1: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+npm warn deprecated @walletconnect/sign-client@2.19.1: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+npm warn deprecated @walletconnect/universal-provider@2.19.1: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+npm warn deprecated @walletconnect/universal-provider@2.19.1: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+npm warn deprecated @walletconnect/universal-provider@2.19.1: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+npm warn deprecated @walletconnect/universal-provider@2.19.0: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+npm warn cleanup Failed to remove some directories [
+npm warn cleanup   [
+npm warn cleanup     '\\\\?\\C:\\Users\\MSI\\Downloads\\ferm1\\node_modules\\protobufjs',
+npm warn cleanup     [Error: EBUSY: resource busy or locked, rmdir 'C:\Users\MSI\Downloads\ferm1\node_modules\protobufjs'] {
+npm warn cleanup       errno: -4082,
+npm warn cleanup       code: 'EBUSY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: 'C:\\Users\\MSI\\Downloads\\ferm1\\node_modules\\protobufjs'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '\\\\?\\C:\\Users\\MSI\\Downloads\\ferm1\\node_modules\\esbuild',
+npm warn cleanup     [Error: EBUSY: resource busy or locked, rmdir 'C:\Users\MSI\Downloads\ferm1\node_modules\esbuild'] {
+npm warn cleanup       errno: -4082,
+npm warn cleanup       code: 'EBUSY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: 'C:\\Users\\MSI\\Downloads\\ferm1\\node_modules\\esbuild'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '\\\\?\\C:\\Users\\MSI\\Downloads\\ferm1\\node_modules',
+npm warn cleanup     [Error: EBUSY: resource busy or locked, rmdir 'C:\Users\MSI\Downloads\ferm1\node_modules\esbuild'] {
+npm warn cleanup       errno: -4082,
+npm warn cleanup       code: 'EBUSY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: 'C:\\Users\\MSI\\Downloads\\ferm1\\node_modules\\esbuild'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '\\\\?\\C:\\Users\\MSI\\Downloads\\ferm1\\node_modules\\@solana-mobile\\mobile-wallet-adapter-protocol-web3js\\node_modules\\react-native',
+npm warn cleanup     [Error: EPERM: operation not permitted, rmdir 'C:\Users\MSI\Downloads\ferm1\node_modules\@solana-mobile\mobile-wallet-adapter-protocol-web3js\node_modules\react-native'] {
+npm warn cleanup       errno: -4048,
+npm warn cleanup       code: 'EPERM',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: 'C:\\Users\\MSI\\Downloads\\ferm1\\node_modules\\@solana-mobile\\mobile-wallet-adapter-protocol-web3js\\node_modules\\react-native'
+npm warn cleanup     }
+npm warn cleanup   ]
+npm warn cleanup ]
+npm error code 1
+npm error path C:\Users\MSI\Downloads\ferm1\node_modules\@stellar\stellar-sdk
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c yarn setup || true
+npm error "yarn" �� ���� ����७��� ��� ���譥�
+npm error ��������, �ᯮ��塞�� �ணࠬ��� ��� ������ 䠩���.
+npm error "true" �� ���� ����७��� ��� ���譥�
+npm error ��������, �ᯮ��塞�� �ணࠬ��� ��� ������ 䠩���.
+npm error A complete log of this run can be found in: C:\Users\MSI\AppData\Local\npm-cache\_logs\2025-12-27T12_04_59_688Z-debug-0.log

@@ -1,0 +1,13 @@
+Vercel CLI 48.2.6
+Loading scopes…
+Searching for existing projects…
+Linked to mor1nicreators-projects/ferm1 (created .vercel)
+Deploying mor1nicreators-projects/ferm1
+Uploading [--------------------] (0.0B/933B)
+Uploading [==============------] (678.0B/933B)
+Uploading [====================] (933.0B/933B)
+Inspect: https://vercel.com/mor1nicreators-projects/ferm1/5GsfyJgt1HnCD9JfUrQnKBj3eMK1 [3s]
+Production: https://ferm1-punkes3c9-mor1nicreators-projects.vercel.app [3s]
+https://ferm1-punkes3c9-mor1nicreators-projects.vercel.appQueued
+Building
+Completing

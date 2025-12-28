@@ -1,0 +1,10 @@
+Vercel CLI 48.2.6
+Retrieving projectтАж
+Deploying mor1nicreators-projects/ferm1
+Uploading [--------------------] (0.0B/1.1KB)
+Uploading [====================] (1.1KB/1.1KB)
+Inspect: https://vercel.com/mor1nicreators-projects/ferm1/FbVoAnqk6dzBV5NuC1kfLrL9Hzgz [2s]
+Production: https://ferm1-dnq6z2sjs-mor1nicreators-projects.vercel.app [2s]
+https://ferm1-dnq6z2sjs-mor1nicreators-projects.vercel.appQueued
+Building
+Завершить выполнение пакетного файла [Y(да)/N(нет)]? 

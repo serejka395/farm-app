@@ -1,0 +1,4 @@
+Vercel CLI 48.2.6
+> Assigning alias farm2earn.vercel.app to deployment ferm1-lgyt6tai3-mor1nicreators-projects.vercel.app
+Creating alias
+> Success! https://farm2earn.vercel.app now points to https://ferm1-lgyt6tai3-mor1nicreators-projects.vercel.app [3s]

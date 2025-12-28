@@ -1,0 +1,11 @@
+Vercel CLI 48.2.6
+Retrieving project…
+Deploying mor1nicreators-projects/ferm1
+Uploading [--------------------] (0.0B/624B)
+Uploading [===============-----] (468.0B/624B)
+Uploading [====================] (624.0B/624B)
+Inspect: https://vercel.com/mor1nicreators-projects/ferm1/GuHLvpJpGqaQcfzRuwq2f1zYBxEV [2s]
+Production: https://ferm1-dg64oadzr-mor1nicreators-projects.vercel.app [2s]
+https://ferm1-dg64oadzr-mor1nicreators-projects.vercel.appQueued
+Building
+Error: Command "npm install --legacy-peer-deps" exited with 1

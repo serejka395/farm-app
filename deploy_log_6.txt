@@ -1,0 +1,10 @@
+Vercel CLI 48.2.6
+Retrieving project…
+Deploying mor1nicreators-projects/ferm1
+Uploading [--------------------] (0.0B/589B)
+Uploading [====================] (589.0B/589B)
+Inspect: https://vercel.com/mor1nicreators-projects/ferm1/5gGpsZaJrJTY19Lt2xZCTpdoVAZh [2s]
+Production: https://ferm1-nyobznu4w-mor1nicreators-projects.vercel.app [2s]
+https://ferm1-nyobznu4w-mor1nicreators-projects.vercel.appQueued
+Building
+Error: Command "npm install --legacy-peer-deps --ignore-scripts" exited with 1

@@ -1,0 +1,26 @@
+npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error
+npm error While resolving: zen-harvest:-solana-farm@0.0.0
+npm error Found: @solana/web3.js@1.95.3
+npm error node_modules/@solana/web3.js
+npm error   @solana/web3.js@"1.95.3" from the root project
+npm error
+npm error Could not resolve dependency:
+npm error peer @solana/web3.js@"^1.98.0" from @solana/wallet-adapter-base@0.9.25
+npm error node_modules/@solana/wallet-adapter-base
+npm error   @solana/wallet-adapter-base@"0.9.25" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error C:\Users\MSI\AppData\Local\npm-cache\_logs\2025-12-27T12_03_06_332Z-eresolve-report.txt
+npm notice
+npm notice New major version of npm available! 10.9.3 -> 11.7.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.7.0
+npm notice To update run: npm install -g npm@11.7.0
+npm notice
+npm error A complete log of this run can be found in: C:\Users\MSI\AppData\Local\npm-cache\_logs\2025-12-27T12_03_06_332Z-debug-0.log

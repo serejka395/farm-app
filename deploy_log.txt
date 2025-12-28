@@ -1,0 +1,23 @@
+Vercel CLI 48.2.6
+Loading scopes…
+Searching for existing projects…
+Local settings detected in vercel.json:
+- Build Command: npm run build
+- Framework: vite
+- Output Directory: dist
+Merging default Project Settings for Vite. Previously listed overrides are prioritized.
+Auto-detected Project Settings (Vite):
+- Development Command: vite --port $PORT
+- Install Command: `yarn install`, `pnpm install`, `npm install`, or `bun install`
+Linked to mor1nicreators-projects/ferm1 (created .vercel and added it to .gitignore)
+Deploying mor1nicreators-projects/ferm1
+Uploading [--------------------] (0.0B/1.2MB)
+Uploading [=====---------------] (322.2KB/1.2MB)
+Uploading [==========----------] (642.2KB/1.2MB)
+Uploading [===============-----] (957.3KB/1.2MB)
+Uploading [====================] (1.2MB/1.2MB)
+Inspect: https://vercel.com/mor1nicreators-projects/ferm1/7tLL4jxA9tdupc8r83TQnp5EF3K9 [25s]
+Production: https://ferm1-acm5udopf-mor1nicreators-projects.vercel.app [25s]
+https://ferm1-acm5udopf-mor1nicreators-projects.vercel.appQueued
+Building
+Error: Command "npm install" exited with 1
