@@ -1,2 +1,0 @@
-Vercel CLI 48.2.6
-> Success! Alias farm2earn.vercel.app removed [322ms]

@@ -1,6 +1,0 @@
-This folder isn't linked to a project yet
-
-To create and deploy in one go, use: netlify deploy --create-site <SITE_NAME> --dir dist --prod
-? What would you like to do? (Use arrow keys)
-> ⇄  Link this directory to an existing project 
-  +  Create & configure a new project [38D[38C

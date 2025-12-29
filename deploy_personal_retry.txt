@@ -1,2 +1,0 @@
-Vercel CLI 48.2.6
-Error: You cannot set your Personal Account as the scope.
