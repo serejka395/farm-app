@@ -74,7 +74,8 @@ export enum UpgradeType {
   IRRIGATION = 'IRRIGATION',
   FERTILIZER_TECH = 'FERTILIZER_TECH',
   BARN_CAPACITY = 'BARN_CAPACITY',
-  HOUSE_ESTATE = 'HOUSE_ESTATE'
+  HOUSE_ESTATE = 'HOUSE_ESTATE',
+  WINTER_HOUSE = 'WINTER_HOUSE'
 }
 
 export interface UpgradeData {
@@ -84,7 +85,9 @@ export interface UpgradeData {
   icon: string;
   baseCost: number;
   costMultiplier: number;
+  costMultiplier: number;
   maxLevel: number;
+  currency?: 'ZEN' | 'GOLD';
 }
 
 export enum AnimalType {
@@ -104,6 +107,7 @@ export interface AnimalData {
   id: AnimalType;
   name: LocalizedStr;
   emoji: string;
+  image: string;
   productEmoji: string;
   productName: LocalizedStr;
   productType: CropType;
@@ -161,6 +165,7 @@ export interface UserProfile {
     lastActive: number;
     dailyStreak: number;
   };
+  lastWinterHouseClaim?: number;
 }
 
 export type ToolType = 'SEED' | 'WATER' | 'HARVEST';

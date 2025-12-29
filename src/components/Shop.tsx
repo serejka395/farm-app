@@ -69,7 +69,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                     >
                       <div className="flex items-center gap-4">
                         <div className="w-24 h-24 flex items-center justify-center drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform bg-black/20 rounded-lg overflow-hidden border border-white/5">
-                          {crop.emoji.startsWith('/') ? <img src={crop.emoji} className={`w-full h-full object-contain ${['WHEAT', 'GARLIC', 'CARROT', 'WINTER_PEAS', 'CABBAGE', 'FROST_LETTUCE', 'TOMATO'].includes(crop.id) ? 'scale-[2.5] origin-top-left translate-x-4 translate-y-4' : ''}`} /> : <span className="text-6xl">{crop.emoji}</span>}
+                          <span className="text-6xl">{crop.emoji}</span>
                         </div>
                         <div className="flex-1">
                           <h4 className="font-black text-[12px] uppercase tracking-tighter leading-tight text-white">{crop.name[language]}</h4>
@@ -123,7 +123,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                     >
                       <div className="flex items-center gap-4">
                         <div className="w-24 h-24 bg-black/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform overflow-hidden border border-white/5">
-                          {crop.emoji.startsWith('/') ? <img src={crop.emoji} className={`w-full h-full object-contain ${['WHEAT', 'GARLIC', 'CARROT', 'WINTER_PEAS', 'CABBAGE', 'FROST_LETTUCE', 'TOMATO'].includes(crop.id) ? 'scale-[2.5] origin-top-left translate-x-4 translate-y-4' : ''}`} /> : <span className="text-6xl">{crop.emoji}</span>}
+                          <span className="text-6xl">{crop.emoji}</span>
                         </div>
                         <div className="flex-1">
                           <h4 className="font-black text-[12px] uppercase tracking-tighter leading-tight">{crop.name[language]}</h4>
@@ -161,8 +161,8 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                   className="bg-black/40 p-5 rounded-xl border-[6px] border-[#5D4037] shadow-[0_5px_10px_rgba(0,0,0,0.6)] flex flex-col gap-4 group hover:border-[#8D6E63] transition-all"
                 >
                   <div className="flex items-center gap-5">
-                    <div className="w-28 h-28 flex items-center justify-center drop-shadow-xl group-hover:scale-110 transition-transform bg-black/20 rounded-xl overflow-hidden border border-white/5">
-                      {animal.emoji.startsWith('/') ? <img src={animal.emoji} className="w-full h-full object-contain" /> : <span className="text-7xl">{animal.emoji}</span>}
+                    <div className="w-28 h-28 flex items-center justify-center drop-shadow-xl group-hover:scale-110 transition-transform bg-black/20 rounded-xl overflow-hidden border border-white/5 relative">
+                      <img src={animal.image} className="w-full h-full object-contain p-2 drop-shadow-lg" alt={animal.name[language]} />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-black text-[15px] uppercase tracking-tighter">{animal.name[language]}</h4>
@@ -233,23 +233,26 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
           {(tab === 'upgrades' || tab === 'estate') && (
             <motion.div key={tab} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
               <h3 className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em] px-2">{tab === 'estate' ? 'Headquarters Upgrades' : 'Technical Upgrades'}</h3>
-              {Object.values(UPGRADES).filter(u => tab === 'estate' ? u.id === UpgradeType.HOUSE_ESTATE : u.id !== UpgradeType.HOUSE_ESTATE).map(up => {
+              {Object.values(UPGRADES).filter(u => tab === 'estate' ? (u.id === UpgradeType.HOUSE_ESTATE || u.id === UpgradeType.WINTER_HOUSE) : (u.id !== UpgradeType.HOUSE_ESTATE && u.id !== UpgradeType.WINTER_HOUSE)).map(up => {
                 const lvl = profile.upgrades[up.id] || 0;
                 const cost = getCost(up.id);
                 const maxed = lvl >= up.maxLevel;
+                const isGold = up.currency === 'GOLD';
+                const canAfford = isGold ? (profile.gold || 0) >= cost : profile.balance >= cost;
+
                 return (
                   <motion.div
                     layout
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    whileHover={!maxed && profile.balance >= cost ? { scale: 1.02 } : {}}
-                    whileTap={!maxed && profile.balance >= cost ? { scale: 0.95 } : {}}
+                    whileHover={!maxed && canAfford ? { scale: 1.02 } : {}}
+                    whileTap={!maxed && canAfford ? { scale: 0.95 } : {}}
                     key={up.id}
                     className={`bg-black/40 p-6 rounded-xl border-[6px] shadow-[0_5px_10px_rgba(0,0,0,0.6)] transition-all ${maxed ? 'border-transparent opacity-50 grayscale' : 'border-[#5D4037] hover:border-[#8D6E63]'
                       }`}
                   >
                     <div className="flex items-center gap-5 mb-5">
-                      <div className="w-20 h-20 bg-black/30 rounded-lg flex items-center justify-center text-4xl border border-white/5 text-f2e-gold shadow-inner"><i className={`fas ${up.icon}`}></i></div>
+                      <div className={`w-20 h-20 bg-black/30 rounded-lg flex items-center justify-center text-4xl border border-white/5 shadow-inner ${isGold ? 'text-yellow-400' : 'text-f2e-gold'}`}><i className={`fas ${up.icon}`}></i></div>
                       <div className="flex-1">
                         <h4 className="font-black text-[14px] uppercase tracking-tighter">{up.name[language]}</h4>
                         <p className="text-[9px] opacity-50 uppercase mt-0.5 leading-relaxed">{up.description[language]}</p>
@@ -257,11 +260,11 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                       <div className="text-xs font-black bg-white/10 px-3 py-1.5 rounded-lg text-white/60">{t('level')} {lvl}</div>
                     </div>
                     <button
-                      disabled={maxed || profile.balance < cost}
+                      disabled={maxed || !canAfford}
                       onClick={() => onUpgrade(up.id)}
-                      className={`w-full py-4 rounded-lg text-[11px] font-black uppercase transition-all active:scale-[0.98] ${maxed ? 'bg-white/5 text-white/10' : profile.balance >= cost ? 'bg-f2e-gold text-black shadow-lg shadow-f2e-gold/20' : 'bg-white/10 text-white/20'}`}
+                      className={`w-full py-4 rounded-lg text-[11px] font-black uppercase transition-all active:scale-[0.98] ${maxed ? 'bg-white/5 text-white/10' : canAfford ? 'bg-f2e-gold text-black shadow-lg shadow-f2e-gold/20' : 'bg-white/10 text-white/20'}`}
                     >
-                      {maxed ? t('max') : `${t('buy')} (◎ ${cost.toLocaleString()})`}
+                      {maxed ? t('max') : `${t('buy')} (${isGold ? 'GOLD ' : '◎ '}${cost.toLocaleString()})`}
                     </button>
                   </motion.div>
                 );

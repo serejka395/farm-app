@@ -12,7 +12,7 @@ interface ProfileModalProps {
   onClose: () => void;
 }
 
-type Tab = 'main' | 'stats' | 'achievements' | 'security';
+type Tab = 'main' | 'stats' | 'achievements' | 'referrals' | 'security';
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
   const { disconnect, publicKey } = useWallet();
@@ -71,7 +71,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
       {/* Tabs */}
       <div className="px-8 mt-6">
         <div className="flex gap-2 border-b border-white/5 pb-1">
-          {(['main', 'stats', 'achievements', 'security'] as const).map(tab => (
+          {(['main', 'stats', 'achievements', 'referrals', 'security'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -114,6 +114,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
                 <div className="grid grid-cols-4 gap-3">
                   {Object.values(CropType).map(type => {
                     const count = profile.inventory[type] || 0;
+                    const data = CROPS[type];
+                    if (!data) return null;
                     return (
                       <motion.div
                         whileHover={{ scale: 1.05 }}
@@ -124,9 +126,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
                           : 'bg-black/20 border-white/5 opacity-40 select-none grayscale'
                           }`}
                       >
-                        <span className="text-2xl drop-shadow-md grayscale-[0.5]">{CROPS[type].emoji}</span>
+                        <span className="text-2xl drop-shadow-md grayscale-[0.5]">{data.emoji}</span>
                         <div className="text-center">
-                          <p className="text-[8px] font-black text-white/40 uppercase mb-0.5 tracking-tighter">{CROPS[type].name[language]}</p>
+                          <p className="text-[8px] font-black text-white/40 uppercase mb-0.5 tracking-tighter">{data.name[language]}</p>
                           <span className="text-xs font-black text-white">x{count}</span>
                         </div>
                       </motion.div>
@@ -179,6 +181,48 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
                   </div>
                 );
               })}
+            </motion.div>
+          )}
+
+          {activeTab === 'referrals' && (
+            <motion.div key="referrals" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6">
+              <div className="bg-f2e-gold/10 p-6 rounded-2xl border border-f2e-gold/30 text-center relative overflow-hidden">
+                <div className="relative z-10">
+                  <i className="fas fa-users text-4xl text-f2e-gold mb-3"></i>
+                  <h4 className="text-lg font-black text-white uppercase tracking-tighter mb-2">Invite Friends</h4>
+                  <p className="text-[10px] text-white/60 mb-4 px-8">Earn 10% of your friends' harvest value forever!</p>
+
+                  <div className="bg-black/40 p-3 rounded-xl border border-white/10 flex items-center justify-between gap-3 mb-4">
+                    <code className="text-[10px] text-f2e-gold font-mono truncate flex-1 text-left">
+                      https://farm2earn.vercel.app?ref={profile.walletAddress.slice(0, 8)}
+                    </code>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(`https://farm2earn.vercel.app?ref=${profile.walletAddress}`)}
+                      className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all"
+                    >
+                      <i className="fas fa-copy text-xs"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-3 px-2">Your Squad ({profile.referrals?.length || 0})</h4>
+                {(!profile.referrals || profile.referrals.length === 0) ? (
+                  <div className="text-center py-8 opacity-20 text-[10px] uppercase font-black">
+                    No farmers invited yet
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {profile.referrals.map((ref, i) => (
+                      <div key={i} className="bg-white/5 p-3 rounded-xl border border-white/5 flex justify-between items-center">
+                        <span className="text-[10px] font-mono text-white/60">Farmer #{i + 1}</span>
+                        <span className="text-[10px] text-f2e-gold font-bold">Active</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </motion.div>
           )}
 

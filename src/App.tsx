@@ -71,27 +71,22 @@ const RoamingPet: React.FC<{
       onClick={() => onCollect(animal.id)}
     >
       <div className={`relative w-20 h-20 transition-all ${isReady ? 'filter drop-shadow-[0_5px_5px_rgba(0,0,0,0.3)]' : 'opacity-80'}`}>
-        {data.emoji.startsWith('/') ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <motion.img
-              src={data.emoji}
-              alt={data.name[language]}
-              className="w-full h-full object-contain"
-              animate={{
-                y: [0, -8, 0],
-                scale: [1, 1.05, 1],
-                rotate: [0, 2, -2, 0]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-          </div>
-        ) : (
-          <div className="text-4xl animate-bounce">{data.emoji}</div>
-        )}
+        <div className="w-full h-full flex items-center justify-center">
+          <motion.img
+            src={data.image}
+            alt={data.name[language]}
+            className="w-full h-full object-contain drop-shadow-md"
+            animate={{
+              y: [0, -4, 0],
+              scale: [1, 1.02, 1]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+        </div>
 
         {/* Collection Indicator */}
         {isReady && (
@@ -107,9 +102,10 @@ const RoamingPet: React.FC<{
 const FarmScene: React.FC<{
   onHouseClick: () => void,
   houseLevel: number,
+  hasWinterHouse: boolean,
   animals: Animal[],
   onCollectAnimal: (id: string) => void
-}> = ({ onHouseClick, houseLevel, animals, onCollectAnimal }) => {
+}> = ({ onHouseClick, houseLevel, hasWinterHouse, animals, onCollectAnimal }) => {
   const { language, t } = useLanguage();
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-end">
@@ -122,7 +118,11 @@ const FarmScene: React.FC<{
         className="relative z-10 cursor-pointer flex flex-col items-center group"
       >
         <div className="text-[80px] drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:-translate-y-2">
-          🏠
+          {hasWinterHouse ? (
+            <img src="/assets/houses/winter_house.png" className="w-32 h-32 object-contain drop-shadow-2xl" alt="Winter House" />
+          ) : (
+            '🏠'
+          )}
         </div>
         <div className="bg-f2e-dark text-[10px] lg:text-xs font-black px-4 py-1 rounded-none border border-f2e-gold/50 shadow-[0_0_20px_rgba(255,193,7,0.2)] -mt-6 z-20 whitespace-nowrap uppercase tracking-[0.2em] group-hover:bg-f2e-gold group-hover:text-black transition-colors pointer-events-none transform translate-y-full">
           {HOUSE_TITLES[houseLevel]?.[language] || 'EMPIRE'}
@@ -214,6 +214,9 @@ const App: React.FC = () => {
   const [rewards, setRewards] = useState<{ id: number, x: number, y: number, text: string, type: 'xp' | 'gold' }[]>([]);
   const [notification, setNotification] = useState<{ msg: string, type: 'info' | 'error' } | null>(null);
 
+  // Test Mode State
+  const [testMode, setTestMode] = useState(false);
+
   useEffect(() => {
     security.syncTime();
   }, []);
@@ -259,12 +262,60 @@ const App: React.FC = () => {
     }
   }, [activeAddress, isDemo]);
 
+  // Winter House Passive Income Logic
+  useEffect(() => {
+    if (!profile) return;
+    const hasWinterHouse = (profile.upgrades[UpgradeType.WINTER_HOUSE] || 0) > 0;
+    if (!hasWinterHouse) return;
+
+    const checkPassiveIncome = () => {
+      const now = Date.now();
+      const lastClaim = profile.lastWinterHouseClaim || now;
+      // 3 hours in ms = 3 * 60 * 60 * 1000 = 10800000
+      const interval = 10800000;
+
+      if (now - lastClaim >= interval) {
+        setProfile(prev => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            gold: prev.gold + 0.5,
+            lastWinterHouseClaim: now
+          };
+        });
+        setNotification({ msg: "Winter House Income: +0.5 GOLD", type: 'info' });
+      }
+    };
+
+    // Initial check (if valid upon load)
+    if (!profile.lastWinterHouseClaim) {
+      // First time initialization
+      setProfile(prev => prev ? ({ ...prev, lastWinterHouseClaim: Date.now() }) : null);
+    } else {
+      checkPassiveIncome();
+    }
+
+    const intervalId = setInterval(checkPassiveIncome, 60000); // Check every minute
+    return () => clearInterval(intervalId);
+  }, [profile?.upgrades[UpgradeType.WINTER_HOUSE], profile?.lastWinterHouseClaim]);
+
   const handleInvite = () => {
     // Mock Invite
     navigator.clipboard.writeText(`https://farm2earn.vercel.app?ref=${profile?.id}`);
     setNotification({ msg: "Link Copied! (Simulated Invite)", type: 'info' });
     // Simulating invite success for testing
     setProfile(prev => prev ? questService.updateProgress(prev, 'INVITE', 1) : null);
+  };
+
+  // Test Mode Handler
+  const toggleTestMode = () => {
+    setTestMode(!testMode);
+    if (!profile) return;
+    // Infinite Gold Hack: set to massive number or replenish
+    if (!testMode) { // Turning ON
+      setProfile(prev => prev ? ({ ...prev, gold: 999999 }) : null);
+      setNotification({ msg: "TEST MODE: INFINITE GOLD ENABLED", type: 'info' });
+    }
   };
 
   // ... (Add 'quests' to Tab Dock and Render View)
@@ -534,12 +585,30 @@ const App: React.FC = () => {
     const data = UPGRADES[type];
     if (current >= data.maxLevel) return;
     const cost = Math.floor(data.baseCost * Math.pow(data.costMultiplier, current));
-    if (profile.balance < cost) return;
-    setProfile(prev => prev ? ({
-      ...prev, balance: prev.balance - cost,
-      upgrades: { ...prev.upgrades, [type]: current + 1 },
-      stats: { ...prev.stats, houseLevel: type === UpgradeType.HOUSE_ESTATE ? current + 1 : prev.stats.houseLevel }
-    }) : null);
+
+    if (data.currency === 'GOLD') {
+      if (profile.gold < cost) {
+        setNotification({ msg: `Need ${cost} GOLD`, type: 'error' });
+        return;
+      }
+      setProfile(prev => prev ? ({
+        ...prev,
+        gold: prev.gold - cost,
+        upgrades: { ...prev.upgrades, [type]: current + 1 },
+        // If it's the Winter House, initialize the claim timer
+        lastWinterHouseClaim: type === UpgradeType.WINTER_HOUSE ? Date.now() : prev.lastWinterHouseClaim
+      }) : null);
+    } else {
+      if (profile.balance < cost) {
+        setNotification({ msg: t('insufficientZen'), type: 'error' });
+        return;
+      }
+      setProfile(prev => prev ? ({
+        ...prev, balance: prev.balance - cost,
+        upgrades: { ...prev.upgrades, [type]: current + 1 },
+        stats: { ...prev.stats, houseLevel: type === UpgradeType.HOUSE_ESTATE ? current + 1 : prev.stats.houseLevel }
+      }) : null);
+    }
   };
 
   if (!profile) return (
@@ -559,10 +628,10 @@ const App: React.FC = () => {
       <Snowfall />
 
       {/* --- TOP HEADER (FIXED) --- */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3 winter-glass border-b-0 shadow-2xl flex justify-between items-center">
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3 winter-glass border-b-0 shadow-2xl flex justify-between items-center bg-black/40 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <div className="flex items-center">
-            <img src="/assets/logo.png" alt="Farm2Earn" className="h-[42px] w-auto object-contain" />
+            <img src="/assets/logo.png" alt="Farm2Earn" className="h-[64px] md:h-[72px] w-auto object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]" />
           </div>
         </div>
 
@@ -585,18 +654,16 @@ const App: React.FC = () => {
 
           {/* STATS BAR (Scrolls with content) */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-            {/* Balance */}
-            <div className="winter-glass p-4 rounded-2xl relative overflow-hidden group shadow-lg">
-              <div className="relative z-10 flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-1 flex items-center gap-1.5 font-sans">
-                  <i className="fas fa-coins text-f2e-gold"></i> {t('balance')}
-                </span>
-                <span className="text-2xl font-cartoon text-white tracking-wide drop-shadow-md">
-                  {profile.balance.toLocaleString()} <span className="text-f2e-gold text-sm ml-0.5">ZEN</span>
-                </span>
+            {/* Balances */}
+            <div className="winter-glass p-2 rounded-2xl relative overflow-hidden group shadow-lg flex flex-col gap-1 justify-center">
+              <div className="flex items-center justify-between px-2">
+                <span className="text-[10px] font-bold text-white/50"><i className="fas fa-coins text-f2e-gold"></i> ZEN</span>
+                <span className="text-sm font-black text-white">{profile.balance.toLocaleString()}</span>
               </div>
-              <div className="absolute right-0 bottom-0 opacity-5 text-6xl text-f2e-gold transform translate-x-1/4 translate-y-1/4">
-                <i className="fas fa-coins"></i>
+              <div className="w-full h-[1px] bg-white/5"></div>
+              <div className="flex items-center justify-between px-2">
+                <span className="text-[10px] font-bold text-white/50"><i className="fas fa-gem text-yellow-300"></i> GOLD</span>
+                <span className="text-sm font-black text-yellow-300">{profile.gold?.toLocaleString() || 0}</span>
               </div>
             </div>
 
@@ -679,6 +746,7 @@ const App: React.FC = () => {
                       <FarmScene
                         onHouseClick={() => setCurrentTab('shop')}
                         houseLevel={profile.upgrades[UpgradeType.HOUSE_ESTATE]}
+                        hasWinterHouse={(profile.upgrades[UpgradeType.WINTER_HOUSE] || 0) > 0}
                         animals={profile.animals}
                         onCollectAnimal={handleCollectAnimal}
                       />
@@ -737,7 +805,12 @@ const App: React.FC = () => {
                   <div className="bg-black/40 border border-white/5 p-6 rounded-2xl">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-sm font-black text-white uppercase tracking-widest">Daily Quests</h3>
-                      <div className="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Reset in 24h</div>
+                      <div className="flex gap-2">
+                        <button onClick={toggleTestMode} className={`text-[9px] px-2 py-1 rounded font-black uppercase ${testMode ? 'bg-red-500 text-white animate-pulse' : 'bg-white/10 text-white/40'}`}>
+                          {testMode ? 'TEST MODE ON' : 'TEST MODE'}
+                        </button>
+                        <div className="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Reset in 24h</div>
+                      </div>
                     </div>
 
                     <div className="space-y-3">
@@ -758,7 +831,8 @@ const App: React.FC = () => {
                               const res = questService.claimReward(profile, q.id);
                               if (res.reward > 0) {
                                 setProfile(res.profile);
-                                setNotification({ msg: `+${res.reward} GOLD${res.bonus ? ' (BONUS!)' : ''}`, type: 'info' });
+                                const bonusMsg = res.bonus ? ' + 10 GOLD BONUS!' : '';
+                                setNotification({ msg: `+${res.reward} GOLD${bonusMsg}`, type: 'info' });
                               }
                             }}
                             className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${q.claimed ? 'bg-green-500/20 text-green-500' : q.progress >= q.target ? 'bg-f2e-gold text-black animate-pulse' : 'bg-white/10 text-white/20'}`}
@@ -788,26 +862,47 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* --- BOTTOM DOCK (FIXED) --- */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-lg px-4">
-        <div className="winter-glass p-2 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.6)] flex items-center justify-between gap-1">
-          {['farm', 'shop', 'roadmap', 'tokenomics'].map((tab) => {
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] w-full max-w-md px-2">
+        {/* Dock Container - Cartoon Cute Farm Style */}
+        <div className="bg-[#FFF8E1] p-2 rounded-[40px] border-[6px] border-[#8D6E63] shadow-[0_10px_0_#5D4037,0_20px_20px_rgba(0,0,0,0.4)] flex items-center justify-between gap-1 relative h-24">
+
+          {/* Farm2Earn Logo Stamp */}
+          <div className="absolute -top-6 -left-4 w-20 h-20 bg-white rounded-full border-[4px] border-[#8D6E63] flex items-center justify-center transform -rotate-12 shadow-lg z-20">
+            <img src="/assets/logo.png" className="w-16 h-auto" alt="Logo" />
+          </div>
+
+          {['farm', 'shop', 'quests', 'roadmap'].map((tab, idx) => {
             const isActive = currentTab === tab;
-            const icons = { farm: 'fa-wheat-awn', shop: 'fa-store', roadmap: 'fa-map-location-dot', tokenomics: 'fa-parachute-box' };
-            const labels = { farm: t('work'), shop: t('dex'), roadmap: t('map'), tokenomics: t('drop') };
+            const emojis = {
+              farm: '🏠',
+              shop: '🛒',
+              quests: '📜',
+              roadmap: '🗺️'
+            };
+            const labels = { farm: t('work'), shop: t('dex'), quests: 'Quests', roadmap: t('map') };
 
             return (
               <button
                 key={tab}
                 onClick={() => setCurrentTab(tab as any)}
-                className={`relative flex-1 h-14 rounded-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 group overflow-hidden active:opacity-100 ${isActive ? 'bg-f2e-gold shadow-[0_0_20px_rgba(255,193,7,0.3)] translate-y-[-4px] active:bg-f2e-gold active:text-black' : 'hover:bg-white/5 active:bg-white/10 active:text-white'
-                  }`}
+                className={`relative flex-1 h-full flex flex-col items-center justify-end pb-2 transition-all duration-300 group z-10 ${idx === 0 ? 'ml-12' : ''}`}
               >
-                <i className={`fas ${icons[tab as keyof typeof icons]} text-lg mb-0.5 transition-colors ${isActive ? 'text-black transform scale-110' : 'text-white/40 group-hover:text-white'}`}></i>
-                <span className={`text-[9px] font-black uppercase tracking-wider leading-none transition-colors font-sans ${isActive ? 'text-black' : 'text-white/30 group-hover:text-white'}`}>
+                {/* Icon */}
+                <div className={`transition-transform duration-300 ${isActive ? 'scale-125 -translate-y-4' : 'group-hover:-translate-y-2'}`}>
+                  <span className="text-4xl filter drop-shadow-md grayscale-0">
+                    {emojis[tab as keyof typeof emojis]}
+                  </span>
+                </div>
+
+                {/* Label (Hidden when active to reduce clutter, or just small) */}
+                <span className={`text-[10px] font-black uppercase tracking-wider text-[#5D4037] transition-all bg-white/80 px-2 rounded-full backdrop-blur-sm ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-75 group-hover:opacity-100'}`}>
                   {labels[tab as keyof typeof labels]}
                 </span>
-                {isActive && <div className="absolute bottom-1 w-1 h-1 bg-black rounded-full" />}
+
+                {/* Active Indicator (Cute Wood Plank or underline) */}
+                {isActive && (
+                  <div className="absolute bottom-1 w-8 h-1.5 bg-[#FFB74D] rounded-full" />
+                )}
               </button>
             )
           })}

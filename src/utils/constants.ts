@@ -2,15 +2,13 @@ import { CropType, CropData, UpgradeType, UpgradeData, AnimalType, AnimalData, W
 
 export const CROPS: Record<CropType, CropData> = {
   // Common (Tier 1) - Fast reinforcement loop
-  [CropType.WHEAT]: { id: CropType.WHEAT, name: { en: 'Cyber Wheat', ru: 'Кибер Пшеница' }, emoji: '/assets/crops/wheat.png', seedPrice: 10, sellPrice: 18, growthTime: 10, xpReward: 5, unlockLevel: 1, rarity: 'COMMON' },
-  [CropType.GARLIC]: { id: CropType.GARLIC, name: { en: 'Crystal Garlic', ru: 'Кристалл Чеснок' }, emoji: '/assets/crops/garlic.png', seedPrice: 20, sellPrice: 45, growthTime: 20, xpReward: 12, unlockLevel: 1, rarity: 'COMMON' },
-  [CropType.CARROT]: { id: CropType.CARROT, name: { en: 'Neon Carrot', ru: 'Неон Морковь' }, emoji: '/assets/crops/carrot.png', seedPrice: 40, sellPrice: 100, growthTime: 45, xpReward: 25, unlockLevel: 2, rarity: 'COMMON' },
-  [CropType.WINTER_PEAS]: { id: CropType.WINTER_PEAS, name: { en: 'Frost Peas', ru: 'Морозный Горох' }, emoji: '/assets/crops/winter_peas.png', seedPrice: 80, sellPrice: 220, growthTime: 90, xpReward: 55, unlockLevel: 3, rarity: 'COMMON' },
-  [CropType.CABBAGE]: { id: CropType.CABBAGE, name: { en: 'Ice Cabbage', ru: 'Лед Капуста' }, emoji: '/assets/crops/cabbage.png', seedPrice: 150, sellPrice: 450, growthTime: 180, xpReward: 120, unlockLevel: 4, rarity: 'COMMON' },
-
-  // Uncommon (Tier 2) - Mid-term investment
-  [CropType.FROST_LETTUCE]: { id: CropType.FROST_LETTUCE, name: { en: 'Frost Leaf', ru: 'Морозный Лист' }, emoji: '/assets/crops/frost_lettuce.png', seedPrice: 300, sellPrice: 950, growthTime: 300, xpReward: 250, unlockLevel: 6, rarity: 'UNCOMMON' },
-  [CropType.TOMATO]: { id: CropType.TOMATO, name: { en: 'Void Tomato', ru: 'Войд Томат' }, emoji: '/assets/crops/tomato.png', seedPrice: 500, sellPrice: 1600, growthTime: 600, xpReward: 550, unlockLevel: 8, rarity: 'UNCOMMON' },
+  [CropType.WHEAT]: { id: CropType.WHEAT, name: { en: 'Cyber Wheat', ru: 'Кибер Пшеница' }, emoji: '🌾', seedPrice: 10, sellPrice: 18, growthTime: 10, xpReward: 5, unlockLevel: 1, rarity: 'COMMON' },
+  [CropType.GARLIC]: { id: CropType.GARLIC, name: { en: 'Crystal Garlic', ru: 'Кристалл Чеснок' }, emoji: '🧄', seedPrice: 20, sellPrice: 45, growthTime: 20, xpReward: 12, unlockLevel: 1, rarity: 'COMMON' },
+  [CropType.CARROT]: { id: CropType.CARROT, name: { en: 'Neon Carrot', ru: 'Неон Морковь' }, emoji: '🥕', seedPrice: 40, sellPrice: 100, growthTime: 45, xpReward: 25, unlockLevel: 2, rarity: 'COMMON' },
+  [CropType.WINTER_PEAS]: { id: CropType.WINTER_PEAS, name: { en: 'Frost Peas', ru: 'Морозный Горох' }, emoji: '🫛', seedPrice: 80, sellPrice: 220, growthTime: 90, xpReward: 55, unlockLevel: 3, rarity: 'COMMON' },
+  [CropType.CABBAGE]: { id: CropType.CABBAGE, name: { en: 'Ice Cabbage', ru: 'Лед Капуста' }, emoji: '🥬', seedPrice: 150, sellPrice: 450, growthTime: 180, xpReward: 120, unlockLevel: 4, rarity: 'COMMON' },
+  [CropType.FROST_LETTUCE]: { id: CropType.FROST_LETTUCE, name: { en: 'Frost Leaf', ru: 'Морозный Лист' }, emoji: '🥗', seedPrice: 300, sellPrice: 950, growthTime: 300, xpReward: 250, unlockLevel: 6, rarity: 'UNCOMMON' },
+  [CropType.TOMATO]: { id: CropType.TOMATO, name: { en: 'Void Tomato', ru: 'Войд Томат' }, emoji: '🍅', seedPrice: 500, sellPrice: 1600, growthTime: 600, xpReward: 550, unlockLevel: 8, rarity: 'UNCOMMON' },
   [CropType.SNOW_POTATO]: { id: CropType.SNOW_POTATO, name: { en: 'Snow Potato', ru: 'Снежный Картофель' }, emoji: '🥔', seedPrice: 800, sellPrice: 2800, growthTime: 1200, xpReward: 1200, unlockLevel: 10, rarity: 'UNCOMMON' },
   [CropType.BEETROOT]: { id: CropType.BEETROOT, name: { en: 'Ruby Beet', ru: 'Рубин Свекла' }, emoji: '🫚', seedPrice: 1500, sellPrice: 5500, growthTime: 1800, xpReward: 2000, unlockLevel: 12, rarity: 'UNCOMMON' },
   [CropType.ARCTIC_CUCUMBER]: { id: CropType.ARCTIC_CUCUMBER, name: { en: 'Arctic Cuke', ru: 'Арктик Огурец' }, emoji: '🥒', seedPrice: 2500, sellPrice: 9000, growthTime: 2700, xpReward: 3200, unlockLevel: 15, rarity: 'UNCOMMON' },
@@ -42,27 +40,28 @@ export const CROPS: Record<CropType, CropData> = {
   [CropType.NEON_EGG]: { id: CropType.NEON_EGG, name: { en: 'Neon Egg', ru: 'Неон Яйцо' }, emoji: '🥚', seedPrice: 0, sellPrice: 150, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'COMMON' },
   [CropType.FROST_MEAT]: { id: CropType.FROST_MEAT, name: { en: 'Frost Meat', ru: 'Мороз Мясо' }, emoji: '🥩', seedPrice: 0, sellPrice: 800, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'UNCOMMON' },
   [CropType.ICY_MILK]: { id: CropType.ICY_MILK, name: { en: 'Icy Milk', ru: 'Лед Молоко' }, emoji: '🥛', seedPrice: 0, sellPrice: 4000, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'RARE' },
-  [CropType.ALPHA_FRAGMENT]: { id: CropType.ALPHA_FRAGMENT, name: { en: 'Alpha Fragment', ru: 'Альфа Фрагмент' }, emoji: '✨', seedPrice: 0, sellPrice: 25000, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'LEGENDARY' }
+  [CropType.ALPHA_FRAGMENT]: { id: CropType.ALPHA_FRAGMENT, name: { en: 'Alpha Fragment', ru: 'Альфа Фрагмент' }, emoji: '✨', seedPrice: 0, sellPrice: 25000, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'LEGENDARY' },
+  [CropType.GOLD]: { id: CropType.GOLD, name: { en: 'Gold', ru: 'Золото' }, emoji: '💰', seedPrice: 0, sellPrice: 1, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'COMMON' }
 };
 
 export const ANIMALS: Record<AnimalType, AnimalData> = {
   [AnimalType.CHICKEN]: {
-    id: AnimalType.CHICKEN, name: { en: 'Cyber Chicken', ru: 'Кибер Курица' }, emoji: '/assets/animals/chicken.png', productEmoji: '🥚', productName: { en: 'Neon Egg', ru: 'Неон Яйцо' },
+    id: AnimalType.CHICKEN, name: { en: 'Cyber Chicken', ru: 'Кибер Курица' }, emoji: '🐔', image: '/assets/animals/chicken.png', productEmoji: '🥚', productName: { en: 'Neon Egg', ru: 'Неон Яйцо' },
     productType: CropType.NEON_EGG,
     productPrice: 150, productionTime: 300, zenPrice: 1000, solPrice: 0.001, xpReward: 50
   },
   [AnimalType.PIG]: {
-    id: AnimalType.PIG, name: { en: 'Frost Pig', ru: 'Мороз Свинья' }, emoji: '/assets/animals/pig.png', productEmoji: '🥩', productName: { en: 'Frost Meat', ru: 'Мороз Мясо' },
+    id: AnimalType.PIG, name: { en: 'Frost Pig', ru: 'Мороз Свинья' }, emoji: '🐷', image: '/assets/animals/pig.png', productEmoji: '🥩', productName: { en: 'Frost Meat', ru: 'Мороз Мясо' },
     productType: CropType.FROST_MEAT,
     productPrice: 800, productionTime: 900, zenPrice: 5000, solPrice: 0.01, xpReward: 200
   },
   [AnimalType.COW]: {
-    id: AnimalType.COW, name: { en: 'Glacier Cow', ru: 'Ледник Корова' }, emoji: '/assets/animals/cow.png', productEmoji: '🥛', productName: { en: 'Icy Milk', ru: 'Лед Молоко' },
+    id: AnimalType.COW, name: { en: 'Glacier Cow', ru: 'Ледник Корова' }, emoji: '🐮', image: '/assets/animals/cow.png', productEmoji: '🥛', productName: { en: 'Icy Milk', ru: 'Лед Молоко' },
     productType: CropType.ICY_MILK,
     productPrice: 4000, productionTime: 1800, zenPrice: 25000, solPrice: 0.05, xpReward: 800
   },
   [AnimalType.GOLDEN_GOOSE]: {
-    id: AnimalType.GOLDEN_GOOSE, name: { en: 'Alpha Goose', ru: 'Альфа Гусь' }, emoji: '/assets/animals/goose.png', productEmoji: '✨', productName: { en: 'Alpha Fragment', ru: 'Альфа Фрагмент' },
+    id: AnimalType.GOLDEN_GOOSE, name: { en: 'Alpha Goose', ru: 'Альфа Гусь' }, emoji: '🦢', image: '/assets/animals/goose.png', productEmoji: '✨', productName: { en: 'Alpha Fragment', ru: 'Альфа Фрагмент' },
     productType: CropType.ALPHA_FRAGMENT,
     productPrice: 25000, productionTime: 3600, zenPrice: null, solPrice: 0.2, xpReward: 5000
   }
@@ -74,7 +73,17 @@ export const UPGRADES: Record<UpgradeType, UpgradeData> = {
   [UpgradeType.IRRIGATION]: { id: UpgradeType.IRRIGATION, name: { en: 'Plasma Water', ru: 'Плазма Вода' }, icon: 'fa-faucet-drip', description: { en: 'Doubles water boost power', ru: 'Удваивает эффект полива' }, baseCost: 8000, costMultiplier: 2.2, maxLevel: 8 },
   [UpgradeType.FERTILIZER_TECH]: { id: UpgradeType.FERTILIZER_TECH, name: { en: 'Quantum Growth', ru: 'Квант Рост' }, icon: 'fa-flask-vial', description: { en: 'Higher chance for instant harvest', ru: 'Шанс мгновенного созревания' }, baseCost: 20000, costMultiplier: 3.5, maxLevel: 5 },
   [UpgradeType.BARN_CAPACITY]: { id: UpgradeType.BARN_CAPACITY, name: { en: 'Hyperspace Barn', ru: 'Гипер Амбар' }, icon: 'fa-warehouse', description: { en: 'Increases storage by 500', ru: 'Увеличивает склад на 500' }, baseCost: 5000, costMultiplier: 1.8, maxLevel: 20 },
-  [UpgradeType.HOUSE_ESTATE]: { id: UpgradeType.HOUSE_ESTATE, name: { en: 'Estate Rank', ru: 'Уровень Усадьбы' }, icon: 'fa-house-chimney', description: { en: 'Unlocks ultimate farm aesthetics', ru: 'Открывает эстетику фермы' }, baseCost: 50000, costMultiplier: 5.0, maxLevel: 10 }
+  [UpgradeType.HOUSE_ESTATE]: { id: UpgradeType.HOUSE_ESTATE, name: { en: 'Estate Rank', ru: 'Уровень Усадьбы' }, icon: 'fa-house-chimney', description: { en: 'Unlocks ultimate farm aesthetics', ru: 'Открывает эстетику фермы' }, baseCost: 50000, costMultiplier: 5.0, maxLevel: 10 },
+  [UpgradeType.WINTER_HOUSE]: {
+    id: UpgradeType.WINTER_HOUSE,
+    name: { en: 'Winter Lodge', ru: 'Зимний Домик' },
+    icon: 'fa-snowflake',
+    description: { en: 'Cozy winter vibes + 0.5 Gold / 3h', ru: 'Зимний уют + 0.5 Золота / 3ч' },
+    baseCost: 100,
+    costMultiplier: 1,
+    maxLevel: 1,
+    currency: 'GOLD'
+  }
 };
 
 export const ROADMAP = [
@@ -124,16 +133,16 @@ export const HOUSE_TITLES = [
 
 // Note: HOUSE_VISUALS uses 3D asset paths
 export const HOUSE_VISUALS = [
-  '/assets/houses/level_1.png',
-  '/assets/houses/level_2.png',
-  '/assets/houses/level_3.png',
-  '/assets/houses/level_4.png',
-  '/assets/houses/level_5.png',
-  '/assets/houses/level_6.png',
-  '/assets/houses/level_7.png',
-  '/assets/houses/level_8.png',
-  '/assets/houses/level_9.png',
-  '/assets/houses/level_10.png'
+  '🛖',
+  '🏡',
+  '🏘️',
+  '🏰',
+  '🏯',
+  '🏛️',
+  '🕍',
+  '🏢',
+  '🏤',
+  '🏫'
 ];
 
 // VISUAL COORDINATES (Percentages for 9:16 VERTICAL Container)
@@ -157,5 +166,26 @@ export const PLOT_POSITIONS = [
   { id: 8, top: '80%', left: '80%', width: '22%', height: '14%' },
 ];
 
+
 export const ADMIN_WALLET = '7eBHyFSTNuCCdvDhKYsvPJVB3ZYjKX5TUzsaXQrmNqFE';
 export const PLATFORM_FEE_PERCENT = 0.015; // 1.5%
+
+export const DAILY_QUEST_TEMPLATES = [
+  // HARVEST TYPE
+  { type: 'HARVEST', target: 5, description: { en: 'Harvest 5 Crops', ru: 'Собрать 5 урожаев' }, rewardGold: 1 },
+  { type: 'HARVEST', target: 10, description: { en: 'Harvest 10 Crops', ru: 'Собрать 10 урожаев' }, rewardGold: 2 },
+  { type: 'HARVEST', target: 20, description: { en: 'Harvest 20 Crops', ru: 'Собрать 20 урожаев' }, rewardGold: 3 },
+  { type: 'HARVEST', target: 50, description: { en: 'Harvest 50 Crops', ru: 'Собрать 50 урожаев' }, rewardGold: 5 },
+
+  // EARN TYPE
+  { type: 'EARN', target: 100, description: { en: 'Earn 100 Zen', ru: 'Заработать 100 Zen' }, rewardGold: 1 },
+  { type: 'EARN', target: 500, description: { en: 'Earn 500 Zen', ru: 'Заработать 500 Zen' }, rewardGold: 2 },
+  { type: 'EARN', target: 1000, description: { en: 'Earn 1,000 Zen', ru: 'Заработать 1,000 Zen' }, rewardGold: 3 },
+
+  // SPECIFIC CROPS (Using IDs)
+  { type: 'HARVEST_CROP', target: 5, cropId: 'WHEAT', description: { en: 'Harvest 5 Wheat', ru: 'Собрать 5 Пшеницы' }, rewardGold: 2 },
+  { type: 'HARVEST_CROP', target: 3, cropId: 'CARROT', description: { en: 'Harvest 3 Carrots', ru: 'Собрать 3 Моркови' }, rewardGold: 2 },
+
+  // WATERING (If tracked) - Assuming 'Use Water' is an action
+  // { type: 'WATER', target: 5, description: { en: 'Water 5 Plots', ru: 'Полить 5 грядок' }, rewardGold: 1 },
+];

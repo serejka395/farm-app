@@ -27,6 +27,7 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
     let interval: number;
     if (plot.crop && plot.plantedAt) {
       const crop = CROPS[plot.crop];
+      if (!crop) return;
       const update = () => {
         const now = security.getServerNow();
         const waterBoost = plot.isWatered ? (WATER_GROWTH_BOOST_BASE + waterBoostMultiplier) : 1;
@@ -66,7 +67,7 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
   // --- Render: Main Plot ---
   return (
     <div className="w-full aspect-square relative">
-      {/* 1. Base Layer: Dirt Plot (Relative to hold space) */}
+      {/* 1. Base Layer: Dirt Plot */}
       <div
         onClick={handlePlotClick}
         className={`w-full h-full relative cursor-pointer flex items-center justify-center rounded-xl border-[6px] shadow-[0_5px_10px_rgba(0,0,0,0.6)] transition-all duration-300 ${plot.isWatered
@@ -78,99 +79,77 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
         {!plot.crop && (
           <div className="text-4xl text-white/30 font-black pointer-events-none select-none">+</div>
         )}
-      </div>
 
-      {/* 2. Crop Layer: Stacked via Grid Centering */}
-      {/* Using Grid place-items-center is the most robust centering method */}
-      <div className="absolute inset-0 pointer-events-none z-10 grid place-items-center">
+        {/* 2. Crop Layer: STRICT CENTERING */}
         <AnimatePresence mode="wait">
-          {plot.crop && (
+          {plot.crop && CROPS[plot.crop] && (
             <motion.div
               key={plot.plantedAt}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
               initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              // Wrapper is strictly limited size, centered by parent Grid
-              className="relative w-[75%] h-[75%] flex items-center justify-center"
+              animate={{
+                scale: isReady
+                  ? [1, 1.1, 1]
+                  : 0.2 + (progress / 100) * 0.8
+              }}
+              transition={isReady
+                ? { repeat: Infinity, duration: 2, ease: "easeInOut" }
+                : { type: "spring", stiffness: 100 }
+              }
             >
-              {/* Glow */}
+              <div className="text-6xl drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] select-none">
+                {CROPS[plot.crop].emoji}
+              </div>
+
+              {/* Ready Particles / Glow */}
               {isReady && (
                 <motion.div
-                  animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                  className="absolute inset-0 bg-f2e-gold/40 blur-[25px] rounded-full scale-125"
+                  animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  className="absolute inset-0 bg-f2e-gold/20 rounded-full blur-xl"
                 />
-              )}
-
-              {/* Image */}
-              <motion.div
-                className="w-full h-full flex items-center justify-center"
-                animate={!isReady ? {
-                  scale: 0.5 + (progress / 100) * 0.5,
-                } : {
-                  scale: [1, 1.05, 1],
-                  transition: { repeat: Infinity, duration: 2 }
-                }}
-              >
-                {CROPS[plot.crop].emoji.startsWith('/') ? (
-                  <img
-                    src={CROPS[plot.crop].emoji}
-                    className="w-full h-full object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]"
-                    alt="Crop"
-                  />
-                ) : (
-                  <span className="text-6xl drop-shadow-md">{CROPS[plot.crop].emoji}</span>
-                )}
-              </motion.div>
-
-              {/* Ready Badge - Absolute to this centered wrapper */}
-              {isReady && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-black/80 text-f2e-gold text-[9px] font-black px-2 py-0.5 rounded border border-f2e-gold/50 shadow-sm whitespace-nowrap z-30">
-                  READY
-                </div>
               )}
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
 
-      {/* 3. UI Layer: Controls (Absolute Layout) */}
-      <div className="absolute inset-0 pointer-events-none z-20">
-        {/* Progress Bar (Bottom Center) */}
+        {/* 3. Helper UI (Progress, Button, Water) - Absolute positioned but separate from crop */}
+        <div className="absolute inset-0 z-20 pointer-events-none">
+          {/* Water Icon (Top Right) */}
+          {plot.crop && !plot.isWatered && !isReady && (
+            <div className="absolute top-2 right-2 text-blue-400 text-lg drop-shadow-[0_0_5px_rgba(59,130,246,0.8)] animate-pulse">
+              <i className="fas fa-tint"></i>
+            </div>
+          )}
+
+          {/* Harvest Button (Bottom Center) - Takes clicks */}
+          {isReady && (
+            <div className="absolute bottom-2 left-0 right-0 flex justify-center pointer-events-auto">
+              <motion.button
+                initial={{ scale: 0, y: 10 }}
+                animate={{ scale: 1, y: 0 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAction(plot.id);
+                }}
+                className="bg-f2e-gold text-black text-[10px] font-black px-3 py-1 rounded shadow-lg uppercase tracking-widest hover:bg-white transition-colors"
+              >
+                {t('getProfit')}
+              </motion.button>
+            </div>
+          )}
+        </div>
+
+        {/* Progress Bar (Bottom) - Only if growing */}
         {plot.crop && !isReady && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-16 h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/10">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-3/4 h-1.5 bg-black/50 rounded-full overflow-hidden border border-white/5">
             <motion.div
+              className="h-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
-              className="h-full bg-f2e-gold rounded-full"
+              transition={{ ease: "linear", duration: 0.5 }}
             />
-          </div>
-        )}
-
-        {/* Harvest Button (Bottom Center) */}
-        {isReady && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-auto">
-            <motion.button
-              initial={{ scale: 0, y: 10 }}
-              animate={{ scale: 1, y: 0 }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                onAction(plot.id);
-              }}
-              className="bg-f2e-gold text-black text-[10px] font-black px-4 py-1.5 rounded-lg shadow-lg uppercase tracking-widest hover:bg-white transition-colors"
-            >
-              {t('getProfit')}
-            </motion.button>
-          </div>
-        )}
-
-        {/* Water Icon (Top Right) */}
-        {plot.crop && !plot.isWatered && !isReady && (
-          <div className="absolute top-2 right-2 text-blue-400 text-lg drop-shadow-[0_0_5px_rgba(59,130,246,0.8)] animate-pulse">
-            <i className="fas fa-tint"></i>
           </div>
         )}
       </div>
