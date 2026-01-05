@@ -166,6 +166,7 @@ export interface UserProfile {
     dailyStreak: number;
   };
   lastWinterHouseClaim?: number;
+  cheatDetectionLogs?: string[];
 }
 
 export type ToolType = 'SEED' | 'WATER' | 'HARVEST';

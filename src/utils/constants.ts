@@ -87,13 +87,18 @@ export const UPGRADES: Record<UpgradeType, UpgradeData> = {
 };
 
 export const ROADMAP = [
-  { phase: "PHASE 1", title: { en: "ALPHA SEASON", ru: "АЛЬФА СЕЗОН" }, status: { en: "Live Now", ru: "Активен" }, details: { en: "Core loop live. Earn XP to qualify for $ZH Airdrop allocation.", ru: "Игра запущена. Зарабатывай XP для аллокации $ZH." } },
-  { phase: "PHASE 2", title: { en: "TOKEN GENERATION", ru: "ГЕНЕРАЦИЯ ТОКЕНА" }, status: { en: "Loading...", ru: "Загрузка..." }, details: { en: "TGE Event. $ZH listed on Raydium. Early farmers snapshot.", ru: "TGE Событие. Листинг $ZH на Raydium. Снапшот ранних фермеров." } },
-  { phase: "PHASE 3", title: { en: "MAINNET HARVEST", ru: "MAINNET УРОЖАЙ" }, status: { en: "Upcoming", ru: "Скоро" }, details: { en: "DAO Governance, PvP Farm Raids, Staking Rewards.", ru: "DAO управление, PvP рейды, Награды за стейкинг." } }
+  { phase: "PHASE 1", title: { en: "ALPHA SEASON", ru: "АЛЬФА СЕЗОН" }, status: { en: "Live Now", ru: "Активен" }, details: { en: "Core loop live. Earn XP to qualify for $F2E Airdrop allocation.", ru: "Игра запущена. Зарабатывай XP для аллокации $F2E." } },
+  { phase: "PHASE 2", title: { en: "CHEAT TEST", ru: "ТЕСТ ЧИТОВ" }, status: { en: "Active", ru: "Активен" }, details: { en: "Security hardening. Honeypot deployment. Bot elimination protocol.", ru: "Усиление защиты. Ловушки для ботов. Протокол зачистки." } },
+  { phase: "PHASE 3", title: { en: "TOKEN GENERATION", ru: "ГЕНЕРАЦИЯ ТОКЕНА" }, status: { en: "Loading...", ru: "Загрузка..." }, details: { en: "TGE Event. $F2E listed on Raydium. Rewards for Testers & Holders.", ru: "TGE Событие. Листинг $F2E на Raydium. Награды тестерам и холдерам." } },
+  { phase: "PHASE 4", title: { en: "MARKETPLACE", ru: "МАРКЕТПЛЕЙС" }, status: { en: "Upcoming", ru: "Скоро" }, details: { en: "P2P Trading System. Sell resources to other players. Economy 2.0.", ru: "P2P Торговля. Продажа ресурсов игрокам. Экономика 2.0." } },
+  { phase: "PHASE 5", title: { en: "PVP FARM RAIDS", ru: "PVP РЕЙДЫ" }, status: { en: "Planning", ru: "В планах" }, details: { en: "Attack rival farms. Steal crops. Build defenses for your estate.", ru: "Атаки на фермы. Кража урожая. Строительство защиты." } },
+  { phase: "PHASE 6", title: { en: "OPEN WORLD", ru: "ОТКРЫТЫЙ МИР" }, status: { en: "Concept", ru: "Концепт" }, details: { en: "Visit neighbors. Social hubs. Global map exploration.", ru: "Визиты к соседям. Социальные хабы. Исследование карты." } },
+  { phase: "PHASE 7", title: { en: "GUILDS & DAO", ru: "ГИЛЬДИИ И DAO" }, status: { en: "Concept", ru: "Концепт" }, details: { en: "Create alliances. Community governance. Cooperative farming events.", ru: "Создание альянсов. Управление сообществом. Совместные ивенты." } },
+  { phase: "PHASE 8", title: { en: "METAVERSE", ru: "МЕТАВСЕЛЕННАЯ" }, status: { en: "Future", ru: "Будущее" }, details: { en: "Full 3D immersive world. VR support. Cross-chain asset integration.", ru: "Полноценный 3D мир. VR поддержка. Кросс-чейн интеграция." } }
 ];
 
 export const TOKENOMICS = {
-  totalSupply: "1,000,000,000 $ZH",
+  totalSupply: "1,000,000,000 $F2E",
   distribution: [
     { label: { en: "Community", ru: "Сообщество" }, value: "40%", description: { en: "Play-to-Earn Rewards", ru: "Награды P2E" } },
     { label: { en: "Liquidity", ru: "Ликвидность" }, value: "20%", description: { en: "Exchange backing", ru: "Обеспечение бирж" } },

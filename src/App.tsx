@@ -145,20 +145,20 @@ const FarmScene: React.FC<{
 const RoadmapView: React.FC = () => {
   const { language, t } = useLanguage();
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-6 max-w-2xl mx-auto pb-24">
       <div className="text-center mb-10">
-        <h2 className="text-4xl font-black text-white uppercase tracking-[0.4em]">{t('missionControl')}</h2>
-        <p className="text-f2e-gold text-[10px] font-black tracking-widest mt-2 uppercase">{t('roadmapSubtitle')}</p>
+        <h2 className="text-4xl font-black text-[#5D4037] uppercase tracking-[0.4em] drop-shadow-sm">{t('missionControl')}</h2>
+        <p className="text-[#8D6E63] text-[10px] font-black tracking-widest mt-2 uppercase">{t('roadmapSubtitle')}</p>
       </div>
       <div className="grid gap-6">
         {ROADMAP.map((item, i) => (
-          <div key={i} className="f2e-panel p-8 rounded-xl relative overflow-hidden group">
-            <div className={`absolute top-0 right-0 px-6 py-2 text-[10px] font-black rounded-bl-xl ${item.status[language] === 'In Progress' ? 'bg-f2e-gold text-black' : 'bg-white/5 text-white/40'}`}>
+          <div key={i} className="bg-[#FFF8E1] p-8 rounded-xl relative overflow-hidden group border-[3px] border-[#8D6E63] shadow-[0_4px_0_#5D4037]">
+            <div className={`absolute top-0 right-0 px-6 py-2 text-[10px] font-black rounded-bl-xl border-l-[3px] border-b-[3px] border-[#8D6E63] ${item.status[language] === 'In Progress' ? 'bg-[#FFB74D] text-[#5D4037]' : 'bg-[#D7CCC8] text-[#5D4037]/50'}`}>
               {item.status[language]}
             </div>
-            <div className="text-f2e-gold text-xs font-black mb-1">{item.phase}</div>
-            <div className="text-2xl font-black text-white mb-3 uppercase tracking-wider">{item.title[language]}</div>
-            <p className="text-white/60 text-sm leading-relaxed">{item.details[language]}</p>
+            <div className="text-[#8D6E63] text-xs font-black mb-1 uppercase tracking-widest">{item.phase}</div>
+            <div className={`text-2xl font-black mb-3 uppercase tracking-wider ${item.status[language] === 'In Progress' ? 'text-[#3E2723]' : 'text-[#5D4037]/60'}`}>{item.title[language]}</div>
+            <p className="text-[#5D4037] text-sm leading-relaxed font-bold opacity-80">{item.details[language]}</p>
           </div>
         ))}
       </div>
@@ -366,7 +366,15 @@ const App: React.FC = () => {
   };
 
   const handleAction = (plotId: number, pos?: { clientX: number, clientY: number }) => {
-    if (!profile || !security.validateAction()) return;
+    // Security check with behavioral biometrics
+    if (!profile || !security.validateAction(profile, pos ? { x: pos.clientX, y: pos.clientY } : undefined)) {
+      // If validation failed, UI might have been updated by reference in service, but we should force update state if needed
+      if (profile?.securityStatus === 'banned' || profile?.securityStatus === 'flagged') {
+        setProfile({ ...profile }); // Trigger re-render to show badges
+      }
+      return;
+    }
+
     const plot = plots[plotId];
     if (!plot || !plot.isUnlocked) return;
 
@@ -628,22 +636,23 @@ const App: React.FC = () => {
       <Snowfall />
 
       {/* --- TOP HEADER (FIXED) --- */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3 winter-glass border-b-0 shadow-2xl flex justify-between items-center bg-black/40 backdrop-blur-md">
+      {/* --- TOP HEADER (FIXED) --- */}
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 py-2 bg-[#FFF8E1] border-b-[4px] border-[#8D6E63] shadow-[0_4px_10px_rgba(0,0,0,0.2)] flex justify-between items-center">
         <div className="flex items-center gap-3">
           <div className="flex items-center">
-            <img src="/assets/logo.png" alt="Farm2Earn" className="h-[64px] md:h-[72px] w-auto object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]" />
+            <img src="/assets/logo.png" alt="Farm2Earn" className="h-[56px] w-auto object-contain mix-blend-multiply" />
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={() => setLanguage(language === 'en' ? 'ru' : 'en')}
-            className="h-9 px-3 rounded-lg bg-white/5 border border-white/10 hover:border-f2e-gold/50 flex items-center justify-center font-bold text-xs uppercase transition-all hover:bg-white/10 text-white"
+            className="h-9 px-3 rounded-xl bg-[#8D6E63] text-[#FFF8E1] border-2 border-[#5D4037] flex items-center justify-center font-black text-xs uppercase shadow-[0_2px_0_#5D4037] active:translate-y-0.5 active:shadow-none transition-all"
           >
             {language}
           </button>
           <div className="scale-90 origin-right">
-            <WalletMultiButton className="!bg-f2e-gold !text-black !rounded-xl !h-10 !text-xs !font-black !px-5 hover:!bg-white hover:!scale-105 transition-all shadow-[0_4px_15px_rgba(255,193,7,0.3)] !font-sans" />
+            <WalletMultiButton className="!bg-[#FFB74D] !text-[#5D4037] !rounded-xl !h-10 !text-xs !font-black !px-5 hover:!bg-[#FFA726] !border-2 !border-[#E65100] !shadow-[0_2px_0_#E65100] !font-sans" />
           </div>
         </div>
       </header>
@@ -655,53 +664,53 @@ const App: React.FC = () => {
           {/* STATS BAR (Scrolls with content) */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
             {/* Balances */}
-            <div className="winter-glass p-2 rounded-2xl relative overflow-hidden group shadow-lg flex flex-col gap-1 justify-center">
+            <div className="bg-[#FFF8E1] p-3 rounded-2xl border-[3px] border-[#8D6E63] shadow-[0_4px_0_#5D4037] relative overflow-hidden flex flex-col gap-1 justify-center">
               <div className="flex items-center justify-between px-2">
-                <span className="text-[10px] font-bold text-white/50"><i className="fas fa-coins text-f2e-gold"></i> ZEN</span>
-                <span className="text-sm font-black text-white">{profile.balance.toLocaleString()}</span>
+                <span className="text-[10px] font-black text-[#8D6E63] uppercase tracking-wider">ZEN</span>
+                <span className="text-sm font-black text-[#5D4037]">{profile.balance.toLocaleString()}</span>
               </div>
-              <div className="w-full h-[1px] bg-white/5"></div>
+              <div className="w-full h-[2px] bg-[#8D6E63]/20 rounded-full my-1"></div>
               <div className="flex items-center justify-between px-2">
-                <span className="text-[10px] font-bold text-white/50"><i className="fas fa-gem text-yellow-300"></i> GOLD</span>
-                <span className="text-sm font-black text-yellow-300">{profile.gold?.toLocaleString() || 0}</span>
+                <span className="text-[10px] font-black text-[#8D6E63] uppercase tracking-wider">GOLD</span>
+                <span className="text-sm font-black text-[#FBC02D] drop-shadow-sm">{profile.gold?.toLocaleString() || 0}</span>
               </div>
             </div>
 
             {/* XP */}
-            <div onClick={() => setShowProfile(true)} className="winter-glass p-4 rounded-2xl relative overflow-hidden group shadow-lg cursor-pointer hover:border-blue-500/50 transition-colors">
+            <div onClick={() => setShowProfile(true)} className="bg-[#FFF8E1] p-3 rounded-2xl border-[3px] border-[#8D6E63] shadow-[0_4px_0_#5D4037] relative overflow-hidden cursor-pointer active:translate-y-1 active:shadow-none transition-all">
               <div className="relative z-10 flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-1 flex items-center gap-1.5 font-sans">
-                  <i className="fas fa-star text-blue-400"></i> {t('experience')}
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#8D6E63] mb-1 flex items-center gap-1.5 font-sans">
+                  <i className="fas fa-star text-[#FFB74D]"></i> {t('experience')}
                 </span>
-                <span className="text-2xl font-cartoon text-white tracking-wide drop-shadow-md">
-                  {profile.xp} <span className="text-blue-400 text-sm ml-0.5">XP</span>
+                <span className="text-xl font-black text-[#5D4037] tracking-wide">
+                  {profile.xp} <span className="text-[#8D6E63] text-xs ml-0.5">XP</span>
                 </span>
               </div>
-              <div className="absolute top-2 right-2 bg-blue-500/20 text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-500/30 uppercase">
+              <div className="absolute top-2 right-2 bg-[#8D6E63] text-[#FFF8E1] text-[9px] font-black px-2 py-0.5 rounded-full border border-[#5D4037] uppercase">
                 LVL {profile.level}
               </div>
             </div>
 
             {/* Barn */}
-            <div className="winter-glass p-4 rounded-2xl relative overflow-hidden group shadow-lg">
+            <div className="bg-[#FFF8E1] p-3 rounded-2xl border-[3px] border-[#8D6E63] shadow-[0_4px_0_#5D4037] relative overflow-hidden">
               <div className="relative z-10 flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-1 flex items-center gap-1.5 font-sans">
-                  <i className="fas fa-warehouse text-orange-400"></i> {t('barn')}
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#8D6E63] mb-1 flex items-center gap-1.5 font-sans">
+                  <i className="fas fa-warehouse text-[#FFB74D]"></i> {t('barn')}
                 </span>
-                <span className="text-2xl font-cartoon text-white tracking-wide drop-shadow-md">
+                <span className="text-xl font-black text-[#5D4037] tracking-wide">
                   {(Object.values(profile.inventory) as number[]).reduce((a, b) => (a as number) + (b as number), 0)}
-                  <span className="text-white/30 text-base font-sans font-bold"> / {BASE_BARN_CAPACITY + profile.upgrades[UpgradeType.BARN_CAPACITY] * CAPACITY_PER_LEVEL}</span>
+                  <span className="text-[#8D6E63]/60 text-sm font-sans font-bold"> / {BASE_BARN_CAPACITY + profile.upgrades[UpgradeType.BARN_CAPACITY] * CAPACITY_PER_LEVEL}</span>
                 </span>
               </div>
             </div>
 
             {/* Estate */}
-            <div className="winter-glass p-4 rounded-2xl border-solana-purple/30 relative overflow-hidden group shadow-lg">
+            <div className="bg-[#FFF8E1] p-3 rounded-2xl border-[3px] border-[#8D6E63] shadow-[0_4px_0_#5D4037] relative overflow-hidden">
               <div className="relative z-10 flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-solana-purple mb-1 flex items-center gap-1.5 font-sans">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#8D6E63] mb-1 flex items-center gap-1.5 font-sans">
                   <i className="fas fa-landmark"></i> {t('farmstead')}
                 </span>
-                <span className="text-lg font-cartoon text-white tracking-wide truncate mt-1">
+                <span className="text-sm font-black text-[#5D4037] tracking-wide truncate mt-1">
                   {HOUSE_TITLES[profile.upgrades[UpgradeType.HOUSE_ESTATE]]?.[language] || 'EMPIRE'}
                 </span>
               </div>
@@ -793,36 +802,36 @@ const App: React.FC = () => {
                 });
               }} /></div>}
               {currentTab === 'quests' && (
-                <div className="pb-20 h-full overflow-y-auto space-y-4 px-4 pt-4">
-                  <div className="bg-f2e-gold/10 border border-f2e-gold/30 p-6 rounded-2xl flex items-center justify-between">
+                <div className="pb-20 h-full overflow-y-auto space-y-4 px-4 pt-4 custom-scroll">
+                  <div className="bg-[#FFF8E1] border-[3px] border-[#8D6E63] p-6 rounded-2xl flex items-center justify-between shadow-[0_4px_0_#5D4037]">
                     <div>
-                      <div className="text-[10px] font-black uppercase tracking-widest text-f2e-gold mb-1">GOLD Balance</div>
-                      <div className="text-3xl font-black text-white">{profile?.gold || 0} G</div>
+                      <div className="text-[10px] font-black uppercase tracking-widest text-[#8D6E63] mb-1">GOLD Balance</div>
+                      <div className="text-3xl font-black text-[#5D4037]">{profile?.gold || 0} G</div>
                     </div>
-                    <i className="fas fa-coins text-4xl text-f2e-gold opacity-50"></i>
+                    <i className="fas fa-coins text-4xl text-[#FBC02D] drop-shadow-sm"></i>
                   </div>
 
-                  <div className="bg-black/40 border border-white/5 p-6 rounded-2xl">
+                  <div className="bg-[#FFF8E1] border-[3px] border-[#8D6E63] p-6 rounded-2xl shadow-[0_4px_0_#5D4037]">
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-sm font-black text-white uppercase tracking-widest">Daily Quests</h3>
+                      <h3 className="text-sm font-black text-[#5D4037] uppercase tracking-widest">Daily Quests</h3>
                       <div className="flex gap-2">
-                        <button onClick={toggleTestMode} className={`text-[9px] px-2 py-1 rounded font-black uppercase ${testMode ? 'bg-red-500 text-white animate-pulse' : 'bg-white/10 text-white/40'}`}>
+                        <button onClick={toggleTestMode} className={`text-[9px] px-2 py-1 rounded font-black uppercase transition-all ${testMode ? 'bg-red-500 text-white animate-pulse' : 'bg-[#D7CCC8] text-[#5D4037]/50'}`}>
                           {testMode ? 'TEST MODE ON' : 'TEST MODE'}
                         </button>
-                        <div className="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Reset in 24h</div>
+                        <div className="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded border border-blue-200 font-bold">Reset in 24h</div>
                       </div>
                     </div>
 
                     <div className="space-y-3">
                       {profile?.dailyQuests.map(q => (
-                        <div key={q.id} className="bg-white/5 p-4 rounded-xl flex items-center justify-between border border-white/5">
+                        <div key={q.id} className="bg-[#FFFFF0] p-4 rounded-xl flex items-center justify-between border-[2px] border-[#D7CCC8]">
                           <div>
-                            <div className="text-xs font-bold text-white mb-1">{q.description[language]}</div>
-                            <div className="text-[10px] text-white/40 uppercase tracking-wide">Reward: {q.rewardGold} GOLD</div>
-                            <div className="w-32 h-1.5 bg-black/50 rounded-full mt-2 overflow-hidden">
-                              <div className="h-full bg-f2e-gold" style={{ width: `${Math.min(100, (q.progress / q.target) * 100)}%` }}></div>
+                            <div className="text-xs font-black text-[#5D4037] mb-1">{q.description[language]}</div>
+                            <div className="text-[10px] text-[#8D6E63] uppercase tracking-wide font-bold">Reward: <span className="text-[#FBC02D]">{q.rewardGold} GOLD</span></div>
+                            <div className="w-32 h-2 bg-[#D7CCC8] rounded-full mt-2 overflow-hidden">
+                              <div className="h-full bg-[#FFB74D]" style={{ width: `${Math.min(100, (q.progress / q.target) * 100)}%` }}></div>
                             </div>
-                            <div className="text-[9px] text-white/30 mt-1">{q.progress} / {q.target}</div>
+                            <div className="text-[9px] text-[#8D6E63] mt-1 font-bold">{q.progress} / {q.target}</div>
                           </div>
                           <button
                             disabled={q.claimed || q.progress < q.target}
@@ -835,7 +844,7 @@ const App: React.FC = () => {
                                 setNotification({ msg: `+${res.reward} GOLD${bonusMsg}`, type: 'info' });
                               }
                             }}
-                            className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${q.claimed ? 'bg-green-500/20 text-green-500' : q.progress >= q.target ? 'bg-f2e-gold text-black animate-pulse' : 'bg-white/10 text-white/20'}`}
+                            className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all shadow-[0_2px_0_rgba(0,0,0,0.1)] active:translate-y-0.5 active:shadow-none ${q.claimed ? 'bg-green-100 text-green-600' : q.progress >= q.target ? 'bg-[#FFB74D] text-[#5D4037] animate-pulse' : 'bg-[#D7CCC8] text-[#5D4037]/40'}`}
                           >
                             {q.claimed ? 'Claimed' : q.progress >= q.target ? 'Claim' : 'In Progress'}
                           </button>
@@ -844,12 +853,12 @@ const App: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-black/40 border border-white/5 p-6 rounded-2xl">
-                    <h3 className="text-sm font-black text-white uppercase tracking-widest mb-4">Referrals</h3>
-                    <button onClick={handleInvite} className="w-full py-3 bg-f2e-gold text-black font-black uppercase rounded-xl hover:bg-yellow-400 active:scale-95 transition-all text-xs">
+                  <div className="bg-[#FFF8E1] border-[3px] border-[#8D6E63] p-6 rounded-2xl shadow-[0_4px_0_#5D4037]">
+                    <h3 className="text-sm font-black text-[#5D4037] uppercase tracking-widest mb-4">Referrals</h3>
+                    <button onClick={handleInvite} className="w-full py-3 bg-[#FFB74D] text-[#5D4037] font-black uppercase rounded-xl hover:bg-[#FFA726] active:translate-y-0.5 shadow-[0_4px_0_#E65100] active:shadow-none transition-all text-xs border border-[#E65100]">
                       Invte a Friend (+10 Gold)
                     </button>
-                    <div className="mt-4 text-center text-[10px] text-white/40 uppercase">
+                    <div className="mt-4 text-center text-[10px] text-[#8D6E63] uppercase font-bold">
                       You have invited {profile?.referrals?.length || 0} friends
                     </div>
                   </div>
@@ -867,8 +876,8 @@ const App: React.FC = () => {
         <div className="bg-[#FFF8E1] p-2 rounded-[40px] border-[6px] border-[#8D6E63] shadow-[0_10px_0_#5D4037,0_20px_20px_rgba(0,0,0,0.4)] flex items-center justify-between gap-1 relative h-24">
 
           {/* Farm2Earn Logo Stamp */}
-          <div className="absolute -top-6 -left-4 w-20 h-20 bg-white rounded-full border-[4px] border-[#8D6E63] flex items-center justify-center transform -rotate-12 shadow-lg z-20">
-            <img src="/assets/logo.png" className="w-16 h-auto" alt="Logo" />
+          <div className="absolute top-1/2 -translate-y-1/2 left-2 w-20 h-20 bg-white rounded-full border-[4px] border-[#8D6E63] flex items-center justify-center shadow-lg z-20 overflow-hidden">
+            <img src="/assets/logo.png" className="w-full h-full object-contain mix-blend-multiply p-1" alt="Logo" />
           </div>
 
           {['farm', 'shop', 'quests', 'roadmap'].map((tab, idx) => {
@@ -885,7 +894,7 @@ const App: React.FC = () => {
               <button
                 key={tab}
                 onClick={() => setCurrentTab(tab as any)}
-                className={`relative flex-1 h-full flex flex-col items-center justify-end pb-2 transition-all duration-300 group z-10 ${idx === 0 ? 'ml-12' : ''}`}
+                className={`relative flex-1 h-full flex flex-col items-center justify-end pb-2 transition-all duration-300 group z-10 ${idx === 0 ? 'ml-24' : ''}`}
               >
                 {/* Icon */}
                 <div className={`transition-transform duration-300 ${isActive ? 'scale-125 -translate-y-4' : 'group-hover:-translate-y-2'}`}>
@@ -926,6 +935,23 @@ const App: React.FC = () => {
         )}
         {rewards.map(r => <FloatingReward key={r.id} {...r} />)}
       </AnimatePresence>
+
+      {/* HONEYPOT TRAP: Invisible element for bots */}
+      <button
+        onClick={() => { if (profile) security.triggerHoneypot(profile); setProfile({ ...profile!, securityStatus: 'banned' }); }}
+        className="fixed top-0 left-0 w-1 h-1 opacity-0 pointer-events-auto z-[9999]"
+        aria-hidden="true"
+        tabIndex={-1}
+      >
+        System Check
+      </button>
+
+      {/* CHEATER BADGE */}
+      {profile.securityStatus !== 'verified' && (
+        <div className="fixed top-16 right-4 z-[100] bg-red-600/90 text-white text-[10px] font-black px-2 py-1 rounded border border-red-400 animate-pulse">
+          {profile.securityStatus === 'banned' ? '🚫 BANNED' : '⚠️ FLAGGED'}
+        </div>
+      )}
     </div>
   );
 };

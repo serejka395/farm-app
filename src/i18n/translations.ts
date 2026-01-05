@@ -4,7 +4,7 @@ export type Language = 'en' | 'ru';
 export const translations = {
     en: {
         // App Header
-        appTitle: "ZEN HARVEST",
+        appTitle: "Farm to Earn",
         appSubtitle: "Alpha Season 1",
 
         // Stats
@@ -64,7 +64,7 @@ export const translations = {
     },
     ru: {
         // App Header
-        appTitle: "ZEN HARVEST",
+        appTitle: "Farm to Earn",
         appSubtitle: "Альфа Сезон 1",
 
         // Stats

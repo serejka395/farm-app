@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm to Earn - Investor Deck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #2D2420;
+            --bg-cream: #FFF8E1;
+            --text-dark: #3E2723;
+            --text-light: #FFF8E1;
+            --accent-gold: #FFB74D;
+            --accent-wood: #8D6E63;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #1a1a1a;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-cream);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            page-break-after: always;
+        }
+
+        /* --- SLIDE 1: COVER --- */
+        .slide-cover {
+            background-image: url('presentation_assets/user_cover_final.png');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            justify-content: flex-end;
+            padding: 60px;
+        }
+
+        .slide-cover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .brand-tag {
+            background: var(--accent-gold);
+            color: var(--text-dark);
+            padding: 5px 15px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: inline-block;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        h1.title {
+            font-size: 8em;
+            line-height: 0.9;
+            margin: 0;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        p.subtitle {
+            font-size: 2em;
+            margin-top: 10px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* --- COMMON LAYOUTS --- */
+        .slide-header {
+            padding: 40px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 3em;
+            color: var(--text-dark);
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .slide-number {
+            font-size: 1.5em;
+            color: var(--accent-wood);
+            opacity: 0.5;
+            font-weight: 900;
+        }
+
+        .slide-body {
+            padding: 0 60px 60px 60px;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        /* --- VISUALS --- */
+        .mockup-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(62, 39, 35, 0.2);
+            border: 8px solid var(--accent-wood);
+            background: #fff;
+        }
+
+        .mockup-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .feature-list h3 {
+            font-size: 1.8em;
+            color: var(--accent-wood);
+            margin: 0 0 10px 0;
+        }
+
+        .feature-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            padding-left: 30px;
+            position: relative;
+            color: var(--text-dark);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: var(--accent-gold);
+            position: absolute;
+            left: 0;
+            font-weight: 900;
+        }
+
+        /* --- OBJECT GRID --- */
+        .object-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .object-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #EFEBE9;
+        }
+
+        .object-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .object-card h4 {
+            margin: 10px 0 0 0;
+            color: var(--accent-wood);
+            font-weight: 900;
+        }
+
+        /* --- TOKENOMICS --- */
+        .token-chart {
+            background: var(--bg-dark);
+            color: white;
+            padding: 40px;
+            border-radius: 30px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+            font-size: 1.2em;
+        }
+
+        .stat-val {
+            font-weight: 900;
+            color: var(--accent-gold);
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: none;
+            }
+
+            .slide {
+                margin: 0;
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 01 COVER -->
+    <div class="slide slide-cover">
+        <div class="cover-content">
+            <div class="brand-tag">Q1 2026 Deck</div>
+            <h1 class="title">FARM<br>TO EARN</h1>
+            <p class="subtitle">From Soil to Solana. The Next Gen DeFi Game.</p>
+        </div>
+    </div>
+
+    <!-- 02 GAMEPLAY -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="section-title">Immersive Gameplay</div>
+            <div class="slide-number">01</div>
+        </div>
+        <div class="slide-body">
+            <div class="mockup-container">
+                <img src="presentation_assets/real_farm.png" class="mockup-img" alt="Farm Gameplay">
+            </div>
+            <div class="feature-list">
+                <h3>Build Your Empire</h3>
+                <p style="font-size: 1.4em; margin-bottom: 40px; line-height: 1.4; color: #5D4037;">
+                    Experience the most relaxing yet profitable farming simulator on Solana. Plant crops, raise
+                    livestock, and expand your estate.
+                </p>
+                <ul>
+                    <li><strong>60+ Unique Crops</strong>: Dynamic growth cycles & weather effects.</li>
+                    <li><strong>Livestock System</strong>: Chickens, Pigs, Cows with real yields.</li>
+                    <li><strong>Estate Upgrades</strong>: Visual progression from Shack to Palace.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 03 ASSETS -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="section-title">Game Assets</div>
+            <div class="slide-number">02</div>
+        </div>
+        <div class="slide-body" style="grid-template-columns: 1fr;">
+            <div class="object-grid">
+                <div class="object-card">
+                    <img src="assets/animals/chicken.png" alt="Chicken">
+                    <h4>Cyber Chicken</h4>
+                </div>
+                <div class="object-card">
+                    <img src="assets/animals/pig.png" alt="Pig">
+                    <h4>Frost Pig</h4>
+                </div>
+                <div class="object-card">
+                    <img src="assets/animals/cow.png" alt="Cow">
+                    <h4>Glacier Cow</h4>
+                </div>
+                <div class="object-card">
+                    <img src="assets/animals/goose.png" alt="Goose">
+                    <h4>Alpha Goose</h4>
+                </div>
+                <!-- Crops -->
+                <div class="object-card">
+                    <div style="font-size: 60px;">🎃</div>
+                    <h4>Void Gourd</h4>
+                </div>
+                <div class="object-card">
+                    <div style="font-size: 60px;">🐉</div>
+                    <h4>Solar Dragon</h4>
+                </div>
+                <div class="object-card">
+                    <div style="font-size: 60px;">🎄</div>
+                    <h4>Origin Yule</h4>
+                </div>
+                <div class="object-card">
+                    <div style="font-size: 60px;">💎</div>
+                    <h4>Rare Gems</h4>
+                </div>
+            </div>
+            <p style="text-align: center; font-size: 1.5em; color: var(--accent-wood); margin-top: 30px;">
+                Hundreds of collectible assets with unique utility and yield rates.
+            </p>
+        </div>
+    </div>
+
+    <!-- 04 ECONOMY -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="section-title">Economy & Shop</div>
+            <div class="slide-number">03</div>
+        </div>
+        <div class="slide-body">
+            <div class="feature-list">
+                <h3>$F2E Tokenomics</h3>
+                <div class="token-chart">
+                    <div class="stat-row"><span>Total Supply</span> <span class="stat-val">1,000,000,000</span></div>
+                    <div class="stat-row"><span>Community P2E</span> <span class="stat-val">40%</span></div>
+                    <div class="stat-row"><span>Liquidity</span> <span class="stat-val">20%</span></div>
+                    <div class="stat-row"><span>Team (Vested)</span> <span class="stat-val">20%</span></div>
+                </div>
+                <br>
+                <ul>
+                    <li><strong>Dual Currency</strong>: ZEN (Soft) + $F2E (Hard).</li>
+                    <li><strong>Anti-Inflation</strong>: Strategic sinks via Upgrades & Crafting.</li>
+                </ul>
+            </div>
+            <div class="mockup-container">
+                <img src="presentation_assets/real_shop.png" class="mockup-img"
+                    onerror="this.src='presentation_assets/real_farm.png'" alt="Shop Interface">
+            </div>
+        </div>
+    </div>
+
+    <!-- 05 SECURITY -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="section-title">Security & Roadmap</div>
+            <div class="slide-number">04</div>
+        </div>
+        <div class="slide-body">
+            <div>
+                <h3>Maximum Honesty Protocol</h3>
+                <p style="font-size: 1.2em; opacity: 0.8; margin-bottom: 20px;">We built the first client-side
+                    behavioral biometrics system on Solana.</p>
+                <div
+                    style="background: #FFEBEE; color: #D32F2F; padding: 20px; border-radius: 10px; border-left: 5px solid #D32F2F;">
+                    <strong>🚫 Anti-Bot Tech</strong>: Click Entropy Analysis, Honeypots, Server Validation.
+                </div>
+                <br>
+                <h3>Roadmap 2026</h3>
+                <ul style="font-size: 0.8em; opacity: 0.8;">
+                    <li>Phase 4: Marketplace P2P</li>
+                    <li>Phase 5: PvP Farm Raids</li>
+                    <li>Phase 6: Open World Social Hub</li>
+                </ul>
+            </div>
+            <div class="mockup-container">
+                <img src="presentation_assets/real_map.png" class="mockup-img"
+                    onerror="this.src='presentation_assets/real_farm.png'" alt="Map Roadmap">
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
