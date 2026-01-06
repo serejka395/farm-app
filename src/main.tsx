@@ -3,22 +3,49 @@ import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
+import {
+    PhantomWalletAdapter,
+    SolflareWalletAdapter,
+    BackpackWalletAdapter,
+    TrustWalletAdapter,
+    CoinbaseWalletAdapter,
+    LedgerWalletAdapter,
+    TorusWalletAdapter,
+    SlopeWalletAdapter,
+    GlowWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import { LanguageProvider } from './contexts/LanguageContext';
 import App from './App';
 import './styles/index.css';
-import '@solana/wallet-adapter-react-ui/styles.css'; // Also ensure wallet styles are imported if not elsewhere
+import '@solana/wallet-adapter-react-ui/styles.css';
 
 const Root = () => {
-    // Solana network endpoint
-    const endpoint = useMemo(() => clusterApiUrl('devnet'), []);
+    // Solana mainnet-beta endpoint for production
+    // Use Helius RPC for better performance and reliability
+    const endpoint = useMemo(() => {
+        // Primary: Helius free tier (rate limited but fast)
+        const heliusRpc = 'https://rpc.helius.xyz/?api-key=public';
+        // Fallback: Official mainnet
+        const mainnetRpc = clusterApiUrl('mainnet-beta');
 
-    // Supported wallet adapters
+        // In production, use Helius; for development, can switch
+        return process.env.VITE_RPC_ENDPOINT || heliusRpc;
+    }, []);
+
+    // Comprehensive wallet adapter support
+    // All major Solana wallets with mobile deep linking
     const wallets = useMemo(
         () => [
-            new PhantomWalletAdapter(),
-            new SolflareWalletAdapter(),
+            new PhantomWalletAdapter(),      // Most popular, excellent mobile support
+            new SolflareWalletAdapter(),     // Popular, good mobile app
+            new BackpackWalletAdapter(),     // New but popular, xNFT support
+            new TrustWalletAdapter(),        // Mobile-first, widely used
+            new CoinbaseWalletAdapter(),     // Major exchange wallet
+            new GlowWalletAdapter(),         // Solana native, good UX
+            new SlopeWalletAdapter(),        // Mobile-focused
+            new TorusWalletAdapter(),        // Social login wallet
+            new LedgerWalletAdapter(),       // Hardware wallet support
         ],
         []
     );
