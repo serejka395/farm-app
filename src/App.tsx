@@ -12,6 +12,7 @@ import {
 import PlotComponent from './components/PlotComponent';
 import Shop from './components/Shop';
 import ProfileModal from './components/ProfileModal';
+import StartPage from './components/StartPage';
 import Snowfall from './components/Snowfall';
 import { db } from './api/database';
 import { security } from './api/securityService';
@@ -211,8 +212,7 @@ const App: React.FC = () => {
   const [rewards, setRewards] = useState<{ id: number, x: number, y: number, text: string, type: 'xp' | 'gold' }[]>([]);
   const [notification, setNotification] = useState<{ msg: string, type: 'info' | 'error' } | null>(null);
 
-  // Test Mode State
-  const [testMode, setTestMode] = useState(false);
+
 
   useEffect(() => {
     security.syncTime();
@@ -304,16 +304,7 @@ const App: React.FC = () => {
     setProfile(prev => prev ? questService.updateProgress(prev, 'INVITE', 1) : null);
   };
 
-  // Test Mode Handler
-  const toggleTestMode = () => {
-    setTestMode(!testMode);
-    if (!profile) return;
-    // Infinite Gold Hack: set to massive number or replenish
-    if (!testMode) { // Turning ON
-      setProfile(prev => prev ? ({ ...prev, gold: 999999 }) : null);
-      setNotification({ msg: "TEST MODE: INFINITE GOLD ENABLED", type: 'info' });
-    }
-  };
+
 
   // ... (Add 'quests' to Tab Dock and Render View)
 
@@ -659,13 +650,12 @@ const App: React.FC = () => {
     }
   };
 
-  if (!profile) return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center bg-f2e-black text-white">
-      <h1 className="text-6xl font-black mb-8 text-white tracking-tighter">Farm<span className="text-f2e-gold">2</span>Earn</h1>
-      <div className="scale-150 mb-12"><WalletMultiButton /></div>
-      <button onClick={() => setIsDemo(true)} className="px-12 py-4 bg-f2e-gold text-black rounded-xl font-bold hover:bg-yellow-400 transition-all shadow-[0_0_20px_rgba(255,193,7,0.4)]">{t('trySimulator')}</button>
-    </div>
-  );
+  if (!profile) {
+    if (activeAddress) {
+      return <div className="h-screen w-full flex items-center justify-center bg-f2e-black text-white font-black text-xl animate-pulse">ENTERING FARM...</div>;
+    }
+    return <StartPage onGuestLogin={() => setIsDemo(true)} />;
+  }
 
   return (
     <div className="h-screen w-full bg-f2e-black text-white font-sans overflow-hidden relative selection:bg-f2e-gold selection:text-black">
@@ -855,9 +845,6 @@ const App: React.FC = () => {
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-sm font-black text-[#5D4037] uppercase tracking-widest">Daily Quests</h3>
                       <div className="flex gap-2">
-                        <button onClick={toggleTestMode} className={`text-[9px] px-2 py-1 rounded font-black uppercase transition-all ${testMode ? 'bg-red-500 text-white animate-pulse' : 'bg-[#D7CCC8] text-[#5D4037]/50'}`}>
-                          {testMode ? 'TEST MODE ON' : 'TEST MODE'}
-                        </button>
                         <div className="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded border border-blue-200 font-bold">Reset in 24h</div>
                       </div>
                     </div>

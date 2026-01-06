@@ -23,8 +23,8 @@ const StageImage: React.FC<{ crop: CropData; progress: number; isReady: boolean 
         <motion.img
           src={crop.image}
           alt={crop.name.en}
-          className="w-full h-full object-cover absolute inset-0 rounded-lg mobile-visible-crop"
-          animate={{ scale: [1, 1.02, 1] }}
+          className="w-[85%] h-[85%] object-contain drop-shadow-md z-20"
+          animate={{ scale: [1.1, 1.15, 1.1] }}
           transition={{ duration: 3, repeat: Infinity }}
         />
       );
@@ -106,7 +106,7 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
       {/* 1. Base Layer: Dirt Plot */}
       <div
         onClick={handlePlotClick}
-        className={`w-full h-full relative cursor-pointer flex items-center justify-center rounded-xl border-[6px] shadow-[0_5px_10px_rgba(0,0,0,0.6)] transition-all duration-300 overflow-hidden ${plot.isWatered
+        className={`w-full h-full relative cursor-pointer flex items-center justify-center rounded-xl border-[6px] shadow-[0_5px_10px_rgba(0,0,0,0.6)] transition-all duration-300 ${plot.isWatered
           ? 'bg-blue-50/90 border-[#8B4513] shadow-[inset_0_0_20px_rgba(59,130,246,0.3)]'
           : 'bg-white/90 border-[#D7CCC8] hover:border-[#A1887F]'
           }`}
@@ -116,7 +116,7 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
           <div className="text-4xl text-black/20 font-black pointer-events-none select-none">+</div>
         )}
 
-        {/* 2. Crop Layer: STRICT CENTERING */}
+        {/* 2. Crop Layer: STRICT CENTERING - Removed overflow-hidden from parent so this POPS OUT */}
         <AnimatePresence mode="wait">
           {plot.crop && CROPS[plot.crop] && (
             <motion.div
