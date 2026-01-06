@@ -19,28 +19,17 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
 
                 {/* Top Section: Logo */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, type: "spring" }}
-                    className="flex flex-col items-center gap-6"
+                    initial={{ opacity: 0, scale: 0.8, y: -20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+                    className="flex flex-col items-center justify-center flex-1 w-full"
                 >
-                    {/* Logo Container - White Background */}
-                    <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-4 border-white/5 relative group">
-                        <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-gray-200 rounded-[2.3rem] -z-10" />
+                    <div className="relative w-full max-w-[320px] aspect-square flex items-center justify-center">
                         <img
                             src="/assets/logo.png"
                             alt="Farm2Earn"
-                            className="w-32 h-32 object-contain drop-shadow-xl transform group-hover:scale-110 transition-transform duration-500"
+                            className="w-full h-full object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] filter contrast-125 hover:scale-105 transition-transform duration-500"
                         />
-                    </div>
-
-                    <div className="text-center">
-                        <h1 className="text-3xl font-black text-white tracking-wider uppercase drop-shadow-md">
-                            Zen Harvest
-                        </h1>
-                        <p className="text-white/50 text-xs font-bold tracking-[0.2em] uppercase mt-2">
-                            Winter Season
-                        </p>
                     </div>
                 </motion.div>
 
