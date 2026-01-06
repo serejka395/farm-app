@@ -79,8 +79,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap border-[2px] ${activeTab === tab
-                  ? 'bg-[#FFB74D] text-[#5D4037] border-[#E65100] shadow-[0_2px_0_#E65100] active:shadow-none active:translate-y-0.5'
-                  : 'bg-[#EFEBE9] text-[#8D6E63] border-transparent hover:border-[#8D6E63]/30'
+                ? 'bg-[#FFB74D] text-[#5D4037] border-[#E65100] shadow-[0_2px_0_#E65100] active:shadow-none active:translate-y-0.5'
+                : 'bg-[#EFEBE9] text-[#8D6E63] border-transparent hover:border-[#8D6E63]/30'
                 }`}
             >
               {tab}
@@ -175,8 +175,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
                 const isUnlocked = profile.achievements?.[ach.id];
                 return (
                   <div key={ach.id} className={`p-4 rounded-2xl flex items-center gap-4 border-[3px] transition-all ${isUnlocked
-                      ? 'bg-[#FFF3E0] border-[#FFB74D] shadow-[0_4px_0_#FFE0B2]'
-                      : 'bg-[#EFEBE9] border-[#D7CCC8] opacity-60 grayscale'
+                    ? 'bg-[#FFF3E0] border-[#FFB74D] shadow-[0_4px_0_#FFE0B2]'
+                    : 'bg-[#EFEBE9] border-[#D7CCC8] opacity-60 grayscale'
                     }`}>
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-sm border border-black/5 ${isUnlocked ? 'bg-[#FFB74D] text-[#5D4037]' : 'bg-[#D7CCC8] text-[#8D6E63]'
                       }`}>
@@ -203,10 +203,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
 
                   <div className="bg-white p-3 rounded-xl border border-[#D7CCC8] flex items-center justify-between gap-3 mb-4">
                     <code className="text-[10px] text-[#E65100] font-mono truncate flex-1 text-left bg-[#FFF8E1] px-2 py-1 rounded">
-                      https://farm2earn.vercel.app?ref={profile.walletAddress.slice(0, 8)}
+                      https://t.me/farm_appbot/farm2earn.space/ref...
                     </code>
                     <button
-                      onClick={() => navigator.clipboard.writeText(`https://farm2earn.vercel.app?ref=${profile.walletAddress}`)}
+                      onClick={() => navigator.clipboard.writeText(`https://t.me/farm_appbot/farm2earn.space?startapp=ref_${profile.walletAddress}`)}
                       className="w-8 h-8 bg-[#FFB74D] rounded-lg flex items-center justify-center text-[#5D4037] hover:bg-[#FFA726] transition-all shadow-sm border border-[#E65100]"
                     >
                       <i className="fas fa-copy text-xs"></i>

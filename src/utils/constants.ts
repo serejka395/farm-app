@@ -1,40 +1,40 @@
 import { CropType, CropData, UpgradeType, UpgradeData, AnimalType, AnimalData, WeatherType } from '../types';
 
 export const CROPS: Record<CropType, CropData> = {
-  // Common (Tier 1) - Fast reinforcement loop
+  // Common (Tier 1) - Fast reinforcement loop. High Active Play ROI (~1.8x - 2x)
   [CropType.WHEAT]: { id: CropType.WHEAT, name: { en: 'Cyber Wheat', ru: 'Кибер Пшеница' }, emoji: '🌾', seedPrice: 10, sellPrice: 18, growthTime: 10, xpReward: 5, unlockLevel: 1, rarity: 'COMMON' },
-  [CropType.GARLIC]: { id: CropType.GARLIC, name: { en: 'Crystal Garlic', ru: 'Кристалл Чеснок' }, emoji: '🧄', seedPrice: 20, sellPrice: 45, growthTime: 20, xpReward: 12, unlockLevel: 1, rarity: 'COMMON' },
-  [CropType.CARROT]: { id: CropType.CARROT, name: { en: 'Neon Carrot', ru: 'Неон Морковь' }, emoji: '🥕', seedPrice: 40, sellPrice: 100, growthTime: 45, xpReward: 25, unlockLevel: 2, rarity: 'COMMON' },
+  [CropType.GARLIC]: { id: CropType.GARLIC, name: { en: 'Crystal Garlic', ru: 'Кристалл Чеснок' }, emoji: '🧄', image: '/assets/crops/garlic.png', seedPrice: 20, sellPrice: 45, growthTime: 20, xpReward: 12, unlockLevel: 1, rarity: 'COMMON' },
+  [CropType.CARROT]: { id: CropType.CARROT, name: { en: 'Neon Carrot', ru: 'Неон Морковь' }, emoji: '🥕', image: '/assets/crops/carrot.png', seedPrice: 40, sellPrice: 100, growthTime: 45, xpReward: 25, unlockLevel: 2, rarity: 'COMMON' },
   [CropType.WINTER_PEAS]: { id: CropType.WINTER_PEAS, name: { en: 'Frost Peas', ru: 'Морозный Горох' }, emoji: '🫛', seedPrice: 80, sellPrice: 220, growthTime: 90, xpReward: 55, unlockLevel: 3, rarity: 'COMMON' },
-  [CropType.CABBAGE]: { id: CropType.CABBAGE, name: { en: 'Ice Cabbage', ru: 'Лед Капуста' }, emoji: '🥬', seedPrice: 150, sellPrice: 450, growthTime: 180, xpReward: 120, unlockLevel: 4, rarity: 'COMMON' },
-  [CropType.FROST_LETTUCE]: { id: CropType.FROST_LETTUCE, name: { en: 'Frost Leaf', ru: 'Морозный Лист' }, emoji: '🥗', seedPrice: 300, sellPrice: 950, growthTime: 300, xpReward: 250, unlockLevel: 6, rarity: 'UNCOMMON' },
-  [CropType.TOMATO]: { id: CropType.TOMATO, name: { en: 'Void Tomato', ru: 'Войд Томат' }, emoji: '🍅', seedPrice: 500, sellPrice: 1600, growthTime: 600, xpReward: 550, unlockLevel: 8, rarity: 'UNCOMMON' },
+  [CropType.CABBAGE]: { id: CropType.CABBAGE, name: { en: 'Ice Cabbage', ru: 'Лед Капуста' }, emoji: '🥬', image: '/assets/crops/cabbage.png', seedPrice: 150, sellPrice: 450, growthTime: 180, xpReward: 120, unlockLevel: 4, rarity: 'COMMON' },
+  [CropType.FROST_LETTUCE]: { id: CropType.FROST_LETTUCE, name: { en: 'Frost Leaf', ru: 'Морозный Лист' }, emoji: '🥗', image: '/assets/crops/frost_lettuce.png', seedPrice: 300, sellPrice: 950, growthTime: 300, xpReward: 250, unlockLevel: 6, rarity: 'UNCOMMON' },
+  [CropType.TOMATO]: { id: CropType.TOMATO, name: { en: 'Void Tomato', ru: 'Войд Томат' }, emoji: '🍅', image: '/assets/crops/tomato.png', seedPrice: 500, sellPrice: 1600, growthTime: 600, xpReward: 550, unlockLevel: 8, rarity: 'UNCOMMON' },
   [CropType.SNOW_POTATO]: { id: CropType.SNOW_POTATO, name: { en: 'Snow Potato', ru: 'Снежный Картофель' }, emoji: '🥔', seedPrice: 800, sellPrice: 2800, growthTime: 1200, xpReward: 1200, unlockLevel: 10, rarity: 'UNCOMMON' },
   [CropType.BEETROOT]: { id: CropType.BEETROOT, name: { en: 'Ruby Beet', ru: 'Рубин Свекла' }, emoji: '🫚', seedPrice: 1500, sellPrice: 5500, growthTime: 1800, xpReward: 2000, unlockLevel: 12, rarity: 'UNCOMMON' },
   [CropType.ARCTIC_CUCUMBER]: { id: CropType.ARCTIC_CUCUMBER, name: { en: 'Arctic Cuke', ru: 'Арктик Огурец' }, emoji: '🥒', seedPrice: 2500, sellPrice: 9000, growthTime: 2700, xpReward: 3200, unlockLevel: 15, rarity: 'UNCOMMON' },
 
-  // Rare (Tier 3) - Significant rewards
+  // Rare (Tier 3) - Significant rewards. ROI ~3x
   [CropType.CORN]: { id: CropType.CORN, name: { en: 'Golden Corn', ru: 'Золотая Кукуруза' }, emoji: '🌽', seedPrice: 4000, sellPrice: 15000, growthTime: 3600, xpReward: 5000, unlockLevel: 18, rarity: 'RARE' },
-  [CropType.ICE_RADISH]: { id: CropType.ICE_RADISH, name: { en: 'Ice Radish', ru: 'Ледяной Редс' }, emoji: '🧊', seedPrice: 7000, sellPrice: 28000, growthTime: 5400, xpReward: 8500, unlockLevel: 22, rarity: 'RARE' },
-  [CropType.GLACIER_SPINACH]: { id: CropType.GLACIER_SPINACH, name: { en: 'Glacier Leaf', ru: 'Ледник Шпинат' }, emoji: '🍃', seedPrice: 12000, sellPrice: 50000, growthTime: 7200, xpReward: 12000, unlockLevel: 25, rarity: 'RARE' },
-  [CropType.MANDARIN]: { id: CropType.MANDARIN, name: { en: 'Frost Orange', ru: 'Мороз Мандарин' }, emoji: '🍊', seedPrice: 20000, sellPrice: 85000, growthTime: 10800, xpReward: 20000, unlockLevel: 28, rarity: 'RARE' },
-  [CropType.MUSHROOM]: { id: CropType.MUSHROOM, name: { en: 'Neon Truffle', ru: 'Неон Трюфель' }, emoji: '🍄', seedPrice: 35000, sellPrice: 150000, growthTime: 14400, xpReward: 35000, unlockLevel: 32, rarity: 'RARE' },
+  [CropType.ICE_RADISH]: { id: CropType.ICE_RADISH, name: { en: 'Ice Radish', ru: 'Ледяной Редс' }, emoji: '🧊', seedPrice: 7000, sellPrice: 25000, growthTime: 5400, xpReward: 8500, unlockLevel: 22, rarity: 'RARE' },
+  [CropType.GLACIER_SPINACH]: { id: CropType.GLACIER_SPINACH, name: { en: 'Glacier Leaf', ru: 'Ледник Шпинат' }, emoji: '🍃', seedPrice: 12000, sellPrice: 42000, growthTime: 7200, xpReward: 12000, unlockLevel: 25, rarity: 'RARE' },
+  [CropType.MANDARIN]: { id: CropType.MANDARIN, name: { en: 'Frost Orange', ru: 'Мороз Мандарин' }, emoji: '🍊', seedPrice: 20000, sellPrice: 70000, growthTime: 10800, xpReward: 20000, unlockLevel: 28, rarity: 'RARE' },
+  [CropType.MUSHROOM]: { id: CropType.MUSHROOM, name: { en: 'Neon Truffle', ru: 'Неон Трюфель' }, emoji: '🍄', seedPrice: 35000, sellPrice: 120000, growthTime: 14400, xpReward: 35000, unlockLevel: 32, rarity: 'RARE' },
 
-  // Epic (Tier 4) - Long term strategic crops
-  [CropType.EGGPLANT]: { id: CropType.EGGPLANT, name: { en: 'Plasma Aubergine', ru: 'Плазма Баклажан' }, emoji: '🍆', seedPrice: 60000, sellPrice: 280000, growthTime: 21600, xpReward: 65000, unlockLevel: 36, rarity: 'EPIC' },
-  [CropType.POLAR_ONION]: { id: CropType.POLAR_ONION, name: { en: 'Polar Onion', ru: 'Полярный Лук' }, emoji: '🧅', seedPrice: 100000, sellPrice: 480000, growthTime: 28800, xpReward: 95000, unlockLevel: 40, rarity: 'EPIC' },
-  [CropType.BLUEBERRY]: { id: CropType.BLUEBERRY, name: { en: 'Nano Berry', ru: 'Нано Ягода' }, emoji: '🫐', seedPrice: 180000, sellPrice: 900000, growthTime: 43200, xpReward: 150000, unlockLevel: 45, rarity: 'EPIC' },
-  [CropType.GINGER]: { id: CropType.GINGER, name: { en: 'Storm Ginger', ru: 'Шторм Имбирь' }, emoji: '🫚', seedPrice: 300000, sellPrice: 1600000, growthTime: 57600, xpReward: 250000, unlockLevel: 50, rarity: 'EPIC' },
-  [CropType.PERSIMMON]: { id: CropType.PERSIMMON, name: { en: 'Zen Fruit', ru: 'Дзен Фрукт' }, emoji: '🍅', seedPrice: 500000, sellPrice: 2800000, growthTime: 86400, xpReward: 400000, unlockLevel: 55, rarity: 'EPIC' },
+  // Epic (Tier 4) - Long term. ROI ~4x but very long times
+  [CropType.EGGPLANT]: { id: CropType.EGGPLANT, name: { en: 'Plasma Aubergine', ru: 'Плазма Баклажан' }, emoji: '🍆', seedPrice: 60000, sellPrice: 220000, growthTime: 21600, xpReward: 65000, unlockLevel: 36, rarity: 'EPIC' },
+  [CropType.POLAR_ONION]: { id: CropType.POLAR_ONION, name: { en: 'Polar Onion', ru: 'Полярный Лук' }, emoji: '🧅', seedPrice: 100000, sellPrice: 380000, growthTime: 28800, xpReward: 95000, unlockLevel: 40, rarity: 'EPIC' },
+  [CropType.BLUEBERRY]: { id: CropType.BLUEBERRY, name: { en: 'Nano Berry', ru: 'Нано Ягода' }, emoji: '🫐', seedPrice: 180000, sellPrice: 700000, growthTime: 43200, xpReward: 150000, unlockLevel: 45, rarity: 'EPIC' },
+  [CropType.GINGER]: { id: CropType.GINGER, name: { en: 'Storm Ginger', ru: 'Шторм Имбирь' }, emoji: '🫚', seedPrice: 300000, sellPrice: 1100000, growthTime: 57600, xpReward: 250000, unlockLevel: 50, rarity: 'EPIC' },
+  [CropType.PERSIMMON]: { id: CropType.PERSIMMON, name: { en: 'Zen Fruit', ru: 'Дзен Фрукт' }, emoji: '🍅', seedPrice: 500000, sellPrice: 1800000, growthTime: 86400, xpReward: 400000, unlockLevel: 55, rarity: 'EPIC' },
 
-  // Legendary (Tier 5) - "Jackpot" crops
-  [CropType.PUMPKIN]: { id: CropType.PUMPKIN, name: { en: 'Void Gourd', ru: 'Войд Тыква' }, emoji: '🎃', seedPrice: 1000000, sellPrice: 6000000, growthTime: 172800, xpReward: 800000, unlockLevel: 60, rarity: 'LEGENDARY' },
-  [CropType.HOLLY_BERRY]: { id: CropType.HOLLY_BERRY, name: { en: 'Frost Holly', ru: 'Мороз Холли' }, emoji: '🍒', seedPrice: 2500000, sellPrice: 16000000, growthTime: 259200, xpReward: 2000000, unlockLevel: 65, rarity: 'LEGENDARY' },
-  [CropType.DRAGON_FRUIT]: { id: CropType.DRAGON_FRUIT, name: { en: 'Solar Dragon', ru: 'Солар Дракон' }, emoji: '🐉', seedPrice: 5000000, sellPrice: 35000000, growthTime: 432000, xpReward: 5000000, unlockLevel: 70, rarity: 'LEGENDARY' },
-  [CropType.STAR_FRUIT]: { id: CropType.STAR_FRUIT, name: { en: 'Astral Star', ru: 'Астрал Стар' }, emoji: '⭐', seedPrice: 10000000, sellPrice: 75000000, growthTime: 604800, xpReward: 12000000, unlockLevel: 80, rarity: 'LEGENDARY' },
+  // Legendary (Tier 5) - "Jackpot" crops. ROI ~3-4x. Preventing hyper-inflation
+  [CropType.PUMPKIN]: { id: CropType.PUMPKIN, name: { en: 'Void Gourd', ru: 'Войд Тыква' }, emoji: '🎃', seedPrice: 1000000, sellPrice: 3500000, growthTime: 172800, xpReward: 800000, unlockLevel: 60, rarity: 'LEGENDARY' },
+  [CropType.HOLLY_BERRY]: { id: CropType.HOLLY_BERRY, name: { en: 'Frost Holly', ru: 'Мороз Холли' }, emoji: '🍒', seedPrice: 2500000, sellPrice: 8500000, growthTime: 259200, xpReward: 2000000, unlockLevel: 65, rarity: 'LEGENDARY' },
+  [CropType.DRAGON_FRUIT]: { id: CropType.DRAGON_FRUIT, name: { en: 'Solar Dragon', ru: 'Солар Дракон' }, emoji: '🐉', seedPrice: 5000000, sellPrice: 16000000, growthTime: 432000, xpReward: 5000000, unlockLevel: 70, rarity: 'LEGENDARY' },
+  [CropType.STAR_FRUIT]: { id: CropType.STAR_FRUIT, name: { en: 'Astral Star', ru: 'Астрал Стар' }, emoji: '⭐', seedPrice: 10000000, sellPrice: 35000000, growthTime: 604800, xpReward: 12000000, unlockLevel: 80, rarity: 'LEGENDARY' },
 
-  // Mythic (Tier 6) - End game
-  [CropType.CHRISTMAS_TREE]: { id: CropType.CHRISTMAS_TREE, name: { en: 'Origin Yule', ru: 'Ориджин Ель' }, emoji: '🎄', seedPrice: 50000000, sellPrice: 400000000, growthTime: 1209600, xpReward: 50000000, unlockLevel: 90, rarity: 'MYTHIC' },
+  // Mythic (Tier 6) - End game. ROI ~2.5x (Paying for status)
+  [CropType.CHRISTMAS_TREE]: { id: CropType.CHRISTMAS_TREE, name: { en: 'Origin Yule', ru: 'Ориджин Ель' }, emoji: '🎄', seedPrice: 50000000, sellPrice: 125000000, growthTime: 1209600, xpReward: 50000000, unlockLevel: 90, rarity: 'MYTHIC' },
 
   // Animal Products (Not Plantable)
   [CropType.NEON_EGG]: { id: CropType.NEON_EGG, name: { en: 'Neon Egg', ru: 'Неон Яйцо' }, emoji: '🥚', seedPrice: 0, sellPrice: 150, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'COMMON' },
@@ -68,18 +68,19 @@ export const ANIMALS: Record<AnimalType, AnimalData> = {
 };
 
 export const UPGRADES: Record<UpgradeType, UpgradeData> = {
-  [UpgradeType.SOIL_QUALITY]: { id: UpgradeType.SOIL_QUALITY, name: { en: 'Nano-Soil', ru: 'Нано-Почва' }, icon: 'fa-mountain', description: { en: 'Increases crop growth speed by 25%', ru: 'Ускоряет рост урожая на 25%' }, baseCost: 5000, costMultiplier: 2.5, maxLevel: 10 },
-  [UpgradeType.MARKET_CONTRACTS]: { id: UpgradeType.MARKET_CONTRACTS, name: { en: 'Global Liquidity', ru: 'Ликвидность' }, icon: 'fa-chart-line', description: { en: 'Increases sell price by 15%', ru: 'Увеличивает цену продажи на 15%' }, baseCost: 10000, costMultiplier: 2.8, maxLevel: 5 },
-  [UpgradeType.IRRIGATION]: { id: UpgradeType.IRRIGATION, name: { en: 'Plasma Water', ru: 'Плазма Вода' }, icon: 'fa-faucet-drip', description: { en: 'Doubles water boost power', ru: 'Удваивает эффект полива' }, baseCost: 8000, costMultiplier: 2.2, maxLevel: 8 },
-  [UpgradeType.FERTILIZER_TECH]: { id: UpgradeType.FERTILIZER_TECH, name: { en: 'Quantum Growth', ru: 'Квант Рост' }, icon: 'fa-flask-vial', description: { en: 'Higher chance for instant harvest', ru: 'Шанс мгновенного созревания' }, baseCost: 20000, costMultiplier: 3.5, maxLevel: 5 },
-  [UpgradeType.BARN_CAPACITY]: { id: UpgradeType.BARN_CAPACITY, name: { en: 'Hyperspace Barn', ru: 'Гипер Амбар' }, icon: 'fa-warehouse', description: { en: 'Increases storage by 500', ru: 'Увеличивает склад на 500' }, baseCost: 5000, costMultiplier: 1.8, maxLevel: 20 },
-  [UpgradeType.HOUSE_ESTATE]: { id: UpgradeType.HOUSE_ESTATE, name: { en: 'Estate Rank', ru: 'Уровень Усадьбы' }, icon: 'fa-house-chimney', description: { en: 'Unlocks ultimate farm aesthetics', ru: 'Открывает эстетику фермы' }, baseCost: 50000, costMultiplier: 5.0, maxLevel: 10 },
+  [UpgradeType.SOIL_QUALITY]: { id: UpgradeType.SOIL_QUALITY, name: { en: 'Nano-Soil', ru: 'Нано-Почва' }, icon: 'fa-mountain', description: { en: 'Increases crop growth speed by 25%', ru: 'Ускоряет рост урожая на 25%' }, baseCost: 5000, solBaseCost: 0.005, costMultiplier: 2.5, maxLevel: 10 },
+  [UpgradeType.MARKET_CONTRACTS]: { id: UpgradeType.MARKET_CONTRACTS, name: { en: 'Global Liquidity', ru: 'Ликвидность' }, icon: 'fa-chart-line', description: { en: 'Increases sell price by 15%', ru: 'Увеличивает цену продажи на 15%' }, baseCost: 10000, solBaseCost: 0.01, costMultiplier: 2.8, maxLevel: 5 },
+  [UpgradeType.IRRIGATION]: { id: UpgradeType.IRRIGATION, name: { en: 'Plasma Water', ru: 'Плазма Вода' }, icon: 'fa-faucet-drip', description: { en: 'Doubles water boost power', ru: 'Удваивает эффект полива' }, baseCost: 8000, solBaseCost: 0.008, costMultiplier: 2.2, maxLevel: 8 },
+  [UpgradeType.FERTILIZER_TECH]: { id: UpgradeType.FERTILIZER_TECH, name: { en: 'Quantum Growth', ru: 'Квант Рост' }, icon: 'fa-flask-vial', description: { en: 'Higher chance for instant harvest', ru: 'Шанс мгновенного созревания' }, baseCost: 20000, solBaseCost: 0.02, costMultiplier: 3.5, maxLevel: 5 },
+  [UpgradeType.BARN_CAPACITY]: { id: UpgradeType.BARN_CAPACITY, name: { en: 'Hyperspace Barn', ru: 'Гипер Амбар' }, icon: 'fa-warehouse', description: { en: 'Increases storage by 500', ru: 'Увеличивает склад на 500' }, baseCost: 5000, solBaseCost: 0.005, costMultiplier: 1.8, maxLevel: 20 },
+  [UpgradeType.HOUSE_ESTATE]: { id: UpgradeType.HOUSE_ESTATE, name: { en: 'Estate Rank', ru: 'Уровень Усадьбы' }, icon: 'fa-house-chimney', description: { en: 'Unlocks ultimate farm aesthetics', ru: 'Открывает эстетику фермы' }, baseCost: 50000, solBaseCost: 0.05, costMultiplier: 5.0, maxLevel: 10 },
   [UpgradeType.WINTER_HOUSE]: {
     id: UpgradeType.WINTER_HOUSE,
     name: { en: 'Winter Lodge', ru: 'Зимний Домик' },
     icon: 'fa-snowflake',
     description: { en: 'Cozy winter vibes + 0.5 Gold / 3h', ru: 'Зимний уют + 0.5 Золота / 3ч' },
     baseCost: 100,
+    solBaseCost: 0.1, // Premium Item
     costMultiplier: 1,
     maxLevel: 1,
     currency: 'GOLD'

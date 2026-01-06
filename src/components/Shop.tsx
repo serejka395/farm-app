@@ -7,7 +7,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 interface ShopProps {
   profile: UserProfile;
   onSell: (crop: CropType) => void;
-  onUpgrade: (upgrade: UpgradeType) => void;
+  onUpgrade: (upgrade: UpgradeType, currency: 'ZEN' | 'GOLD' | 'SOL') => void;
   onPurchaseAnimal: (type: AnimalType, currency: 'ZEN' | 'SOL') => void;
   selectedSeed: CropType | null;
   onSelectSeed: (crop: CropType) => void;
@@ -23,6 +23,13 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
   const getCost = (type: UpgradeType) => {
     const lvl = profile.upgrades[type] || 0;
     return Math.floor(UPGRADES[type].baseCost * Math.pow(UPGRADES[type].costMultiplier, lvl));
+  };
+
+  const getSolCost = (type: UpgradeType) => {
+    const lvl = profile.upgrades[type] || 0;
+    const base = UPGRADES[type].solBaseCost || 0;
+    // Don't use Math.floor for SOL, we need precision
+    return base * Math.pow(UPGRADES[type].costMultiplier, lvl);
   };
 
   return (
@@ -187,7 +194,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                         className="w-full bg-[#FFB74D] text-[#5D4037] hover:bg-[#FFA726] py-3 rounded-xl text-[10px] font-black uppercase shadow-[0_3px_0_#E65100] border-2 border-[#E65100] active:translate-y-0.5 active:shadow-none transition-all flex flex-col items-center justify-center leading-none"
                       >
                         <span>⚡ INSTANT</span>
-                        <span className="opacity-60 text-[8px] mt-0.5">Total: {(animal.solPrice * 1.015).toFixed(4)} SOL</span>
+                        <span className="opacity-60 text-[8px] mt-0.5">{(animal.solPrice * 1.015).toFixed(4)} SOL</span>
                       </button>
                     </div>
                   </div>
@@ -232,17 +239,21 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
               {Object.values(UPGRADES).filter(u => tab === 'estate' ? (u.id === UpgradeType.HOUSE_ESTATE || u.id === UpgradeType.WINTER_HOUSE) : (u.id !== UpgradeType.HOUSE_ESTATE && u.id !== UpgradeType.WINTER_HOUSE)).map(up => {
                 const lvl = profile.upgrades[up.id] || 0;
                 const cost = getCost(up.id);
+                const solCost = getSolCost(up.id);
                 const maxed = lvl >= up.maxLevel;
                 const isGold = up.currency === 'GOLD';
-                const canAfford = isGold ? (profile.gold || 0) >= cost : profile.balance >= cost;
+
+                const hasSolOption = !!up.solBaseCost;
+
+                const canAffordZen = isGold ? (profile.gold || 0) >= cost : profile.balance >= cost;
 
                 return (
                   <motion.div
                     layout
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    whileHover={!maxed && canAfford ? { scale: 1.02 } : {}}
-                    whileTap={!maxed && canAfford ? { scale: 0.95 } : {}}
+                    whileHover={!maxed ? { scale: 1.02 } : {}}
+                    whileTap={!maxed ? { scale: 0.95 } : {}}
                     key={up.id}
                     className={`bg-white p-6 rounded-2xl border-[3px] shadow-[0_4px_0_rgba(93,64,55,0.1)] transition-all ${maxed ? 'border-transparent opacity-50 grayscale' : 'border-[#D7CCC8] hover:border-[#8D6E63]'
                       }`}
@@ -255,13 +266,28 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                       </div>
                       <div className="text-xs font-black bg-[#EFEBE9] px-3 py-1.5 rounded-lg text-[#8D6E63] border border-[#D7CCC8]">{t('level')} {lvl}</div>
                     </div>
-                    <button
-                      disabled={maxed || !canAfford}
-                      onClick={() => onUpgrade(up.id)}
-                      className={`w-full py-4 rounded-xl text-[11px] font-black uppercase transition-all active:scale-[0.98] ${maxed ? 'bg-[#EFEBE9] text-[#BCAAA4]' : canAfford ? 'bg-[#FFB74D] text-[#5D4037] shadow-[0_3px_0_#E65100] border-2 border-[#E65100] active:shadow-none active:translate-y-0.5' : 'bg-[#EFEBE9] text-[#BCAAA4]'}`}
-                    >
-                      {maxed ? t('max') : `${t('buy')} (${isGold ? 'GOLD ' : '◎ '}${cost.toLocaleString()})`}
-                    </button>
+
+                    <div className="space-y-2">
+                      {/* ZEN/GOLD Button */}
+                      <button
+                        disabled={maxed || !canAffordZen}
+                        onClick={() => onUpgrade(up.id, isGold ? 'GOLD' : 'ZEN')}
+                        className={`w-full py-3 rounded-xl text-[11px] font-black uppercase transition-all active:scale-[0.98] ${maxed ? 'bg-[#EFEBE9] text-[#BCAAA4]' : canAffordZen ? 'bg-[#EFEBE9] hover:bg-[#D7CCC8] text-[#5D4037]' : 'bg-[#EFEBE9] text-[#BCAAA4]'}`}
+                      >
+                        {maxed ? t('max') : `${t('buy')} (${isGold ? 'GOLD ' : '◎ '}${cost.toLocaleString()})`}
+                      </button>
+
+                      {/* SOL Button */}
+                      {!maxed && hasSolOption && (
+                        <button
+                          onClick={() => onUpgrade(up.id, 'SOL')}
+                          className="w-full py-4 bg-[#FFB74D] text-[#5D4037] rounded-xl text-[11px] font-black uppercase shadow-[0_3px_0_#E65100] border-2 border-[#E65100] hover:bg-[#FFA726] active:shadow-none active:translate-y-0.5 flex flex-col items-center justify-center leading-none"
+                        >
+                          <span>⚡ Upgrade with SOL</span>
+                          <span className="opacity-60 text-[8px] mt-0.5">{(solCost * 1.015).toFixed(4)} SOL (Instant)</span>
+                        </button>
+                      )}
+                    </div>
                   </motion.div>
                 );
               })}

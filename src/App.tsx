@@ -39,9 +39,6 @@ const RoamingPet: React.FC<{
   const { language } = useLanguage();
   const data = ANIMALS[animal.type];
   const now = security.getServerNow();
-  // ... (skip lines to keep it focused, actually replace_file_content needs context)
-  // I will split this into two calls or be careful with context.
-  // Actually, I can just target the import block and the initialization separately using multi_replace_file_content.
 
   const elapsed = (now - animal.lastCollectedAt) / 1000;
   const isReady = elapsed >= data.productionTime;
@@ -301,7 +298,7 @@ const App: React.FC = () => {
 
   const handleInvite = () => {
     // Mock Invite
-    navigator.clipboard.writeText(`https://farm2earn.vercel.app?ref=${profile?.id}`);
+    navigator.clipboard.writeText(`https://t.me/farm_appbot/farm2earn.space?startapp=ref_${profile?.id}`);
     setNotification({ msg: "Link Copied! (Simulated Invite)", type: 'info' });
     // Simulating invite success for testing
     setProfile(prev => prev ? questService.updateProgress(prev, 'INVITE', 1) : null);
@@ -384,11 +381,12 @@ const App: React.FC = () => {
       const boost = (plot.isWatered ? (1.5 + bonuses.irrigation) : 1) * bonuses.soil * bonuses.house;
 
       if (elapsed * boost >= crop.growthTime) {
-        // Calculate Harvest Rewards using Service (Probability & Math)
+        // Calculate Harvest Rewards using Service (Probability & Math) with Web3 Logic
         const { xp, gold, isCrit, critMultiplier } = levelingService.calculateHarvest(
-          crop.xpReward,
-          crop.sellPrice,
-          profile.upgrades
+          plot.crop,
+          profile.level,
+          profile.upgrades,
+          plot.plantedAt || 0
         );
 
         setProfile(prev => {
@@ -587,14 +585,57 @@ const App: React.FC = () => {
     }
   };
 
-  const handleUpgrade = async (type: UpgradeType) => {
+  const handleUpgrade = async (type: UpgradeType, currency: 'ZEN' | 'GOLD' | 'SOL' = 'ZEN') => {
     if (!profile) return;
     const current = profile.upgrades[type];
     const data = UPGRADES[type];
     if (current >= data.maxLevel) return;
+
+    if (currency === 'SOL') {
+      if (!publicKey) {
+        setNotification({ msg: "Connect Wallet for SOL", type: 'error' });
+        return;
+      }
+      // Calculate dynamic SOL cost
+      const baseSol = data.solBaseCost || 999; // Fallback if not defined (shouldn't happen if button shown)
+      // No floor for SOL, keep precision
+      const cost = baseSol * Math.pow(data.costMultiplier, current);
+
+      try {
+        const tx = await paymentService.createPaymentTransaction(publicKey, cost);
+        const sig = await sendTransaction(tx, connection);
+
+        setNotification({ msg: "Confirming Transaction...", type: 'info' });
+
+        const verified = await paymentService.verifyTransaction(connection, sig);
+        if (verified) {
+          setProfile(prev => {
+            if (!prev) return null;
+            const nextLvl = (prev.upgrades[type] || 0) + 1;
+            return {
+              ...prev,
+              upgrades: { ...prev.upgrades, [type]: nextLvl },
+              // If House, update stats
+              stats: { ...prev.stats, houseLevel: type === UpgradeType.HOUSE_ESTATE ? nextLvl : prev.stats.houseLevel },
+              // If Winter House, init claim
+              lastWinterHouseClaim: type === UpgradeType.WINTER_HOUSE ? Date.now() : prev.lastWinterHouseClaim
+            };
+          });
+          setNotification({ msg: "Upgrade Successful! (SOL)", type: 'info' });
+        } else {
+          setNotification({ msg: "Transaction Confirmation Failed", type: 'error' });
+        }
+      } catch (e) {
+        console.error(e);
+        setNotification({ msg: "SOL Payment Canceled/Failed", type: 'error' });
+      }
+      return;
+    }
+
+    // Default ZEN/GOLD Logic
     const cost = Math.floor(data.baseCost * Math.pow(data.costMultiplier, current));
 
-    if (data.currency === 'GOLD') {
+    if (currency === 'GOLD' || data.currency === 'GOLD') { // Handle explicit GOLD request or legacy default
       if (profile.gold < cost) {
         setNotification({ msg: `Need ${cost} GOLD`, type: 'error' });
         return;
@@ -603,7 +644,6 @@ const App: React.FC = () => {
         ...prev,
         gold: prev.gold - cost,
         upgrades: { ...prev.upgrades, [type]: current + 1 },
-        // If it's the Winter House, initialize the claim timer
         lastWinterHouseClaim: type === UpgradeType.WINTER_HOUSE ? Date.now() : prev.lastWinterHouseClaim
       }) : null);
     } else {

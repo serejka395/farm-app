@@ -57,6 +57,7 @@ export interface CropData {
   xpReward: number;
   unlockLevel: number;
   rarity: Rarity;
+  image?: string; // Optional path to PNG
 }
 
 export interface Plot {
@@ -84,7 +85,7 @@ export interface UpgradeData {
   description: LocalizedStr;
   icon: string;
   baseCost: number;
-  costMultiplier: number;
+  solBaseCost?: number; // Optional SOL price
   costMultiplier: number;
   maxLevel: number;
   currency?: 'ZEN' | 'GOLD';
@@ -170,4 +171,3 @@ export interface UserProfile {
 }
 
 export type ToolType = 'SEED' | 'WATER' | 'HARVEST';
-

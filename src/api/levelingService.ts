@@ -1,43 +1,34 @@
-import { UPGRADES } from '../constants';
+import { UPGRADES, CROPS } from '../utils/constants';
+import { CropType } from '../types';
 
 // CONSTANTS FOR MATH
-const BASE_XP = 100; // XP needed for Level 2
-const GROWTH_FACTOR = 1.15; // 15% increase per level. Exponential curve.
+const BASE_XP = 100;
+const GROWTH_FACTOR = 1.15; // 15% increase per level.
 
-// PROBABILITY CONSTANTS
-const BASE_CRIT_CHANCE = 0.05; // 5% chance by default
-const BASE_CRIT_MULTIPLIER = 2.0;
+// WEB3 TRADING MECHANICS
+const HALVING_INTERVAL = 10; // Every 10 levels, difficulty spikes slightly
+const MIN_EXECUTION_WINDOW = 500; // ms leeways for network latency
 
 export const levelingService = {
     /**
-     * Calculates the level based on total XP using an inverse exponential curve.
-     * Formula: TotalXP = Base * (Factor^Level - 1) / (Factor - 1)
-     * Inverse: Level = log(TotalXP * (Factor - 1) / Base + 1) / log(Factor)
+     * Pure function to calculate level from XP.
+     * Uses a logarithmic regression model for smooth curve scaling.
      */
     calculateLevel: (totalXp: number): number => {
         if (totalXp < BASE_XP) return 1;
-        // Approximated for easier implementation and "good enough" steps
-        // We use a simple cumulative geometric sequence sum formula for precise thresholds
-        // But for a continuous "current level", we can iterate or use log.
-        // Iterative is safer for discreet levels to avoid floating point weirdness at boundaries.
 
         let level = 1;
         let xpRequired = BASE_XP;
 
-        // Performance optimization: We could use log, but a loop for max level 100 is negligible.
-        // This ensures exact integer matching with getXpForNextLevel
+        // Iterative approach is safer for integer-based progressions than log approximation
         while (totalXp >= xpRequired) {
             totalXp -= xpRequired;
             level++;
             xpRequired = Math.floor(xpRequired * GROWTH_FACTOR);
         }
-
         return level;
     },
 
-    /**
-     * Returns the Total XP required to reach a specific level from scratch.
-     */
     getXpRequiredForLevel: (targetLevel: number): number => {
         let total = 0;
         let currentReq = BASE_XP;
@@ -48,46 +39,91 @@ export const levelingService = {
         return total;
     },
 
-    /**
-     * Returns XP needed to complete the CURRENT level.
-     */
     getXpForNextLevel: (currentLevel: number): number => {
         return Math.floor(BASE_XP * Math.pow(GROWTH_FACTOR, currentLevel - 1));
     },
 
     /**
-     * Calculates harvest rewards using Probability Theory (RNG).
-     * @param baseExReward Base XP of the crop
-     * @param baseGoldReward Base Sell Price of the crop
-     * @param upgrades User upgrades object
+     * Verifies if a harvest is valid based on time constraints (Anti-Speedhack).
+     * @param plantedAt Timestamp when crop was planted
+     * @param cropId Crop ID
+     * @param upgrades User upgrades
      */
-    calculateHarvest: (baseXp: number, baseGold: number, upgrades: Record<string, number>) => {
-        // 1. Calculate Multipliers
-        // UpgradeType.FERTILIZER_TECH logic:
-        // Previously gave flat 30% per level. Now we split it: 15% flat + Crit Chance.
-        const fertilizerLevel = upgrades['FERTILIZER_TECH'] || 0;
-        const xpBonus = 1 + (fertilizerLevel * 0.15);
+    verifyHarvestEligibility: (plantedAt: number, cropId: CropType, upgrades: Record<string, number>): boolean => {
+        const crop = CROPS[cropId];
+        if (!crop) return false;
 
+        const now = Date.now();
+        const growthDuration = levelingService.getGrowthTime(crop.growthTime, upgrades);
+
+        // Allow a small execution window deviation (lag tolerance)
+        return (now - plantedAt) >= (growthDuration - MIN_EXECUTION_WINDOW);
+    },
+
+    /**
+     * Calculates actual growth time including all upgrade multipliers.
+     */
+    getGrowthTime: (baseTime: number, upgrades: Record<string, number>): number => {
+        const soilLevel = upgrades['SOIL_QUALITY'] || 0;
+        // Diminishing returns on speed upgrades (Soft cap at 75% reduction)
+        const speedReduction = Math.min(0.75, (soilLevel * 0.1));
+        return Math.max(1000, baseTime * 1000 * (1 - speedReduction)); // Min 1 second
+    },
+
+    /**
+     * "Smart Contract" style harvest calculation.
+     * deterministically calculates rewards based on seed + inputs.
+     */
+    calculateHarvest: (cropId: CropType, userLevel: number, upgrades: Record<string, number>, plantedAt: number) => {
+        const crop = CROPS[cropId];
+
+        // 1. Base Values
+        let xp = crop.xpReward;
+        let gold = crop.sellPrice;
+
+        // 2. Dynamic XP Curve (Diminishing Returns)
+        // If high level farmer harvests Tier 1 crop, XP is reduced to prevent botting low-tier crops
+        const levelDiff = Math.max(0, userLevel - crop.unlockLevel);
+        if (levelDiff > 10) {
+            const penalty = Math.min(0.9, (levelDiff - 10) * 0.05); // Up to 90% penalty
+            xp = Math.floor(xp * (1 - penalty));
+        }
+
+        // 3. Upgrade Modifiers
         const marketLevel = upgrades['MARKET_CONTRACTS'] || 0;
         const marketBonus = 1 + (marketLevel * 0.15);
+        gold = Math.floor(gold * marketBonus);
 
-        // 2. Probability: Critical Harvest (Entropy)
-        // Fertilizer Tech increases Crit Chance by 5% per level
-        const critChance = BASE_CRIT_CHANCE + (fertilizerLevel * 0.05);
-        const isCrit = Math.random() < critChance;
+        const fertilizerLevel = upgrades['FERTILIZER_TECH'] || 0;
+        const xpBoost = 1 + (fertilizerLevel * 0.10);
+        xp = Math.floor(xp * xpBoost);
 
-        // Crit Multiplier
-        const critMultiplier = isCrit ? BASE_CRIT_MULTIPLIER + (fertilizerLevel * 0.1) : 1;
+        // 4. Deterministic RNG (Pseudo-VRF)
+        // We use the plantedAt timestamp as a seed. 
+        // In a real blockchain game, this would use a Blockhash.
+        const seed = plantedAt + crop.id.length + userLevel;
+        const randomValue = levelingService.pseudoRandom(seed);
 
-        // 3. Final Calculation
-        const totalXp = Math.floor(baseXp * xpBonus * critMultiplier);
-        const totalGold = Math.floor(baseGold * marketBonus * critMultiplier);
+        // Critical Hit Logic (5% Base + 2% per Fertilizer Level)
+        const critChance = 0.05 + (fertilizerLevel * 0.02);
+        const isCrit = randomValue < critChance;
+
+        const critMultiplier = isCrit ? 2.0 : 1;
 
         return {
-            xp: totalXp,
-            gold: totalGold,
+            xp: Math.floor(xp * critMultiplier),
+            gold: Math.floor(gold * critMultiplier),
             isCrit,
             critMultiplier
         };
+    },
+
+    /**
+     * Simple deterministic pseudo-random generator.
+     * Returns float between 0 and 1.
+     */
+    pseudoRandom: (seed: number): number => {
+        const x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
     }
 };
