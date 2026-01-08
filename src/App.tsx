@@ -196,9 +196,14 @@ const TokenomicsView: React.FC = () => {
   );
 };
 
+import { TonConnectUI, useTonConnectUI } from '@tonconnect/ui-react';
+import { tonPaymentService } from './api/tonPaymentService';
+
 const App: React.FC = () => {
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
+  const [tonConnectUI] = useTonConnectUI();
+
   const { language, setLanguage, t } = useLanguage();
   const [isDemo, setIsDemo] = useState(false);
   const activeAddress = publicKey?.toBase58() || (isDemo ? "dev_solana_farmer" : null);
@@ -695,6 +700,62 @@ const App: React.FC = () => {
         upgrades: { ...prev.upgrades, [type]: current + 1 },
         stats: { ...prev.stats, houseLevel: type === UpgradeType.HOUSE_ESTATE ? current + 1 : prev.stats.houseLevel }
       }) : null);
+    }
+  };
+
+  const handleTonPayment = async (amount: number, type: 'UPGRADE' | 'ANIMAL' | 'WATER', itemId?: string) => {
+    if (!tonConnectUI.connected) {
+      setNotification({ msg: "Please Connect TON Wallet", type: 'error' });
+      tonConnectUI.openModal();
+      return;
+    }
+
+    setNotification({ msg: "Creating TON Transaction...", type: 'info' });
+
+    try {
+      const tx = tonPaymentService.createPaymentTransaction(amount);
+      const result = await tonConnectUI.sendTransaction(tx);
+
+      setNotification({ msg: "Verifying TON Payment...", type: 'info' });
+
+      const verified = await tonPaymentService.verifyTransaction(result);
+
+      if (verified) {
+        if (type === 'WATER') {
+          setProfile(prev => prev ? ({ ...prev, waterCharges: prev.waterCharges + 100 }) : null);
+          setNotification({ msg: "+100 Water (TON Success!)", type: 'info' });
+        } else if (type === 'ANIMAL' && itemId) { // itemId here is animal Type (e.g. CHICKEN) or ID?
+          // Shop passes 'ANIMAL', animal.id. But animal.id in loop is 'chicken', 'cow' etc (AnimalType) or unique?
+          // In Shop: onTonPayment(..., 'ANIMAL', animal.id). animal.id in loop is 'chicken', 'cow' (from ANIMALS keys).
+          // Type mismatch: handleTonPayment(..., itemId) -> itemId is string.
+          // handlePurchaseAnimal expects AnimalType.
+
+          // Let's assume itemId is AnimalType
+          const animalType = itemId as AnimalType;
+          setProfile(prev => prev ? ({
+            ...prev, animals: [...prev.animals, { id: `animal-${Date.now()}`, type: animalType, lastCollectedAt: security.getServerNow() }]
+          }) : null);
+          setNotification({ msg: "Animal Purchased (TON)!", type: 'info' });
+        } else if (type === 'UPGRADE' && itemId) {
+          const upgradeType = itemId as UpgradeType;
+          setProfile(prev => {
+            if (!prev) return null;
+            const nextLvl = (prev.upgrades[upgradeType] || 0) + 1;
+            return {
+              ...prev,
+              upgrades: { ...prev.upgrades, [upgradeType]: nextLvl },
+              stats: { ...prev.stats, houseLevel: upgradeType === UpgradeType.HOUSE_ESTATE ? nextLvl : prev.stats.houseLevel },
+              lastWinterHouseClaim: upgradeType === UpgradeType.WINTER_HOUSE ? Date.now() : prev.lastWinterHouseClaim
+            };
+          });
+          setNotification({ msg: "Upgrade Successful (TON)!", type: 'info' });
+        }
+      } else {
+        setNotification({ msg: "TON Verification Failed", type: 'error' });
+      }
+    } catch (e) {
+      console.error(e);
+      setNotification({ msg: "TON Transaction Cancelled", type: 'error' });
     }
   };
 

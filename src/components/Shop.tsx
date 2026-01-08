@@ -14,9 +14,10 @@ interface ShopProps {
   totalCrops: number;
   maxCapacity: number;
   onPurchaseWater: () => void;
+  onTonPayment: (amount: number, type: 'UPGRADE' | 'ANIMAL' | 'WATER', itemId?: string) => void;
 }
 
-const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnimal, selectedSeed, onSelectSeed, onPurchaseWater, totalCrops, maxCapacity }) => {
+const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnimal, selectedSeed, onSelectSeed, onPurchaseWater, totalCrops, maxCapacity, onTonPayment }) => {
   const [tab, setTab] = useState<'seeds' | 'sell' | 'upgrades' | 'pets' | 'estate' | 'resources'>('seeds');
   const { language, t } = useLanguage();
 
@@ -193,8 +194,14 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                         onClick={() => onPurchaseAnimal(animal.id, 'SOL')}
                         className="w-full bg-[#FFB74D] text-[#5D4037] hover:bg-[#FFA726] py-3 rounded-xl text-[10px] font-black uppercase shadow-[0_3px_0_#E65100] border-2 border-[#E65100] active:translate-y-0.5 active:shadow-none transition-all flex flex-col items-center justify-center leading-none"
                       >
-                        <span>⚡ INSTANT</span>
                         <span className="opacity-60 text-[8px] mt-0.5">{(animal.solPrice * 1.015).toFixed(4)} SOL</span>
+                      </button>
+                      <button
+                        onClick={() => onTonPayment(animal.solPrice * 30, 'ANIMAL', animal.id)}
+                        className="w-full bg-[#0098EA] text-white hover:brightness-110 py-3 rounded-xl text-[10px] font-black uppercase shadow-[0_3px_0_#0077B5] border-2 border-[#0077B5] active:translate-y-0.5 active:shadow-none transition-all flex flex-col items-center justify-center leading-none"
+                      >
+                        <span>💎 TON</span>
+                        <span className="opacity-60 text-[8px] mt-0.5">{(animal.solPrice * 31).toFixed(2)} TON</span>
                       </button>
                     </div>
                   </div>
@@ -227,6 +234,14 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                     <span>+100 Charges</span>
                     <span className="text-[#5D4037]/30">|</span>
                     <span>0.001 SOL</span>
+                  </button>
+                  <button
+                    onClick={() => onTonPayment(0.001 * 30, 'WATER')}
+                    className="w-full bg-[#0098EA] text-white py-4 rounded-xl text-xs font-black uppercase shadow-[0_3px_0_#0077B5] border-2 border-[#0077B5] hover:brightness-110 flex items-center justify-center gap-3 transition-all active:translate-y-0.5 active:shadow-none"
+                  >
+                    <span>+100 Charges (TON)</span>
+                    <span className="text-white/30">|</span>
+                    <span>0.03 TON</span>
                   </button>
                 </div>
               </div>
@@ -279,13 +294,22 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
 
                       {/* SOL Button */}
                       {!maxed && hasSolOption && (
-                        <button
-                          onClick={() => onUpgrade(up.id, 'SOL')}
-                          className="w-full py-4 bg-[#FFB74D] text-[#5D4037] rounded-xl text-[11px] font-black uppercase shadow-[0_3px_0_#E65100] border-2 border-[#E65100] hover:bg-[#FFA726] active:shadow-none active:translate-y-0.5 flex flex-col items-center justify-center leading-none"
-                        >
-                          <span>⚡ Upgrade with SOL</span>
-                          <span className="opacity-60 text-[8px] mt-0.5">{(solCost * 1.015).toFixed(4)} SOL (Instant)</span>
-                        </button>
+                        <>
+                          <button
+                            onClick={() => onUpgrade(up.id, 'SOL')}
+                            className="w-full py-4 bg-[#FFB74D] text-[#5D4037] rounded-xl text-[11px] font-black uppercase shadow-[0_3px_0_#E65100] border-2 border-[#E65100] hover:bg-[#FFA726] active:shadow-none active:translate-y-0.5 flex flex-col items-center justify-center leading-none"
+                          >
+                            <span>⚡ Upgrade with SOL</span>
+                            <span className="opacity-60 text-[8px] mt-0.5">{(solCost * 1.015).toFixed(4)} SOL (Instant)</span>
+                          </button>
+                          <button
+                            onClick={() => onTonPayment(solCost * 30, 'UPGRADE', up.id)}
+                            className="w-full py-4 bg-[#0098EA] text-white rounded-xl text-[11px] font-black uppercase shadow-[0_3px_0_#0077B5] border-2 border-[#0077B5] hover:brightness-110 active:shadow-none active:translate-y-0.5 flex flex-col items-center justify-center leading-none mt-2"
+                          >
+                            <span>💎 Upgrade with TON</span>
+                            <span className="opacity-60 text-[8px] mt-0.5">{(solCost * 31).toFixed(2)} TON</span>
+                          </button>
+                        </>
                       )}
                     </div>
                   </motion.div>

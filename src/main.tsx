@@ -12,6 +12,7 @@ import {
     MathWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
+import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import { LanguageProvider } from './contexts/LanguageContext';
 import App from './App';
 import './styles/index.css';
@@ -47,7 +48,9 @@ const Root = () => {
             <LanguageProvider>
                 <WalletProvider wallets={wallets} autoConnect>
                     <WalletModalProvider>
-                        <App />
+                        <TonConnectUIProvider manifestUrl="https://farm2earn.space/tonconnect-manifest.json">
+                            <App />
+                        </TonConnectUIProvider>
                     </WalletModalProvider>
                 </WalletProvider>
             </LanguageProvider>
