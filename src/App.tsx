@@ -540,9 +540,16 @@ const App: React.FC = () => {
           // paymentService.createPaymentTransaction takes amount. 
           const tx = await paymentService.createPaymentTransaction(publicKey, solCost);
           const sig = await sendTransaction(tx, connection);
-          if (await paymentService.verifyTransaction(connection, sig)) {
+
+          setNotification({ msg: "Verifying Unlock...", type: 'info' });
+
+          const result = await paymentService.validateTransaction(connection, sig, solCost);
+
+          if (result.success) {
             setPlots(prev => prev.map(p => p.id === plotId ? { ...p, isUnlocked: true } : p));
             setNotification({ msg: "Plot Unlocked!", type: 'info' });
+          } else {
+            setNotification({ msg: `Unlock Failed: ${result.error}`, type: 'error' });
           }
         } catch (e) {
           setNotification({ msg: "SOL Payment Failed", type: 'error' });
@@ -574,12 +581,17 @@ const App: React.FC = () => {
     try {
       const tx = await paymentService.createPaymentTransaction(publicKey, cost);
       const sig = await sendTransaction(tx, connection);
-      if (await paymentService.verifyTransaction(connection, sig)) {
+      setNotification({ msg: "Verifying Water Purchase...", type: 'info' });
+
+      const result = await paymentService.validateTransaction(connection, sig, cost);
+      if (result.success) {
         setProfile(prev => prev ? ({ ...prev, waterCharges: prev.waterCharges + 100 }) : null);
         setNotification({ msg: "+100 Water Charges!", type: 'info' });
+      } else {
+        setNotification({ msg: `Verification Failed: ${result.error}`, type: 'error' });
       }
     } catch (e) {
-      setNotification({ msg: "Purchase Failed", type: 'error' });
+      setNotification({ msg: "Purchase Canceled", type: 'error' });
     }
   };
 
@@ -596,13 +608,19 @@ const App: React.FC = () => {
       try {
         const tx = await paymentService.createPaymentTransaction(publicKey, data.solPrice);
         const sig = await sendTransaction(tx, connection);
-        if (await paymentService.verifyTransaction(connection, sig)) {
+
+        setNotification({ msg: "Verifying Purchase...", type: 'info' });
+
+        const result = await paymentService.validateTransaction(connection, sig, data.solPrice);
+        if (result.success) {
           setProfile(prev => prev ? ({
             ...prev, animals: [...prev.animals, { id: `animal-${Date.now()}`, type, lastCollectedAt: security.getServerNow() }]
           }) : null);
-          setNotification({ msg: "TRANSACTION VERIFIED!", type: 'info' });
+          setNotification({ msg: "Purchase Verified!", type: 'info' });
+        } else {
+          setNotification({ msg: `Failed: ${result.error}`, type: 'error' });
         }
-      } catch (e) { setNotification({ msg: "PAYMENT FAILED", type: 'error' }); }
+      } catch (e) { setNotification({ msg: "Payment Canceled", type: 'error' }); }
     }
   };
 
@@ -626,10 +644,10 @@ const App: React.FC = () => {
         const tx = await paymentService.createPaymentTransaction(publicKey, cost);
         const sig = await sendTransaction(tx, connection);
 
-        setNotification({ msg: "Confirming Transaction...", type: 'info' });
+        setNotification({ msg: "Verifying on Blockchain...", type: 'info' });
 
-        const verified = await paymentService.verifyTransaction(connection, sig);
-        if (verified) {
+        const result = await paymentService.validateTransaction(connection, sig, cost);
+        if (result.success) {
           setProfile(prev => {
             if (!prev) return null;
             const nextLvl = (prev.upgrades[type] || 0) + 1;
@@ -644,11 +662,11 @@ const App: React.FC = () => {
           });
           setNotification({ msg: "Upgrade Successful! (SOL)", type: 'info' });
         } else {
-          setNotification({ msg: "Transaction Confirmation Failed", type: 'error' });
+          setNotification({ msg: `Verification Failed: ${result.error}`, type: 'error' });
         }
       } catch (e) {
         console.error(e);
-        setNotification({ msg: "SOL Payment Canceled/Failed", type: 'error' });
+        setNotification({ msg: "SOL Payment Failed", type: 'error' });
       }
       return;
     }
