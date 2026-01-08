@@ -1,12 +1,15 @@
 import React from 'react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { motion } from 'framer-motion';
+import { useTonConnectUI } from '@tonconnect/ui-react';
 
 interface StartPageProps {
     onGuestLogin: () => void;
 }
 
 const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
+    const [tonConnectUI] = useTonConnectUI();
+
     return (
         <div className="h-screen w-full bg-f2e-black relative overflow-hidden flex flex-col items-center justify-center p-6">
 
@@ -47,6 +50,18 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
                         <div className="wallet-adapter-dropdown w-full relative">
                             <WalletMultiButton className="!w-full !justify-center !bg-gradient-to-b !from-f2e-gold !to-[#FF8F00] !text-black !font-black !text-sm !uppercase !tracking-wider !py-5 !h-auto !rounded-2xl transition-all !shadow-[0_4px_0_#E65100] active:!translate-y-[2px] active:!shadow-none hover:!brightness-110" />
                         </div>
+                    </div>
+
+                    {/* 1.5 Connect TON */}
+                    <div className="w-full relative group">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-[#0098EA] to-[#0077B5] rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-1000" />
+                        <button
+                            onClick={() => tonConnectUI.openModal()}
+                            className="relative w-full bg-gradient-to-b from-[#0098EA] to-[#0077B5] text-white font-black text-sm uppercase tracking-wider py-5 rounded-2xl border-2 border-[#0077B5] shadow-[0_4px_0_#005A8D] active:translate-y-[2px] active:shadow-none hover:brightness-110 transition-all flex items-center justify-center gap-2"
+                        >
+                            <span className="text-lg">💎</span>
+                            <span>Connect TON</span>
+                        </button>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
