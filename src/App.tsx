@@ -199,6 +199,22 @@ const TokenomicsView: React.FC = () => {
 import { TonConnectUI, useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
 import { tonPaymentService } from './api/tonPaymentService';
 
+// Declare Telegram global
+declare global {
+  interface Window {
+    Telegram: {
+      WebApp: {
+        initDataUnsafe: {
+          start_param?: string;
+          user?: any;
+        };
+        ready: () => void;
+        expand: () => void;
+      }
+    }
+  }
+}
+
 const App: React.FC = () => {
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
@@ -223,11 +239,61 @@ const App: React.FC = () => {
   // Unlock Modal State
   const [unlockModal, setUnlockModal] = useState<{ plotId: number, solCost: number, zenCost: number, tonCost: number } | null>(null);
 
-
-
   useEffect(() => {
     security.syncTime();
+    // Initialize Telegram Web App
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
   }, []);
+
+  // Referral Logic
+  useEffect(() => {
+    const handleReferral = async () => {
+      if (!profile || !activeAddress || profile.referredBy) return;
+
+      const startParam = window.Telegram?.WebApp?.initDataUnsafe?.start_param;
+      if (startParam && startParam.startsWith('ref_')) {
+        const referrerAddress = startParam.replace('ref_', '');
+
+        // Prevent self-referral
+        if (referrerAddress === activeAddress) return;
+
+        console.log("Processing referral from:", referrerAddress);
+
+        // 1. Mark current user as referred
+        const updatedProfile = { ...profile, referredBy: referrerAddress };
+        setProfile(updatedProfile);
+
+        // Save immediately to prevent double counting
+        await db.saveUser(activeAddress, updatedProfile, plots);
+
+        // 2. Add to Referrer's list
+        try {
+          const referrerData = await db.loadUser(referrerAddress);
+          if (referrerData) {
+            const referrerProfile = referrerData.profile;
+            // Check if already in list (double safety)
+            if (!referrerProfile.referrals.includes(activeAddress)) {
+              const newReferrals = [...(referrerProfile.referrals || []), activeAddress];
+              const updatedReferrer = { ...referrerProfile, referrals: newReferrals };
+
+              // Add bonus to referrer? (Optional, maybe handled by quest claim later)
+              // For now just tracking
+
+              await db.saveUser(referrerAddress, updatedReferrer, referrerData.plots);
+              setNotification({ msg: "Referral Bonus Registered!", type: 'info' });
+            }
+          }
+        } catch (e) {
+          console.error("Failed to update referrer", e);
+        }
+      }
+    };
+
+    handleReferral();
+  }, [profile, activeAddress, plots]);
 
   useEffect(() => {
     if (isDemo) {

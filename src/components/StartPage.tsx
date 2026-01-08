@@ -13,7 +13,11 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
     return (
         <div className="h-screen w-full bg-f2e-black relative overflow-hidden flex flex-col items-center justify-center p-6">
 
-            {/* Background Elements */}
+            {/* Full Screen Background */}
+            <div className="absolute inset-0 z-0">
+                <img src="/assets/start_bg_snow.jpg" className="w-full h-full object-cover opacity-30 blur-sm" alt="Background" />
+                <div className="absolute inset-0 bg-black/40" />
+            </div>
             {/* Top Section: Banner Image */}
             <div className="flex-1 flex flex-col items-center justify-center w-full max-h-[50vh]">
                 <img

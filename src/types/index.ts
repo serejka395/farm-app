@@ -153,7 +153,9 @@ export interface UserProfile {
   animals: Animal[];
   securityStatus: 'verified' | 'flagged' | 'banned';
   waterCharges: number;
+  waterCharges: number;
   referrals: string[];
+  referredBy?: string;
   achievements: Record<string, boolean>; // id -> unlocked
   dailyQuests: Quest[];
   lastDailyReset: number;
