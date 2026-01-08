@@ -510,20 +510,21 @@ const App: React.FC = () => {
     const plot = plots[plotId];
     if (!plot || plot.isUnlocked) return;
 
-    // Costs
-    const zenCost = EXPANSION_COSTS[plotId];
-    const solCost = PLOT_SOL_PRICES[plotId];
+    // Costs - defaulting to 0 to prevent undefined errors
+    const zenCost = EXPANSION_COSTS[plotId] || 0;
+    const solCost = PLOT_SOL_PRICES[plotId] || 0;
     const tonCost = solCost > 0 ? parseFloat((solCost * 30).toFixed(2)) : 0; // Approx 1 SOL = 30 TON
 
     // Check Level Requirement
     const levelReq = PLOT_LEVEL_REQUIREMENTS[plotId];
+    // Only auto-unlock if level is met AND there's no mandatory payment override (assuming lvl 100 implies free)
     if (levelReq && profile.level >= levelReq) {
       setPlots(prev => prev.map(p => p.id === plotId ? { ...p, isUnlocked: true } : p));
       setNotification({ msg: t('plotUnlocked'), type: 'info' });
       return;
     }
 
-    // Open Modal
+    // Open Modal with all options
     setUnlockModal({ plotId, solCost, zenCost, tonCost });
   };
 

@@ -91,12 +91,12 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
   // --- Render: Locked State ---
   if (!plot.isUnlocked) return (
     <motion.div
-      whileHover={{ scale: 0.95, opacity: 0.8 }}
-      onClick={() => onUnlock(plot.id)}
-      className="aspect-square bg-white/20 backdrop-blur-[2px] border border-white/30 border-dashed rounded-xl flex flex-col items-center justify-center opacity-70 cursor-pointer group hover:border-f2e-gold/50 hover:bg-white/30 transition-all"
+      whileHover={{ scale: 0.95, opacity: 1 }}
+      onClick={(e) => { e.stopPropagation(); onUnlock(plot.id); }}
+      className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] border-2 border-dashed border-white/30 rounded-xl cursor-pointer pointer-events-auto hover:bg-black/50 hover:border-f2e-gold transition-all"
     >
-      <i className="fas fa-lock text-white/50 mb-2 text-xl group-hover:text-f2e-gold transition-colors"></i>
-      <span className="text-[9px] font-black uppercase tracking-widest text-white/50 group-hover:text-f2e-gold transition-colors">{t('unlock')}</span>
+      <i className="fas fa-lock text-white/70 mb-2 text-2xl group-hover:text-f2e-gold transition-colors drop-shadow-md"></i>
+      <span className="text-[10px] font-black uppercase tracking-widest text-white/80 group-hover:text-f2e-gold transition-colors shadow-sm">{t('unlock')}</span>
     </motion.div>
   );
 
