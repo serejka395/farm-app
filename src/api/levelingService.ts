@@ -2,8 +2,8 @@ import { UPGRADES, CROPS } from '../utils/constants';
 import { CropType } from '../types';
 
 // CONSTANTS FOR MATH
-const BASE_XP = 100;
-const GROWTH_FACTOR = 1.15; // 15% increase per level.
+const BASE_XP = 500;
+const GROWTH_FACTOR = 1.25; // 25% increase per level.
 
 // WEB3 TRADING MECHANICS
 const HALVING_INTERVAL = 10; // Every 10 levels, difficulty spikes slightly
