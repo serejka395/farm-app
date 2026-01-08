@@ -23,11 +23,9 @@ const Root = () => {
     const endpoint = useMemo(() => {
         // Primary: Helius free tier (rate limited but fast)
         const heliusRpc = 'https://rpc.helius.xyz/?api-key=public';
-        // Fallback: Official mainnet
-        const mainnetRpc = clusterApiUrl('mainnet-beta');
 
         // In production, use Helius; for development, can switch
-        return process.env.VITE_RPC_ENDPOINT || heliusRpc;
+        return import.meta.env.VITE_RPC_ENDPOINT || heliusRpc;
     }, []);
 
     // Comprehensive wallet adapter support
