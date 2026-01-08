@@ -223,12 +223,22 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {profile.referrals.map((ref, i) => (
-                      <div key={i} className="bg-white p-3 rounded-xl border border-[#D7CCC8] flex justify-between items-center shadow-sm">
-                        <span className="text-[10px] font-mono text-[#8D6E63]">Farmer #{i + 1}</span>
-                        <span className="text-[10px] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded border border-[#C8E6C9] font-bold">Active</span>
-                      </div>
-                    ))}
+                    {profile.referrals.map((ref: any, i) => {
+                      // Handle both old string[] and new Referral[] format gracefully
+                      const isObj = typeof ref === 'object';
+                      const name = isObj ? ref.name : `Farmer #${i + 1}`;
+                      const date = isObj ? new Date(ref.joinedAt).toLocaleDateString() : 'Unknown Date';
+
+                      return (
+                        <div key={i} className="bg-white p-3 rounded-xl border border-[#D7CCC8] flex justify-between items-center shadow-sm">
+                          <div>
+                            <p className="text-[10px] font-black uppercase text-[#5D4037]">{name}</p>
+                            <p className="text-[8px] text-[#8D6E63] font-mono">{date}</p>
+                          </div>
+                          <span className="text-[10px] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded border border-[#C8E6C9] font-bold">Active</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>

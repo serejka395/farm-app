@@ -148,13 +148,29 @@ export interface UserProfile {
   xp: number;
   level: number;
   inventory: Record<CropType, number>;
+
+export interface Referral {
+  id: string; // Wallet Address
+  name: string; // Telegram First Name or "Farmer"
+  joinedAt: number;
+}
+
+export interface UserProfile {
+  id: string;
+  walletAddress: string;
+  name: string;
+  balance: number;
+  gold: number;
+  xp: number;
+  level: number;
+  inventory: Record<CropType, number>;
   unlockedPlots: number;
   upgrades: Record<UpgradeType, number>;
   animals: Animal[];
   securityStatus: 'verified' | 'flagged' | 'banned';
   waterCharges: number;
-  waterCharges: number;
-  referrals: string[];
+
+  referrals: Referral[];
   referredBy?: string;
   achievements: Record<string, boolean>; // id -> unlocked
   dailyQuests: Quest[];

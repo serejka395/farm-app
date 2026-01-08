@@ -11,7 +11,9 @@ import {
 } from './utils/constants';
 import PlotComponent from './components/PlotComponent';
 import Shop from './components/Shop';
+import Shop from './components/Shop';
 import ProfileModal from './components/ProfileModal';
+import UnlockModal from './components/UnlockModal';
 import StartPage from './components/StartPage';
 import Snowfall from './components/Snowfall';
 import { db } from './api/database';
@@ -259,8 +261,6 @@ const App: React.FC = () => {
 
         // Prevent self-referral
         if (referrerAddress === activeAddress) return;
-
-        console.log("Processing referral from:", referrerAddress);
 
         // 1. Mark current user as referred
         const updatedProfile = { ...profile, referredBy: referrerAddress };
@@ -1103,6 +1103,55 @@ const App: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Unlock Modal */}
+        {unlockModal && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <div className="w-full max-w-sm">
+              <UnlockModal
+                data={unlockModal}
+                onClose={() => setUnlockModal(null)}
+                onPurchase={(currency) => {
+                  // Handle Purchase Logic Here (Inline or separate function)
+                  if (!profile) return;
+
+                  if (currency === 'ZEN') {
+                    if (profile.balance >= unlockModal.zenCost) {
+                      setProfile(prev => prev ? ({ ...prev, balance: prev.balance - unlockModal.zenCost }) : null);
+                      setPlots(prev => prev.map(p => p.id === unlockModal.plotId ? { ...p, isUnlocked: true } : p));
+                      setNotification({ msg: "Plot Unlocked!", type: 'info' });
+                      setUnlockModal(null);
+                    } else {
+                      setNotification({ msg: "Insufficient ZEN", type: 'error' });
+                    }
+                  } else if (currency === 'SOL') {
+                    // Trigger SOL flow
+                    const handleSolUnlock = async () => {
+                      if (!publicKey) return setNotification({ msg: "Connect Wallet!", type: 'error' });
+                      try {
+                        const tx = await paymentService.createPaymentTransaction(publicKey, unlockModal.solCost);
+                        const sig = await sendTransaction(tx, connection);
+                        setNotification({ msg: "Verifying...", type: 'info' });
+                        const res = await paymentService.validateTransaction(connection, sig, unlockModal.solCost);
+                        if (res.success) {
+                          setPlots(prev => prev.map(p => p.id === unlockModal.plotId ? { ...p, isUnlocked: true } : p));
+                          setNotification({ msg: "Plot Unlocked (SOL)!", type: 'info' });
+                          setUnlockModal(null);
+                        } else {
+                          setNotification({ msg: "Failed verification", type: 'error' });
+                        }
+                      } catch (e) { setNotification({ msg: "Transaction Failed", type: 'error' }); }
+                    };
+                    handleSolUnlock();
+                  } else if (currency === 'TON') {
+                    handleTonPayment(unlockModal.tonCost, 'PLOT', unlockModal.plotId.toString());
+                  }
+                }}
+              />
+            </div>
+          </div>
+        )}
+
         {rewards.map(r => <FloatingReward key={r.id} {...r} />)}
       </AnimatePresence>
 
