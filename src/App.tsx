@@ -934,7 +934,7 @@ const App: React.FC = () => {
                   </div>
                 </motion.div>
               )}
-              {currentTab === 'shop' && <div className="pb-20"><Shop profile={profile} onPurchaseAnimal={handlePurchaseAnimal} onPurchaseWater={handlePurchaseWater} onUpgrade={handleUpgrade} selectedSeed={selectedSeed} onSelectSeed={setSelectedSeed} totalCrops={(Object.values(profile.inventory) as number[]).reduce((a, b) => a + b, 0)} maxCapacity={BASE_BARN_CAPACITY + profile.upgrades[UpgradeType.BARN_CAPACITY] * CAPACITY_PER_LEVEL} onSell={(crop) => {
+              {currentTab === 'shop' && <div className="pb-20"><Shop profile={profile} onPurchaseAnimal={handlePurchaseAnimal} onPurchaseWater={handlePurchaseWater} onUpgrade={handleUpgrade} onTonPayment={handleTonPayment} selectedSeed={selectedSeed} onSelectSeed={setSelectedSeed} totalCrops={(Object.values(profile.inventory) as number[]).reduce((a, b) => a + b, 0)} maxCapacity={BASE_BARN_CAPACITY + profile.upgrades[UpgradeType.BARN_CAPACITY] * CAPACITY_PER_LEVEL} onSell={(crop) => {
                 const count = profile.inventory[crop]; const earned = Math.floor(count * CROPS[crop].sellPrice * bonuses.market); setProfile(prev => {
                   if (!prev) return null;
                   const next = { ...prev, balance: prev.balance + earned, inventory: { ...prev.inventory, [crop]: 0 } };
