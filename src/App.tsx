@@ -794,7 +794,18 @@ const App: React.FC = () => {
             {language}
           </button>
           <div className="scale-90 origin-right">
-            <WalletMultiButton className="!bg-[#FFB74D] !text-[#5D4037] !rounded-xl !h-10 !text-xs !font-black !px-5 hover:!bg-[#FFA726] !border-2 !border-[#E65100] !shadow-[0_2px_0_#E65100] !font-sans" />
+            {tonAddress ? (
+              <button
+                onClick={() => tonConnectUI.disconnect()}
+                className="flex items-center gap-2 h-10 px-4 rounded-xl bg-[#0098EA] text-white border-2 border-[#0077B5] shadow-[0_2px_0_#005A8D] font-black text-xs uppercase hover:brightness-110 active:translate-y-0.5 active:shadow-none transition-all"
+              >
+                <span className="text-sm">💎</span>
+                <span>{tonAddress.slice(0, 4)}...{tonAddress.slice(-4)}</span>
+                <i className="fas fa-sign-out-alt ml-1 opacity-60"></i>
+              </button>
+            ) : (
+              <WalletMultiButton className="!bg-[#FFB74D] !text-[#5D4037] !rounded-xl !h-10 !text-xs !font-black !px-5 hover:!bg-[#FFA726] !border-2 !border-[#E65100] !shadow-[0_2px_0_#E65100] !font-sans" />
+            )}
           </div>
         </div>
       </header>
