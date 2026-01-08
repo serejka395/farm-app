@@ -14,27 +14,15 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
         <div className="h-screen w-full bg-f2e-black relative overflow-hidden flex flex-col items-center justify-center p-6">
 
             {/* Background Elements */}
-            <div className="absolute inset-0 bg-[url('/assets/winter_field_bg.png')] bg-cover bg-center opacity-40 blur-sm pointer-events-none transform scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-f2e-black via-f2e-black/90 to-black/40 pointer-events-none" />
+            <div className="absolute inset-0 bg-[url('/assets/start_bg_snow.jpg')] bg-cover bg-center" />
+            <div className="absolute inset-0 bg-gradient-to-t from-f2e-black/80 via-transparent to-transparent pointer-events-none" />
 
             {/* Content Container */}
             <div className="relative z-10 flex flex-col items-center justify-between h-full max-h-[800px] w-full max-w-sm py-12">
 
                 {/* Top Section: Logo */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.8, y: -20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-                    className="flex flex-col items-center justify-center flex-1 w-full"
-                >
-                    <div className="relative w-full max-w-[320px] aspect-square flex items-center justify-center">
-                        <img
-                            src="/assets/logo.png"
-                            alt="Farm2Earn"
-                            className="w-full h-full object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] filter contrast-125 hover:scale-105 transition-transform duration-500"
-                        />
-                    </div>
-                </motion.div>
+                {/* Top Section: Logo (Removed as requested, keeping spacer or empty) */}
+                <div className="flex-1" />
 
                 {/* Bottom Section: Actions */}
                 <motion.div
