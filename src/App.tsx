@@ -196,14 +196,14 @@ const TokenomicsView: React.FC = () => {
   );
 };
 
-import { TonConnectUI, useTonConnectUI } from '@tonconnect/ui-react';
+import { TonConnectUI, useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
 import { tonPaymentService } from './api/tonPaymentService';
 
 const App: React.FC = () => {
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
   const [tonConnectUI] = useTonConnectUI();
-  const tonAddress = tonConnectUI.account?.address;
+  const tonAddress = useTonAddress();
 
   const { language, setLanguage, t } = useLanguage();
   const [isDemo, setIsDemo] = useState(false);
