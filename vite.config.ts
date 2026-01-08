@@ -26,7 +26,11 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
         'react': path.resolve(__dirname, './node_modules/react'),
         'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
-      }
+      },
+      dedupe: ['react', 'react-dom', '@solana/wallet-adapter-react'],
+    },
+    optimizeDeps: {
+      include: ['@solana/wallet-adapter-react', '@solana/wallet-adapter-wallets', '@solana/wallet-adapter-react-ui'],
     }
   };
 });

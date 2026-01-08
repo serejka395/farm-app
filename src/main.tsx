@@ -19,10 +19,14 @@ import '@solana/wallet-adapter-react-ui/styles.css';
 
 const Root = () => {
     // Solana mainnet-beta endpoint for production
+    // Solana mainnet-beta endpoint for production
     const endpoint = useMemo(() => {
-        // Fallback to official mainnet-beta (Helius key was invalid)
+        // Fallback 1: Ankr Public RPC (Often deeper limits/better uptime)
+        const ankrRpc = 'https://rpc.ankr.com/solana';
+        // Fallback 2: Official mainnet (often rate limited)
         const mainnetRpc = clusterApiUrl('mainnet-beta');
-        return import.meta.env.VITE_RPC_ENDPOINT || mainnetRpc;
+
+        return import.meta.env.VITE_RPC_ENDPOINT || ankrRpc;
     }, []);
 
     // Comprehensive wallet adapter support
