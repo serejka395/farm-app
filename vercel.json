@@ -1,7 +1,5 @@
 {
-    "name": "farm-app",
-    "framework": "vite",
-    "buildCommand": "npm run build",
-    "installCommand": "pnpm install",
+    "framework": null,
+    "buildCommand": "",
     "outputDirectory": "dist"
 }

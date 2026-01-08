@@ -19,20 +19,17 @@ import '@solana/wallet-adapter-react-ui/styles.css';
 
 const Root = () => {
     // Solana mainnet-beta endpoint for production
-    // Use Helius RPC for better performance and reliability
     const endpoint = useMemo(() => {
-        // Primary: Helius free tier (rate limited but fast)
-        const heliusRpc = 'https://rpc.helius.xyz/?api-key=public';
-
-        // In production, use Helius; for development, can switch
-        return import.meta.env.VITE_RPC_ENDPOINT || heliusRpc;
+        // Fallback to official mainnet-beta (Helius key was invalid)
+        const mainnetRpc = clusterApiUrl('mainnet-beta');
+        return import.meta.env.VITE_RPC_ENDPOINT || mainnetRpc;
     }, []);
 
     // Comprehensive wallet adapter support
     // Major Solana wallets with mobile deep linking support
     const wallets = useMemo(
         () => [
-            new PhantomWalletAdapter(),      // Most popular, excellent mobile support
+            // new PhantomWalletAdapter(), // Removed: Detected automatically by Standard Wallet
             new SolflareWalletAdapter(),     // Popular, good mobile app
             new TorusWalletAdapter(),        // Social login wallet
             new LedgerWalletAdapter(),       // Hardware wallet support
