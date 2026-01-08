@@ -14,51 +14,52 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
         <div className="h-screen w-full bg-f2e-black relative overflow-hidden flex flex-col items-center justify-center p-6">
 
             {/* Background Elements */}
-            <div className="absolute inset-0 bg-[url('/assets/start_bg_snow.jpg')] bg-cover bg-center" />
-            <div className="absolute inset-0 bg-gradient-to-t from-f2e-black/80 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-[url('/assets/start_bg_snow.jpg')] bg-cover bg-center fixed" />
+            <div className="absolute inset-0 bg-gradient-to-t from-f2e-black/90 via-black/20 to-black/10 pointer-events-none" />
 
-            {/* Content Container */}
-            <div className="relative z-10 flex flex-col items-center justify-between h-full max-h-[800px] w-full max-w-sm py-12">
+            {/* Content Container - Full Height, Flexible */}
+            <div className="relative z-10 flex flex-col items-center justify-between min-h-screen w-full max-w-md mx-auto py-8 px-4">
 
-                {/* Top Section: Logo */}
-                {/* Top Section: Logo (Removed as requested, keeping spacer or empty) */}
-                <div className="flex-1" />
+                {/* Top Section: Spacer/Logo Area */}
+                <div className="flex-1 flex flex-col items-center justify-center">
+                    {/* Optional: Add a title or just keep the space for the artwork */}
+                </div>
 
-                {/* Bottom Section: Actions */}
+                {/* Bottom Section: Actions - Pinned to bottom comfortably */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
-                    className="w-full flex flex-col gap-4"
+                    className="w-full flex flex-col gap-3 pb-8"
                 >
 
                     {/* 1. Connect Wallet (Primary Action) */}
                     <div className="w-full relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-f2e-gold to-[#FFA000] rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-1000" />
+                        <div className="absolute -inset-[1px] bg-gradient-to-r from-f2e-gold to-[#FFA000] rounded-2xl blur-sm opacity-50 group-hover:opacity-80 transition duration-500" />
                         <div className="wallet-adapter-dropdown w-full relative">
-                            <WalletMultiButton className="!w-full !justify-center !bg-gradient-to-b !from-f2e-gold !to-[#FF8F00] !text-black !font-black !text-sm !uppercase !tracking-wider !py-5 !h-auto !rounded-2xl transition-all !shadow-[0_4px_0_#E65100] active:!translate-y-[2px] active:!shadow-none hover:!brightness-110" />
+                            <WalletMultiButton className="!w-full !justify-center !bg-gradient-to-b !from-f2e-gold !to-[#FF8F00] !text-black !font-black !text-sm !uppercase !tracking-wider !py-4 !h-auto !rounded-2xl transition-all !shadow-[0_4px_0_#E65100] active:!translate-y-[2px] active:!shadow-none hover:!brightness-110 !transform-none" />
                         </div>
                     </div>
 
                     {/* 1.5 Connect TON */}
                     <div className="w-full relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-[#0098EA] to-[#0077B5] rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-1000" />
+                        <div className="absolute -inset-[1px] bg-gradient-to-r from-[#0098EA] to-[#0077B5] rounded-2xl blur-sm opacity-50 group-hover:opacity-80 transition duration-500" />
                         <button
                             onClick={() => tonConnectUI.connected ? tonConnectUI.disconnect() : tonConnectUI.openModal()}
-                            className={`relative w-full bg-gradient-to-b ${tonConnectUI.connected ? 'from-red-500 to-red-700 border-red-700 shadow-[0_4px_0_#b91c1c]' : 'from-[#0098EA] to-[#0077B5] border-[#0077B5] shadow-[0_4px_0_#005A8D]'} text-white font-black text-sm uppercase tracking-wider py-5 rounded-2xl border-2 active:translate-y-[2px] active:shadow-none hover:brightness-110 transition-all flex items-center justify-center gap-2`}
+                            className={`relative w-full bg-gradient-to-b ${tonConnectUI.connected ? 'from-red-500 to-red-600 border-red-700 shadow-[0_4px_0_#991b1b]' : 'from-[#0098EA] to-[#0077B5] border-[#006699] shadow-[0_4px_0_#005A8D]'} text-white font-black text-sm uppercase tracking-wider py-4 rounded-2xl border-b-[4px] active:translate-y-[2px] active:shadow-none hover:brightness-110 transition-all flex items-center justify-center gap-2`}
                         >
-                            <span className="text-lg">{tonConnectUI.connected ? '❌' : '💎'}</span>
-                            <span>{tonConnectUI.connected ? 'Disconnect TON' : 'Connect TON'}</span>
+                            <span className="text-xl drop-shadow-sm">{tonConnectUI.connected ? '❌' : '💎'}</span>
+                            <span className="drop-shadow-sm">{tonConnectUI.connected ? 'Disconnect TON' : 'Connect TON'}</span>
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-3 mt-1">
                         {/* 2. Guest Mode (Secondary) */}
                         <button
                             onClick={onGuestLogin}
-                            className="w-full bg-[#3E2723] text-[#D7CCC8] font-bold text-xs uppercase tracking-wider py-4 rounded-xl border border-[#5D4037] shadow-lg hover:bg-[#4E342E] active:scale-95 transition-all flex flex-col items-center justify-center gap-1"
+                            className="w-full bg-[#1A1A1A]/80 backdrop-blur-md text-[#D7CCC8] font-bold text-[10px] uppercase tracking-wider py-3 rounded-xl border border-white/10 hover:bg-[#2A2A2A] active:scale-95 transition-all flex flex-col items-center justify-center gap-1"
                         >
-                            <i className="fas fa-user-secret text-lg mb-1"></i>
+                            <i className="fas fa-user-secret text-base mb-0.5"></i>
                             <span>Guest</span>
                         </button>
 
@@ -67,24 +68,19 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
                             href="https://farm2earn.website"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-full bg-[#1A1A1A] text-white/80 font-bold text-xs uppercase tracking-wider py-4 rounded-xl border border-white/10 shadow-lg hover:bg-[#2A2A2A] active:scale-95 transition-all flex flex-col items-center justify-center gap-1"
+                            className="w-full bg-[#1A1A1A]/80 backdrop-blur-md text-white/80 font-bold text-[10px] uppercase tracking-wider py-3 rounded-xl border border-white/10 hover:bg-[#2A2A2A] active:scale-95 transition-all flex flex-col items-center justify-center gap-1"
                         >
-                            <i className="fas fa-globe text-lg mb-1"></i>
+                            <i className="fas fa-globe text-base mb-0.5"></i>
                             <span>Website</span>
                         </a>
                     </div>
-                </motion.div>
 
-                {/* Footer Info */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
-                    className="absolute bottom-4 left-0 right-0 text-center"
-                >
-                    <p className="text-white/20 text-[10px] uppercase font-bold tracking-widest">
-                        v1.0.0 • Farm2Earn
-                    </p>
+                    {/* Footer Info */}
+                    <div className="text-center mt-2">
+                        <p className="text-white/30 text-[9px] uppercase font-bold tracking-[0.2em]">
+                            Farm2Earn v1.0.0
+                        </p>
+                    </div>
                 </motion.div>
 
             </div>

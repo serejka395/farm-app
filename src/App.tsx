@@ -220,6 +220,9 @@ const App: React.FC = () => {
   const [rewards, setRewards] = useState<{ id: number, x: number, y: number, text: string, type: 'xp' | 'gold' }[]>([]);
   const [notification, setNotification] = useState<{ msg: string, type: 'info' | 'error' } | null>(null);
 
+  // Unlock Modal State
+  const [unlockModal, setUnlockModal] = useState<{ plotId: number, solCost: number, zenCost: number, tonCost: number } | null>(null);
+
 
 
   useEffect(() => {
@@ -502,82 +505,26 @@ const App: React.FC = () => {
     }
   };
 
-  const handleUnlock = async (plotId: number) => {
+  const handleUnlock = (plotId: number) => {
     if (!profile) return;
     const plot = plots[plotId];
     if (!plot || plot.isUnlocked) return;
 
-    // Special Logic for Plots 6, 7, 8 (Indices 6, 7, 8)
+    // Costs
     const zenCost = EXPANSION_COSTS[plotId];
     const solCost = PLOT_SOL_PRICES[plotId];
-    const levelReq = PLOT_LEVEL_REQUIREMENTS[plotId];
+    const tonCost = solCost > 0 ? parseFloat((solCost * 30).toFixed(2)) : 0; // Approx 1 SOL = 30 TON
 
-    // Check Level Requirement Override (e.g. Plot 8 requires Level 100 OR SOL)
+    // Check Level Requirement
+    const levelReq = PLOT_LEVEL_REQUIREMENTS[plotId];
     if (levelReq && profile.level >= levelReq) {
-      // Free unlock if level met? Or just allowed to buy?
-      // User said: "And 3rd (plot 9) opens at account level 100 OR for 1 solana"
-      // Implies free unlock at level 100.
       setPlots(prev => prev.map(p => p.id === plotId ? { ...p, isUnlocked: true } : p));
       setNotification({ msg: t('plotUnlocked'), type: 'info' });
       return;
     }
 
-    // Interactive Unlock Choice using window.confirm (Simplest for now)
-    // "Unlock Plot X? Cost: 5000 ZEN or 0.005 SOL"
-    let message = `Unlock Plot ${plotId + 1}?`;
-    if (zenCost > 0) message += `\nPay ${zenCost} ZEN?`;
-    if (solCost > 0) message += `\nPay ${solCost} SOL?`;
-    if (levelReq) message += `\n(Or reach Level ${levelReq})`;
-
-    // Logic: Try SOL first if requested? No, we need user intent.
-    // For now, if user clicks unlock:
-    // If they have SOL cost defined, ask if they want to pay SOL.
-    // If they say No/Cancel, ask if they want to pay ZEN.
-
-    // Better: Check what they can afford.
-    // If defined solCost check logic:
-    if (solCost > 0) {
-      const confirmSol = window.confirm(`Unlock Plot ${plotId + 1} for ${solCost} SOL? \n(Click Cancel to check for ZEN purchase)`);
-      if (confirmSol) {
-        if (!publicKey) {
-          setNotification({ msg: "Connect Wallet for SOL", type: 'error' });
-          return;
-        }
-        try {
-          // 1.5% fee included in calculation usually, but standard paymentService adds it or we pass amount
-          // paymentService.createPaymentTransaction takes amount. 
-          const tx = await paymentService.createPaymentTransaction(publicKey, solCost);
-          const sig = await sendTransaction(tx, connection);
-
-          setNotification({ msg: "Verifying Unlock...", type: 'info' });
-
-          const result = await paymentService.validateTransaction(connection, sig, solCost);
-
-          if (result.success) {
-            setPlots(prev => prev.map(p => p.id === plotId ? { ...p, isUnlocked: true } : p));
-            setNotification({ msg: "Plot Unlocked!", type: 'info' });
-          } else {
-            setNotification({ msg: `Unlock Failed: ${result.error}`, type: 'error' });
-          }
-        } catch (e) {
-          setNotification({ msg: "SOL Payment Failed", type: 'error' });
-        }
-        return;
-      }
-    }
-
-    if (zenCost > 0) {
-      const confirmZen = window.confirm(`Unlock Plot ${plotId + 1} for ${zenCost} ZEN?`);
-      if (confirmZen) {
-        if (profile.balance < zenCost) {
-          setNotification({ msg: t('needZenToUnlock', { amount: zenCost }), type: 'error' });
-          return;
-        }
-        setProfile(prev => prev ? ({ ...prev, balance: prev.balance - zenCost }) : null);
-        setPlots(prev => prev.map(p => p.id === plotId ? { ...p, isUnlocked: true } : p));
-        setNotification({ msg: t('plotUnlocked'), type: 'info' });
-      }
-    }
+    // Open Modal
+    setUnlockModal({ plotId, solCost, zenCost, tonCost });
   };
 
   const handlePurchaseWater = async () => {
@@ -706,7 +653,7 @@ const App: React.FC = () => {
     }
   };
 
-  const handleTonPayment = async (amount: number, type: 'UPGRADE' | 'ANIMAL' | 'WATER', itemId?: string) => {
+  const handleTonPayment = async (amount: number, type: 'UPGRADE' | 'ANIMAL' | 'WATER' | 'PLOT', itemId?: string) => {
     if (!tonConnectUI.connected) {
       setNotification({ msg: "Please Connect TON Wallet", type: 'error' });
       tonConnectUI.openModal();
@@ -752,6 +699,12 @@ const App: React.FC = () => {
             };
           });
           setNotification({ msg: "Upgrade Successful (TON)!", type: 'info' });
+        } else if (type === 'PLOT' && itemId) {
+          // Unlock Plot
+          const plotId = parseInt(itemId);
+          setPlots(prev => prev.map(p => p.id === plotId ? { ...p, isUnlocked: true } : p));
+          setNotification({ msg: "Plot Unlocked (TON)!", type: 'info' });
+          setUnlockModal(null); // Close modal
         }
       } else {
         setNotification({ msg: "TON Verification Failed", type: 'error' });
