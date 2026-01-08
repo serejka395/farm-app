@@ -95,10 +95,10 @@ const PlotComponent: React.FC<PlotComponentProps> = ({
       <div
         onClick={handlePlotClick}
         className={`w-full h-full relative flex items-center justify-center rounded-xl border-[6px] shadow-[0_5px_10px_rgba(0,0,0,0.6)] transition-all duration-300 overflow-hidden ${!plot.isUnlocked
-            ? 'bg-gray-800/80 border-gray-600 grayscale cursor-pointer'
-            : plot.isWatered
-              ? 'bg-blue-50/90 border-[#8B4513] shadow-[inset_0_0_20px_rgba(59,130,246,0.3)] cursor-pointer'
-              : 'bg-white/90 border-[#D7CCC8] hover:border-[#A1887F] cursor-pointer'
+          ? 'bg-gray-800/80 border-gray-600 grayscale cursor-pointer'
+          : plot.isWatered
+            ? 'bg-blue-50/90 border-[#8B4513] shadow-[inset_0_0_20px_rgba(59,130,246,0.3)] cursor-pointer'
+            : 'bg-white/90 border-[#D7CCC8] hover:border-[#A1887F] cursor-pointer'
           }`}
       >
 

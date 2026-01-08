@@ -67,7 +67,7 @@ const RoamingPet: React.FC<{
     <motion.div
       animate={{ x: target.x, y: target.y }}
       transition={{ duration: 4, ease: "linear" }}
-      className="absolute bottom-20 left-1/2 z-30 cursor-pointer group"
+      className="absolute bottom-20 left-1/2 z-30 cursor-pointer group pointer-events-auto"
       onClick={() => onCollect(animal.id)}
     >
       <div className={`relative w-20 h-20 transition-all ${isReady ? 'filter drop-shadow-[0_5px_5px_rgba(0,0,0,0.3)]' : 'opacity-80'}`}>
@@ -132,7 +132,7 @@ const FarmScene: React.FC<{
       {/* Roaming Pets Layer */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[300%] pointer-events-none overflow-visible">
         {/* Pets can roam widely */}
-        <div className="pointer-events-auto w-full h-full relative">
+        <div className="pointer-events-none w-full h-full relative">
           {animals.map(animal => (
             <RoamingPet key={animal.id} animal={animal} onCollect={onCollectAnimal} />
           ))}
