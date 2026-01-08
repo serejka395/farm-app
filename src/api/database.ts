@@ -32,10 +32,12 @@ export const db = {
         }, { onConflict: 'wallet_address' });
 
       if (error) {
-        console.error('[Supabase] Save failed:', error.message);
+        // Silent fail for now to avoid console spam if DB is down
+        // console.error('[Supabase] Save failed:', error.message);
       }
     } catch (e) {
-      console.error('[Supabase] Connection error during save');
+      // Suppress network errors (like DNS failure to Supabase)
+      // console.error('[Supabase] Connection error during save');
     }
   },
 
