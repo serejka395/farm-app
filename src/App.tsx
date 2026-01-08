@@ -203,10 +203,13 @@ const App: React.FC = () => {
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
   const [tonConnectUI] = useTonConnectUI();
+  const tonAddress = tonConnectUI.account?.address;
 
   const { language, setLanguage, t } = useLanguage();
   const [isDemo, setIsDemo] = useState(false);
-  const activeAddress = publicKey?.toBase58() || (isDemo ? "dev_solana_farmer" : null);
+
+  // Unified Address: Solana OR TON OR Demo
+  const activeAddress = publicKey?.toBase58() || tonAddress || (isDemo ? "dev_solana_farmer" : null);
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [plots, setPlots] = useState<Plot[]>([]);
