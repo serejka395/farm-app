@@ -219,6 +219,34 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (isDemo) {
+      // Guest Mode: Initialize transient profile immediately without loading from DB
+      const baseProfile: UserProfile = {
+        id: "guest-farmer", walletAddress: "guest_mode",
+        name: "Guest Farmer", balance: 1000, xp: 0, level: 1, gold: 0,
+        inventory: Object.values(CropType).reduce((acc, crop) => { acc[crop] = 0; return acc; }, {} as Record<CropType, number>),
+        unlockedPlots: INITIAL_PLOTS_COUNT,
+        upgrades: {
+          [UpgradeType.SOIL_QUALITY]: 0, [UpgradeType.MARKET_CONTRACTS]: 0,
+          [UpgradeType.IRRIGATION]: 0, [UpgradeType.FERTILIZER_TECH]: 0,
+          [UpgradeType.BARN_CAPACITY]: 0, [UpgradeType.HOUSE_ESTATE]: 0,
+          [UpgradeType.WINTER_HOUSE]: 0 // Ensure this is initialized
+        },
+        animals: [], securityStatus: 'verified', waterCharges: 0,
+        referrals: [], achievements: {}, dailyQuests: [], lastDailyReset: 0,
+        stats: {
+          totalMoneyEarned: 0, totalCropsHarvested: 0, houseLevel: 0,
+          harvestHistory: Object.values(CropType).reduce((acc, crop) => { acc[crop] = 0; return acc; }, {} as Record<CropType, number>),
+          joinDate: Date.now(), lastActive: Date.now(), dailyStreak: 1
+        }
+      };
+      setProfile(questService.generateDailyQuests(baseProfile));
+      setPlots(Array(18).fill(null).map((_, i) => ({
+        id: i, crop: null, plantedAt: null, isWatered: false, isUnlocked: i < INITIAL_PLOTS_COUNT
+      })));
+      return;
+    }
+
     if (activeAddress) {
       db.loadUser(activeAddress).then(data => {
         if (data) {
@@ -241,6 +269,7 @@ const App: React.FC = () => {
               [UpgradeType.SOIL_QUALITY]: 0, [UpgradeType.MARKET_CONTRACTS]: 0,
               [UpgradeType.IRRIGATION]: 0, [UpgradeType.FERTILIZER_TECH]: 0,
               [UpgradeType.BARN_CAPACITY]: 0, [UpgradeType.HOUSE_ESTATE]: 0,
+              [UpgradeType.WINTER_HOUSE]: 0 // Ensure this is initialized
             },
             animals: [], securityStatus: 'verified', waterCharges: 0,
             referrals: [], achievements: {}, dailyQuests: [], lastDailyReset: 0,
@@ -310,10 +339,11 @@ const App: React.FC = () => {
 
 
   useEffect(() => {
-    if (activeAddress && profile && plots.length > 0) {
+    // Only save if NOT demo mode and user is logged in
+    if (!isDemo && activeAddress && profile && plots.length > 0) {
       db.saveUser(activeAddress, profile, plots);
     }
-  }, [profile, plots, activeAddress]);
+  }, [profile, plots, activeAddress, isDemo]);
 
   const bonuses = useMemo(() => {
     if (!profile) return { soil: 1, market: 1, irrigation: 0, xp: 1, house: 1 };

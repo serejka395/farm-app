@@ -6,13 +6,10 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import {
     PhantomWalletAdapter,
     SolflareWalletAdapter,
-    BackpackWalletAdapter,
-    TrustWalletAdapter,
-    CoinbaseWalletAdapter,
     LedgerWalletAdapter,
     TorusWalletAdapter,
-    SlopeWalletAdapter,
-    GlowWalletAdapter,
+    Coin98WalletAdapter,
+    MathWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -34,18 +31,15 @@ const Root = () => {
     }, []);
 
     // Comprehensive wallet adapter support
-    // All major Solana wallets with mobile deep linking
+    // Major Solana wallets with mobile deep linking support
     const wallets = useMemo(
         () => [
             new PhantomWalletAdapter(),      // Most popular, excellent mobile support
             new SolflareWalletAdapter(),     // Popular, good mobile app
-            new BackpackWalletAdapter(),     // New but popular, xNFT support
-            new TrustWalletAdapter(),        // Mobile-first, widely used
-            new CoinbaseWalletAdapter(),     // Major exchange wallet
-            new GlowWalletAdapter(),         // Solana native, good UX
-            new SlopeWalletAdapter(),        // Mobile-focused
             new TorusWalletAdapter(),        // Social login wallet
             new LedgerWalletAdapter(),       // Hardware wallet support
+            new Coin98WalletAdapter(),       // Multi-chain wallet
+            new MathWalletAdapter(),         // Multi-chain support
         ],
         []
     );
