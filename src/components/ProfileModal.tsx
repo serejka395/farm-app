@@ -165,12 +165,25 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
                 </div>
               </div>
 
-              <button
-                onClick={handleDisconnect}
-                className="w-full py-4 rounded-xl bg-[#FFEBEE] border-2 border-[#FFCDD2] text-[#C62828] text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#FFCDD2] transition-all shadow-[0_3px_0_#EF9A9A] active:shadow-none active:translate-y-0.5"
-              >
-                {isTon ? 'Disconnect TON' : 'Disconnect Wallet'}
-              </button>
+              <div className="flex flex-col gap-3">
+                {/* Connect TON Option (Visible if not connected to TON) */}
+                {!isTon && (
+                  <button
+                    onClick={() => { tonConnectUI.openModal(); onClose(); }}
+                    className="w-full py-4 rounded-xl bg-[#0098EA] border-2 border-[#0077B5] text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#008AC9] transition-all shadow-[0_3px_0_#005A8D] active:shadow-none active:translate-y-0.5 flex items-center justify-center gap-2"
+                  >
+                    <span className="text-lg">💎</span>
+                    Connect TON Wallet
+                  </button>
+                )}
+
+                <button
+                  onClick={handleDisconnect}
+                  className="w-full py-4 rounded-xl bg-[#FFEBEE] border-2 border-[#FFCDD2] text-[#C62828] text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#FFCDD2] transition-all shadow-[0_3px_0_#EF9A9A] active:shadow-none active:translate-y-0.5"
+                >
+                  {isTon ? 'Disconnect TON' : 'Disconnect Wallet'}
+                </button>
+              </div>
             </motion.div>
           )}
 
