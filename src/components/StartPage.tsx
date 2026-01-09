@@ -42,7 +42,7 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
                         onClick={() => setVisible(true)}
                         className="relative w-full bg-[#FFCA28] border-b-[4px] border-[#FFA000] text-[#5D4037] font-black text-sm uppercase tracking-wider py-4 rounded-xl transition-all shadow-[0_4px_0_#FFA000] active:translate-y-[2px] active:shadow-none hover:brightness-105"
                     >
-                        Connect Solana Wallet
+                        Select Solana Wallet
                     </button>
                 </div>
 
