@@ -10,14 +10,15 @@ interface StartPageProps {
 
 const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
     const [tonConnectUI] = useTonConnectUI();
+    const { setVisible } = useWalletModal();
 
     return (
         <div className="h-screen w-full bg-f2e-black relative overflow-hidden flex flex-col items-center justify-center p-6">
 
             {/* Full Screen Background */}
             <div className="absolute inset-0 z-0">
-                <img src="/assets/start_hero.png" className="w-full h-full object-cover opacity-30 blur-sm lg:opacity-100 lg:blur-none" alt="Background" />
-                <div className="absolute inset-0 bg-black/40 lg:bg-black/20" />
+                <img src="/assets/start_hero.png" className="w-full h-full object-cover" alt="Background" />
+                <div className="absolute inset-0 bg-black/40" />
             </div>
             {/* Top Section: Banner Image - Mobile Only */}
             <div className="flex-1 flex flex-col items-center justify-center w-full max-h-[50vh] lg:hidden">
@@ -35,13 +36,6 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
                 transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
                 className="w-full flex flex-col gap-3 pb-8"
             >
-
-                import {useWalletModal} from '@solana/wallet-adapter-react-ui';
-
-                // ... (in component)
-                const {setVisible} = useWalletModal();
-
-                // ... (in render)
                 {/* 1. Connect Solana */}
                 <div className="w-full relative group">
                     <button
