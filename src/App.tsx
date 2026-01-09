@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { Plot, CropType, UserProfile, ToolType, UpgradeType, AnimalType, Animal } from './types';
 import {
   CROPS, ANIMALS, EXPANSION_COSTS, INITIAL_PLOTS_COUNT, TOTAL_MAX_PLOTS,
