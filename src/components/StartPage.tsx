@@ -39,7 +39,9 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
                 <div className="w-full relative group">
                     <div className="absolute -inset-[1px] bg-gradient-to-r from-f2e-gold to-[#FFA000] rounded-2xl blur-sm opacity-50 group-hover:opacity-80 transition duration-500" />
                     <div className="wallet-adapter-dropdown w-full relative">
-                        <WalletMultiButton className="!w-full !justify-center !bg-gradient-to-b !from-f2e-gold !to-[#FF8F00] !text-black !font-black !text-sm !uppercase !tracking-wider !py-4 !h-auto !rounded-2xl transition-all !shadow-[0_4px_0_#E65100] active:!translate-y-[2px] active:!shadow-none hover:!brightness-110 !transform-none" />
+                        <WalletMultiButton className="!w-full !justify-center !bg-gradient-to-b !from-f2e-gold !to-[#FF8F00] !text-black !font-black !text-sm !uppercase !tracking-wider !py-4 !h-auto !rounded-2xl transition-all !shadow-[0_4px_0_#E65100] active:!translate-y-[2px] active:!shadow-none hover:!brightness-110 !transform-none">
+                            Connect Solana
+                        </WalletMultiButton>
                     </div>
                 </div>
 
@@ -51,7 +53,7 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
                         className={`relative w-full bg-gradient-to-b ${tonConnectUI.connected ? 'from-red-500 to-red-600 border-red-700 shadow-[0_4px_0_#991b1b]' : 'from-[#0098EA] to-[#0077B5] border-[#006699] shadow-[0_4px_0_#005A8D]'} text-white font-black text-sm uppercase tracking-wider py-4 rounded-2xl border-b-[4px] active:translate-y-[2px] active:shadow-none hover:brightness-110 transition-all flex items-center justify-center gap-2`}
                     >
                         <span className="text-xl drop-shadow-sm">{tonConnectUI.connected ? '❌' : '💎'}</span>
-                        <span className="drop-shadow-sm">{tonConnectUI.connected ? 'Disconnect TON' : 'Connect TON'}</span>
+                        <span className="drop-shadow-sm">{tonConnectUI.connected ? 'Disconnect TON' : 'Connect TON Wallet'}</span>
                     </button>
                 </div>
 
