@@ -15,11 +15,11 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
 
             {/* Full Screen Background */}
             <div className="absolute inset-0 z-0">
-                <img src="/assets/start_bg_snow.jpg" className="w-full h-full object-cover opacity-30 blur-sm" alt="Background" />
-                <div className="absolute inset-0 bg-black/40" />
+                <img src="/assets/start_bg_snow.jpg" className="w-full h-full object-cover opacity-30 blur-sm lg:opacity-100 lg:blur-none" alt="Background" />
+                <div className="absolute inset-0 bg-black/40 lg:bg-black/20" />
             </div>
-            {/* Top Section: Banner Image */}
-            <div className="flex-1 flex flex-col items-center justify-center w-full max-h-[50vh]">
+            {/* Top Section: Banner Image - Mobile Only */}
+            <div className="flex-1 flex flex-col items-center justify-center w-full max-h-[50vh] lg:hidden">
                 <img
                     src="/assets/start_bg_snow.jpg"
                     alt="Winter Season"

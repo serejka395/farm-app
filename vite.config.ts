@@ -31,6 +31,17 @@ export default defineConfig(({ mode }) => {
     },
     optimizeDeps: {
       include: ['@solana/wallet-adapter-react', '@solana/wallet-adapter-wallets', '@solana/wallet-adapter-react-ui'],
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom', 'framer-motion'],
+            'vendor-solana': ['@solana/wallet-adapter-react', '@solana/wallet-adapter-wallets', '@solana/web3.js'],
+            'vendor-ton': ['@tonconnect/ui-react']
+          }
+        }
+      }
     }
   };
 });

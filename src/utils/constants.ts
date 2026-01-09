@@ -1,46 +1,46 @@
 import { CropType, CropData, UpgradeType, UpgradeData, AnimalType, AnimalData, WeatherType } from '../types';
 
 export const CROPS: Record<CropType, CropData> = {
-  // Common (Tier 1) - Low risk, consistent small profit. ROI ~1.4x
-  [CropType.WHEAT]: { id: CropType.WHEAT, name: { en: 'Cyber Wheat', ru: 'Кибер Пшеница' }, emoji: '🌾', seedPrice: 5, sellPrice: 7, growthTime: 10, xpReward: 2, unlockLevel: 1, rarity: 'COMMON' },
-  [CropType.GARLIC]: { id: CropType.GARLIC, name: { en: 'Crystal Garlic', ru: 'Кристалл Чеснок' }, emoji: '🧄', image: '/assets/crops/garlic.png', seedPrice: 15, sellPrice: 22, growthTime: 20, xpReward: 5, unlockLevel: 1, rarity: 'COMMON' },
-  [CropType.CARROT]: { id: CropType.CARROT, name: { en: 'Neon Carrot', ru: 'Неон Морковь' }, emoji: '🥕', image: '/assets/crops/carrot.png', seedPrice: 30, sellPrice: 45, growthTime: 45, xpReward: 8, unlockLevel: 2, rarity: 'COMMON' },
-  [CropType.WINTER_PEAS]: { id: CropType.WINTER_PEAS, name: { en: 'Frost Peas', ru: 'Морозный Горох' }, emoji: '🫛', seedPrice: 60, sellPrice: 90, growthTime: 90, xpReward: 15, unlockLevel: 3, rarity: 'COMMON' },
-  [CropType.CABBAGE]: { id: CropType.CABBAGE, name: { en: 'Ice Cabbage', ru: 'Лед Капуста' }, emoji: '🥬', image: '/assets/crops/cabbage.png', seedPrice: 120, sellPrice: 180, growthTime: 180, xpReward: 25, unlockLevel: 4, rarity: 'COMMON' },
-  [CropType.FROST_LETTUCE]: { id: CropType.FROST_LETTUCE, name: { en: 'Frost Leaf', ru: 'Морозный Лист' }, emoji: '🥗', image: '/assets/crops/frost_lettuce.png', seedPrice: 250, sellPrice: 380, growthTime: 300, xpReward: 45, unlockLevel: 6, rarity: 'UNCOMMON' },
-  [CropType.TOMATO]: { id: CropType.TOMATO, name: { en: 'Void Tomato', ru: 'Войд Томат' }, emoji: '🍅', image: '/assets/crops/tomato.png', seedPrice: 400, sellPrice: 620, growthTime: 600, xpReward: 80, unlockLevel: 8, rarity: 'UNCOMMON' },
-  [CropType.SNOW_POTATO]: { id: CropType.SNOW_POTATO, name: { en: 'Snow Potato', ru: 'Снежный Картофель' }, emoji: '🥔', seedPrice: 700, sellPrice: 1100, growthTime: 1200, xpReward: 150, unlockLevel: 10, rarity: 'UNCOMMON' },
-  [CropType.BEETROOT]: { id: CropType.BEETROOT, name: { en: 'Ruby Beet', ru: 'Рубин Свекла' }, emoji: '🫚', seedPrice: 1200, sellPrice: 1900, growthTime: 1800, xpReward: 220, unlockLevel: 12, rarity: 'UNCOMMON' },
-  [CropType.ARCTIC_CUCUMBER]: { id: CropType.ARCTIC_CUCUMBER, name: { en: 'Arctic Cuke', ru: 'Арктик Огурец' }, emoji: '🥒', seedPrice: 2000, sellPrice: 3200, growthTime: 2700, xpReward: 350, unlockLevel: 15, rarity: 'UNCOMMON' },
+  // Common (Tier 1) - Hard Mode: Low Margins to slow accumulation.
+  [CropType.WHEAT]: { id: CropType.WHEAT, name: { en: 'Cyber Wheat', ru: 'Кибер Пшеница' }, emoji: '🌾', seedPrice: 15, sellPrice: 18, growthTime: 10, xpReward: 2, unlockLevel: 1, rarity: 'COMMON' },
+  [CropType.GARLIC]: { id: CropType.GARLIC, name: { en: 'Crystal Garlic', ru: 'Кристалл Чеснок' }, emoji: '🧄', image: '/assets/crops/garlic.png', seedPrice: 40, sellPrice: 48, growthTime: 20, xpReward: 5, unlockLevel: 1, rarity: 'COMMON' },
+  [CropType.CARROT]: { id: CropType.CARROT, name: { en: 'Neon Carrot', ru: 'Неон Морковь' }, emoji: '🥕', image: '/assets/crops/carrot.png', seedPrice: 80, sellPrice: 95, growthTime: 45, xpReward: 8, unlockLevel: 2, rarity: 'COMMON' },
+  [CropType.WINTER_PEAS]: { id: CropType.WINTER_PEAS, name: { en: 'Frost Peas', ru: 'Морозный Горох' }, emoji: '🫛', seedPrice: 150, sellPrice: 180, growthTime: 90, xpReward: 15, unlockLevel: 3, rarity: 'COMMON' },
+  [CropType.CABBAGE]: { id: CropType.CABBAGE, name: { en: 'Ice Cabbage', ru: 'Лед Капуста' }, emoji: '🥬', image: '/assets/crops/cabbage.png', seedPrice: 300, sellPrice: 360, growthTime: 180, xpReward: 25, unlockLevel: 4, rarity: 'COMMON' },
+  [CropType.FROST_LETTUCE]: { id: CropType.FROST_LETTUCE, name: { en: 'Frost Leaf', ru: 'Морозный Лист' }, emoji: '🥗', image: '/assets/crops/frost_lettuce.png', seedPrice: 600, sellPrice: 750, growthTime: 300, xpReward: 45, unlockLevel: 6, rarity: 'UNCOMMON' },
+  [CropType.TOMATO]: { id: CropType.TOMATO, name: { en: 'Void Tomato', ru: 'Войд Томат' }, emoji: '🍅', image: '/assets/crops/tomato.png', seedPrice: 1000, sellPrice: 1250, growthTime: 600, xpReward: 80, unlockLevel: 8, rarity: 'UNCOMMON' },
+  [CropType.SNOW_POTATO]: { id: CropType.SNOW_POTATO, name: { en: 'Snow Potato', ru: 'Снежный Картофель' }, emoji: '🥔', seedPrice: 2000, sellPrice: 2400, growthTime: 1200, xpReward: 150, unlockLevel: 10, rarity: 'UNCOMMON' },
+  [CropType.BEETROOT]: { id: CropType.BEETROOT, name: { en: 'Ruby Beet', ru: 'Рубин Свекла' }, emoji: '🫚', seedPrice: 3500, sellPrice: 4200, growthTime: 1800, xpReward: 220, unlockLevel: 12, rarity: 'UNCOMMON' },
+  [CropType.ARCTIC_CUCUMBER]: { id: CropType.ARCTIC_CUCUMBER, name: { en: 'Arctic Cuke', ru: 'Арктик Огурец' }, emoji: '🥒', seedPrice: 6000, sellPrice: 7200, growthTime: 2700, xpReward: 350, unlockLevel: 15, rarity: 'UNCOMMON' },
 
-  // Rare (Tier 3) - Longer growth, decent rewards. ROI ~1.5x
-  [CropType.CORN]: { id: CropType.CORN, name: { en: 'Golden Corn', ru: 'Золотая Кукуруза' }, emoji: '🌽', seedPrice: 3500, sellPrice: 5500, growthTime: 3600, xpReward: 550, unlockLevel: 18, rarity: 'RARE' },
-  [CropType.ICE_RADISH]: { id: CropType.ICE_RADISH, name: { en: 'Ice Radish', ru: 'Ледяной Редс' }, emoji: '🧊', seedPrice: 6000, sellPrice: 9500, growthTime: 5400, xpReward: 850, unlockLevel: 22, rarity: 'RARE' },
-  [CropType.GLACIER_SPINACH]: { id: CropType.GLACIER_SPINACH, name: { en: 'Glacier Leaf', ru: 'Ледник Шпинат' }, emoji: '🍃', seedPrice: 10000, sellPrice: 16000, growthTime: 7200, xpReward: 1200, unlockLevel: 25, rarity: 'RARE' },
-  [CropType.MANDARIN]: { id: CropType.MANDARIN, name: { en: 'Frost Orange', ru: 'Мороз Мандарин' }, emoji: '🍊', seedPrice: 18000, sellPrice: 28000, growthTime: 10800, xpReward: 2000, unlockLevel: 28, rarity: 'RARE' },
-  [CropType.MUSHROOM]: { id: CropType.MUSHROOM, name: { en: 'Neon Truffle', ru: 'Неон Трюфель' }, emoji: '🍄', seedPrice: 30000, sellPrice: 48000, growthTime: 14400, xpReward: 3200, unlockLevel: 32, rarity: 'RARE' },
+  // Rare (Tier 3)
+  [CropType.CORN]: { id: CropType.CORN, name: { en: 'Golden Corn', ru: 'Золотая Кукуруза' }, emoji: '🌽', seedPrice: 10000, sellPrice: 12500, growthTime: 3600, xpReward: 550, unlockLevel: 18, rarity: 'RARE' },
+  [CropType.ICE_RADISH]: { id: CropType.ICE_RADISH, name: { en: 'Ice Radish', ru: 'Ледяной Редс' }, emoji: '🧊', seedPrice: 18000, sellPrice: 22000, growthTime: 5400, xpReward: 850, unlockLevel: 22, rarity: 'RARE' },
+  [CropType.GLACIER_SPINACH]: { id: CropType.GLACIER_SPINACH, name: { en: 'Glacier Leaf', ru: 'Ледник Шпинат' }, emoji: '🍃', seedPrice: 30000, sellPrice: 36000, growthTime: 7200, xpReward: 1200, unlockLevel: 25, rarity: 'RARE' },
+  [CropType.MANDARIN]: { id: CropType.MANDARIN, name: { en: 'Frost Orange', ru: 'Мороз Мандарин' }, emoji: '🍊', seedPrice: 50000, sellPrice: 62000, growthTime: 10800, xpReward: 2000, unlockLevel: 28, rarity: 'RARE' },
+  [CropType.MUSHROOM]: { id: CropType.MUSHROOM, name: { en: 'Neon Truffle', ru: 'Неон Трюфель' }, emoji: '🍄', seedPrice: 85000, sellPrice: 105000, growthTime: 14400, xpReward: 3200, unlockLevel: 32, rarity: 'RARE' },
 
-  // Epic (Tier 4) - Significant investment. ROI ~1.55x
-  [CropType.EGGPLANT]: { id: CropType.EGGPLANT, name: { en: 'Plasma Aubergine', ru: 'Плазма Баклажан' }, emoji: '🍆', seedPrice: 50000, sellPrice: 80000, growthTime: 21600, xpReward: 5000, unlockLevel: 36, rarity: 'EPIC' },
-  [CropType.POLAR_ONION]: { id: CropType.POLAR_ONION, name: { en: 'Polar Onion', ru: 'Полярный Лук' }, emoji: '🧅', seedPrice: 90000, sellPrice: 145000, growthTime: 28800, xpReward: 8500, unlockLevel: 40, rarity: 'EPIC' },
-  [CropType.BLUEBERRY]: { id: CropType.BLUEBERRY, name: { en: 'Nano Berry', ru: 'Нано Ягода' }, emoji: '🫐', seedPrice: 150000, sellPrice: 245000, growthTime: 43200, xpReward: 14000, unlockLevel: 45, rarity: 'EPIC' },
-  [CropType.GINGER]: { id: CropType.GINGER, name: { en: 'Storm Ginger', ru: 'Шторм Имбирь' }, emoji: '🫚', seedPrice: 250000, sellPrice: 410000, growthTime: 57600, xpReward: 22000, unlockLevel: 50, rarity: 'EPIC' },
-  [CropType.PERSIMMON]: { id: CropType.PERSIMMON, name: { en: 'Zen Fruit', ru: 'Дзен Фрукт' }, emoji: '🍅', seedPrice: 400000, sellPrice: 660000, growthTime: 86400, xpReward: 35000, unlockLevel: 55, rarity: 'EPIC' },
+  // Epic (Tier 4)
+  [CropType.EGGPLANT]: { id: CropType.EGGPLANT, name: { en: 'Plasma Aubergine', ru: 'Плазма Баклажан' }, emoji: '🍆', seedPrice: 150000, sellPrice: 190000, growthTime: 21600, xpReward: 5000, unlockLevel: 36, rarity: 'EPIC' },
+  [CropType.POLAR_ONION]: { id: CropType.POLAR_ONION, name: { en: 'Polar Onion', ru: 'Полярный Лук' }, emoji: '🧅', seedPrice: 250000, sellPrice: 320000, growthTime: 28800, xpReward: 8500, unlockLevel: 40, rarity: 'EPIC' },
+  [CropType.BLUEBERRY]: { id: CropType.BLUEBERRY, name: { en: 'Nano Berry', ru: 'Нано Ягода' }, emoji: '🫐', seedPrice: 400000, sellPrice: 520000, growthTime: 43200, xpReward: 14000, unlockLevel: 45, rarity: 'EPIC' },
+  [CropType.GINGER]: { id: CropType.GINGER, name: { en: 'Storm Ginger', ru: 'Шторм Имбирь' }, emoji: '🫚', seedPrice: 750000, sellPrice: 950000, growthTime: 57600, xpReward: 22000, unlockLevel: 50, rarity: 'EPIC' },
+  [CropType.PERSIMMON]: { id: CropType.PERSIMMON, name: { en: 'Zen Fruit', ru: 'Дзен Фрукт' }, emoji: '🍅', seedPrice: 1200000, sellPrice: 1500000, growthTime: 86400, xpReward: 35000, unlockLevel: 55, rarity: 'EPIC' },
 
-  // Legendary (Tier 5) - High stakes, high reward but controlled. ROI ~1.6x
-  [CropType.PUMPKIN]: { id: CropType.PUMPKIN, name: { en: 'Void Gourd', ru: 'Войд Тыква' }, emoji: '🎃', seedPrice: 800000, sellPrice: 1350000, growthTime: 172800, xpReward: 65000, unlockLevel: 60, rarity: 'LEGENDARY' },
-  [CropType.HOLLY_BERRY]: { id: CropType.HOLLY_BERRY, name: { en: 'Frost Holly', ru: 'Мороз Холли' }, emoji: '🍒', seedPrice: 2000000, sellPrice: 3400000, growthTime: 259200, xpReward: 150000, unlockLevel: 65, rarity: 'LEGENDARY' },
-  [CropType.DRAGON_FRUIT]: { id: CropType.DRAGON_FRUIT, name: { en: 'Solar Dragon', ru: 'Солар Дракон' }, emoji: '🐉', seedPrice: 4500000, sellPrice: 7800000, growthTime: 432000, xpReward: 320000, unlockLevel: 70, rarity: 'LEGENDARY' },
-  [CropType.STAR_FRUIT]: { id: CropType.STAR_FRUIT, name: { en: 'Astral Star', ru: 'Астрал Стар' }, emoji: '⭐', seedPrice: 9000000, sellPrice: 16000000, growthTime: 604800, xpReward: 600000, unlockLevel: 80, rarity: 'LEGENDARY' },
+  // Legendary (Tier 5)
+  [CropType.PUMPKIN]: { id: CropType.PUMPKIN, name: { en: 'Void Gourd', ru: 'Войд Тыква' }, emoji: '🎃', seedPrice: 2500000, sellPrice: 3200000, growthTime: 172800, xpReward: 65000, unlockLevel: 60, rarity: 'LEGENDARY' },
+  [CropType.HOLLY_BERRY]: { id: CropType.HOLLY_BERRY, name: { en: 'Frost Holly', ru: 'Мороз Холли' }, emoji: '🍒', seedPrice: 5000000, sellPrice: 6500000, growthTime: 259200, xpReward: 150000, unlockLevel: 65, rarity: 'LEGENDARY' },
+  [CropType.DRAGON_FRUIT]: { id: CropType.DRAGON_FRUIT, name: { en: 'Solar Dragon', ru: 'Солар Дракон' }, emoji: '🐉', seedPrice: 10000000, sellPrice: 13500000, growthTime: 432000, xpReward: 320000, unlockLevel: 70, rarity: 'LEGENDARY' },
+  [CropType.STAR_FRUIT]: { id: CropType.STAR_FRUIT, name: { en: 'Astral Star', ru: 'Астрал Стар' }, emoji: '⭐', seedPrice: 25000000, sellPrice: 32000000, growthTime: 604800, xpReward: 600000, unlockLevel: 80, rarity: 'LEGENDARY' },
 
-  // Mythic (Tier 6) - Status symbols. ROI ~1.65x
-  [CropType.CHRISTMAS_TREE]: { id: CropType.CHRISTMAS_TREE, name: { en: 'Origin Yule', ru: 'Ориджин Ель' }, emoji: '🎄', seedPrice: 40000000, sellPrice: 72000000, growthTime: 1209600, xpReward: 2500000, unlockLevel: 90, rarity: 'MYTHIC' },
+  // Mythic (Tier 6)
+  [CropType.CHRISTMAS_TREE]: { id: CropType.CHRISTMAS_TREE, name: { en: 'Origin Yule', ru: 'Ориджин Ель' }, emoji: '🎄', seedPrice: 100000000, sellPrice: 140000000, growthTime: 1209600, xpReward: 2500000, unlockLevel: 90, rarity: 'MYTHIC' },
 
   // Animal Products (Not Plantable)
-  [CropType.NEON_EGG]: { id: CropType.NEON_EGG, name: { en: 'Neon Egg', ru: 'Неон Яйцо' }, emoji: '🥚', seedPrice: 0, sellPrice: 45, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'COMMON' },
-  [CropType.FROST_MEAT]: { id: CropType.FROST_MEAT, name: { en: 'Frost Meat', ru: 'Мороз Мясо' }, emoji: '🥩', seedPrice: 0, sellPrice: 250, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'UNCOMMON' },
-  [CropType.ICY_MILK]: { id: CropType.ICY_MILK, name: { en: 'Icy Milk', ru: 'Лед Молоко' }, emoji: '🥛', seedPrice: 0, sellPrice: 1200, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'RARE' },
-  [CropType.ALPHA_FRAGMENT]: { id: CropType.ALPHA_FRAGMENT, name: { en: 'Alpha Fragment', ru: 'Альфа Фрагмент' }, emoji: '✨', seedPrice: 0, sellPrice: 15000, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'LEGENDARY' },
+  [CropType.NEON_EGG]: { id: CropType.NEON_EGG, name: { en: 'Neon Egg', ru: 'Неон Яйцо' }, emoji: '🥚', seedPrice: 0, sellPrice: 100, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'COMMON' },
+  [CropType.FROST_MEAT]: { id: CropType.FROST_MEAT, name: { en: 'Frost Meat', ru: 'Мороз Мясо' }, emoji: '🥩', seedPrice: 0, sellPrice: 500, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'UNCOMMON' },
+  [CropType.ICY_MILK]: { id: CropType.ICY_MILK, name: { en: 'Icy Milk', ru: 'Лед Молоко' }, emoji: '🥛', seedPrice: 0, sellPrice: 2500, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'RARE' },
+  [CropType.ALPHA_FRAGMENT]: { id: CropType.ALPHA_FRAGMENT, name: { en: 'Alpha Fragment', ru: 'Альфа Фрагмент' }, emoji: '✨', seedPrice: 0, sellPrice: 20000, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'LEGENDARY' },
   [CropType.GOLD]: { id: CropType.GOLD, name: { en: 'Gold', ru: 'Золото' }, emoji: '💰', seedPrice: 0, sellPrice: 1, growthTime: 0, xpReward: 0, unlockLevel: 1, rarity: 'COMMON' }
 };
 
@@ -111,7 +111,7 @@ export const TOKENOMICS = {
 
 export const INITIAL_PLOTS_COUNT = 6;
 export const TOTAL_MAX_PLOTS = 18;
-export const EXPANSION_COSTS = [0, 0, 0, 0, 0, 0, 5000, 50000, 0, 75000, 250000, 1000000, 5000000, 20000000, 75000000, 250000000, 1000000000, 5000000000];
+export const EXPANSION_COSTS = [0, 0, 0, 0, 0, 0, 5000, 50000, 65000, 75000, 250000, 1000000, 5000000, 20000000, 75000000, 250000000, 1000000000, 5000000000];
 export const PLOT_SOL_PRICES: Record<number, number> = {
   6: 0.005,
   7: 0.05,

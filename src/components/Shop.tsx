@@ -42,7 +42,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
             key={tabName} onClick={() => setTab(tabName)}
             className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:opacity-100 border-[2px] ${tab === tabName ? 'bg-[#FFB74D] text-[#5D4037] border-[#E65100] shadow-[0_2px_0_#E65100] active:shadow-none active:translate-y-0.5' : 'bg-[#EFEBE9] text-[#8D6E63] border-transparent hover:border-[#8D6E63]/30'}`}
           >
-            {tabName === 'seeds' ? t('seeds') : tabName === 'sell' ? t('sell') : tabName === 'pets' ? t('livestock') : tabName === 'upgrades' ? t('upgrades') : tabName === 'estate' ? t('farmstead') : 'Resources'}
+            {tabName === 'seeds' ? t('seeds') : tabName === 'sell' ? t('sell') : tabName === 'pets' ? t('livestock') : tabName === 'upgrades' ? t('upgrades') : tabName === 'estate' ? t('farmstead') : t('resources')}
           </button>
         ))}
       </div>
@@ -53,7 +53,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
             <motion.div key="seeds" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
               <h3 className="text-[10px] font-black text-[#8D6E63] uppercase tracking-[0.3em] px-2 flex justify-between">
                 <span>{t('shopTitle')}</span>
-                <span className="text-[#FFB74D] font-black drop-shadow-sm">{Object.keys(CROPS).length} Varieties</span>
+                <span className="text-[#FFB74D] font-black drop-shadow-sm">{Object.keys(CROPS).length} {t('varieties')}</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Object.values(CROPS).filter(crop => crop.seedPrice > 0).map(crop => {
@@ -135,7 +135,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                         </div>
                         <div className="flex-1">
                           <h4 className="font-black text-[12px] uppercase tracking-tighter leading-tight text-[#5D4037]">{crop.name[language]}</h4>
-                          <p className="text-[10px] opacity-60 uppercase font-bold text-[#8D6E63]">Stock: {count}</p>
+                          <p className="text-[10px] opacity-60 uppercase font-bold text-[#8D6E63]">{t('stock')}: {count}</p>
                         </div>
                       </div>
                       <button
@@ -150,7 +150,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
               </div>
               {totalCrops === 0 && <div className="text-center py-24 opacity-40 text-[11px] font-black uppercase italic tracking-[0.4em] flex flex-col items-center gap-4 text-[#8D6E63]">
                 <i className="fas fa-box-open text-4xl mb-2"></i>
-                Stock is Dry
+                {t('stockDry')}
               </div>}
             </motion.div>
           )}
@@ -175,7 +175,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                     <div className="flex-1">
                       <h4 className="font-black text-[15px] uppercase tracking-tighter text-[#5D4037]">{animal.name[language]}</h4>
                       <div className="flex gap-2 mt-1">
-                        <span className="text-[9px] bg-[#EFEBE9] text-[#8D6E63] px-2 py-0.5 rounded-md uppercase font-bold border border-[#D7CCC8]">Produces {animal.productName[language]}</span>
+                        <span className="text-[9px] bg-[#EFEBE9] text-[#8D6E63] px-2 py-0.5 rounded-md uppercase font-bold border border-[#D7CCC8]">{t('produces')} {animal.productName[language]}</span>
                       </div>
                     </div>
                   </div>
@@ -197,11 +197,11 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                         <span className="opacity-60 text-[8px] mt-0.5">{(animal.solPrice * 1.015).toFixed(4)} SOL</span>
                       </button>
                       <button
-                        onClick={() => onTonPayment(animal.solPrice * 30, 'ANIMAL', animal.id)}
+                        onClick={() => onTonPayment(animal.solPrice * 70, 'ANIMAL', animal.id)}
                         className="w-full bg-[#0098EA] text-white hover:brightness-110 py-3 rounded-xl text-[10px] font-black uppercase shadow-[0_3px_0_#0077B5] border-2 border-[#0077B5] active:translate-y-0.5 active:shadow-none transition-all flex flex-col items-center justify-center leading-none"
                       >
                         <span>💎 TON</span>
-                        <span className="opacity-60 text-[8px] mt-0.5">{(animal.solPrice * 31).toFixed(2)} TON</span>
+                        <span className="opacity-60 text-[8px] mt-0.5">{(animal.solPrice * 70).toFixed(2)} TON</span>
                       </button>
                     </div>
                   </div>
@@ -212,7 +212,7 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
 
           {tab === 'resources' && (
             <motion.div key="resources" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
-              <h3 className="text-[10px] font-black text-[#8D6E63] uppercase tracking-[0.3em] px-2">Resources</h3>
+              <h3 className="text-[10px] font-black text-[#8D6E63] uppercase tracking-[0.3em] px-2">{t('resources')}</h3>
 
               <div className="bg-[#E3F2FD] p-6 rounded-2xl border-[3px] border-[#90CAF9] shadow-[0_4px_0_#64B5F6] flex flex-col gap-4">
                 <div className="flex items-center gap-5">
@@ -220,9 +220,9 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                     <i className="fas fa-faucet-drip animate-bounce"></i>
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-black text-[16px] uppercase tracking-tighter text-[#1565C0]">Water Reserve</h4>
-                    <p className="text-[10px] opacity-60 font-bold uppercase mt-1 text-[#1E88E5]">Accelerates growth significantly</p>
-                    <div className="mt-2 text-2xl font-black text-[#0D47A1]">{profile.waterCharges || 0} <span className="text-sm opacity-50">Charges</span></div>
+                    <h4 className="font-black text-[16px] uppercase tracking-tighter text-[#1565C0]">{t('waterReserve')}</h4>
+                    <p className="text-[10px] opacity-60 font-bold uppercase mt-1 text-[#1E88E5]">{t('waterDesc')}</p>
+                    <div className="mt-2 text-2xl font-black text-[#0D47A1]">{profile.waterCharges || 0} <span className="text-sm opacity-50">{t('charges')}</span></div>
                   </div>
                 </div>
 
@@ -231,17 +231,17 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                     onClick={onPurchaseWater}
                     className="w-full bg-[#FFB74D] text-[#5D4037] py-4 rounded-xl text-xs font-black uppercase shadow-[0_3px_0_#E65100] border-2 border-[#E65100] hover:bg-[#FFA726] flex items-center justify-center gap-3 transition-all active:translate-y-0.5 active:shadow-none"
                   >
-                    <span>+100 Charges</span>
+                    <span>{t('buyCharges')}</span>
                     <span className="text-[#5D4037]/30">|</span>
                     <span>0.001 SOL</span>
                   </button>
                   <button
-                    onClick={() => onTonPayment(0.001 * 30, 'WATER')}
+                    onClick={() => onTonPayment(0.001 * 70, 'WATER')}
                     className="w-full bg-[#0098EA] text-white py-4 rounded-xl text-xs font-black uppercase shadow-[0_3px_0_#0077B5] border-2 border-[#0077B5] hover:brightness-110 flex items-center justify-center gap-3 transition-all active:translate-y-0.5 active:shadow-none"
                   >
-                    <span>+100 Charges (TON)</span>
+                    <span>{t('buyCharges')} (TON)</span>
                     <span className="text-white/30">|</span>
-                    <span>0.03 TON</span>
+                    <span>0.07 TON</span>
                   </button>
                 </div>
               </div>
@@ -299,15 +299,15 @@ const Shop: React.FC<ShopProps> = ({ profile, onSell, onUpgrade, onPurchaseAnima
                             onClick={() => onUpgrade(up.id, 'SOL')}
                             className="w-full py-4 bg-[#FFB74D] text-[#5D4037] rounded-xl text-[11px] font-black uppercase shadow-[0_3px_0_#E65100] border-2 border-[#E65100] hover:bg-[#FFA726] active:shadow-none active:translate-y-0.5 flex flex-col items-center justify-center leading-none"
                           >
-                            <span>⚡ Upgrade with SOL</span>
-                            <span className="opacity-60 text-[8px] mt-0.5">{(solCost * 1.015).toFixed(4)} SOL (Instant)</span>
+                            <span>⚡ {t('upgradeSol')}</span>
+                            <span className="opacity-60 text-[8px] mt-0.5">{(solCost * 1.015).toFixed(4)} SOL ({t('instant')})</span>
                           </button>
                           <button
-                            onClick={() => onTonPayment(solCost * 30, 'UPGRADE', up.id)}
+                            onClick={() => onTonPayment(solCost * 70, 'UPGRADE', up.id)}
                             className="w-full py-4 bg-[#0098EA] text-white rounded-xl text-[11px] font-black uppercase shadow-[0_3px_0_#0077B5] border-2 border-[#0077B5] hover:brightness-110 active:shadow-none active:translate-y-0.5 flex flex-col items-center justify-center leading-none mt-2"
                           >
-                            <span>💎 Upgrade with TON</span>
-                            <span className="opacity-60 text-[8px] mt-0.5">{(solCost * 31).toFixed(2)} TON</span>
+                            <span>💎 {t('upgradeTon')}</span>
+                            <span className="opacity-60 text-[8px] mt-0.5">{(solCost * 70).toFixed(2)} TON</span>
                           </button>
                         </>
                       )}

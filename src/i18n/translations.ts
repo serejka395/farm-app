@@ -60,7 +60,35 @@ export const translations = {
         ready: "READY",
         getProfit: "GET PROFIT",
         unlock: "Unlock",
-        trySimulator: "TRY SIMULATOR"
+        trySimulator: "TRY SIMULATOR",
+
+        // New Additions
+        collect: "COLLECT",
+        empire: "EMPIRE",
+        varieties: "Varieties",
+        stock: "Stock",
+        stockDry: "Stock is Dry",
+        produces: "Produces",
+        upgradeSol: "Upgrade with SOL",
+        upgradeTon: "Upgrade with TON",
+        instant: "Instant",
+        resources: "Resources",
+        waterReserve: "Water Reserve",
+        waterDesc: "Accelerates growth significantly",
+        charges: "Charges",
+        buyCharges: "+100 Charges",
+        dailyQuests: "Daily Quests",
+        resetDaily: "Reset in 24h",
+        reward: "Reward",
+        claim: "Claim",
+        claimed: "Claimed",
+        inProgress: "In Progress",
+        inviteFriend: "Invite a Friend (+10 Gold)",
+        invitedCount: "You have invited {count} friends",
+        unknownFarmer: "Unknown Farmer",
+        legacy: "Legacy",
+        referrals: "Referrals",
+        goldBalance: "GOLD Balance"
     },
     ru: {
         // App Header
@@ -120,6 +148,34 @@ export const translations = {
         ready: "ГОТОВО",
         getProfit: "СОБРАТЬ",
         unlock: "Открыть",
-        trySimulator: "СИМУЛЯТОР"
+        trySimulator: "СИМУЛЯТОР",
+
+        // New Additions
+        collect: "СОБРАТЬ",
+        empire: "ИМПЕРИЯ",
+        varieties: "Видов",
+        stock: "Склад",
+        stockDry: "Склад Пуст",
+        produces: "Производит",
+        upgradeSol: "Улучшить за SOL",
+        upgradeTon: "Улучшить за TON",
+        instant: "Мгновенно",
+        resources: "Ресурсы",
+        waterReserve: "Запас Воды",
+        waterDesc: "Значительно ускоряет рост",
+        charges: "Заряды",
+        buyCharges: "+100 Зарядов",
+        dailyQuests: "Ежедневные Задания",
+        resetDaily: "Сброс через 24ч",
+        reward: "Награда",
+        claim: "Забрать",
+        claimed: "Получено",
+        inProgress: "В процессе",
+        inviteFriend: "Пригласи Друга (+10 Gold)",
+        invitedCount: "Вы пригласили {count} друзей",
+        unknownFarmer: "Неизвестный Фермер",
+        legacy: "Архив",
+        referrals: "Рефералы",
+        goldBalance: "GOLD Баланс"
     }
 };

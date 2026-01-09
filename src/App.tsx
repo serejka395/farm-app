@@ -39,7 +39,7 @@ const RoamingPet: React.FC<{
   animal: Animal,
   onCollect: (id: string) => void
 }> = ({ animal, onCollect }) => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const data = ANIMALS[animal.type];
   const now = security.getServerNow();
 
@@ -91,7 +91,7 @@ const RoamingPet: React.FC<{
         {/* Collection Indicator */}
         {isReady && (
           <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-f2e-gold text-black px-3 py-1 rounded-full text-[10px] font-black animate-bounce shadow-lg whitespace-nowrap z-20">
-            COLLECT
+            {t('collect')}
           </div>
         )}
       </div>
@@ -125,7 +125,7 @@ const FarmScene: React.FC<{
           )}
         </div>
         <div className="bg-f2e-dark text-[10px] lg:text-xs font-black px-4 py-1 rounded-none border border-f2e-gold/50 shadow-[0_0_20px_rgba(255,193,7,0.2)] -mt-6 z-20 whitespace-nowrap uppercase tracking-[0.2em] group-hover:bg-f2e-gold group-hover:text-black transition-colors pointer-events-none transform translate-y-full">
-          {HOUSE_TITLES[houseLevel]?.[language] || 'EMPIRE'}
+          {HOUSE_TITLES[houseLevel]?.[language] || t('empire')}
         </div>
       </motion.div>
 
@@ -154,7 +154,7 @@ const RoadmapView: React.FC = () => {
         {ROADMAP.map((item, i) => (
           <div key={i} className="bg-[#FFF8E1] p-8 rounded-xl relative overflow-hidden group border-[3px] border-[#8D6E63] shadow-[0_4px_0_#5D4037]">
             <div className={`absolute top-0 right-0 px-6 py-2 text-[10px] font-black rounded-bl-xl border-l-[3px] border-b-[3px] border-[#8D6E63] ${item.status[language] === 'In Progress' ? 'bg-[#FFB74D] text-[#5D4037]' : 'bg-[#D7CCC8] text-[#5D4037]/50'}`}>
-              {item.status[language]}
+              {item.status[language] === 'In Progress' ? t('inProgress') : item.status[language]}
             </div>
             <div className="text-[#8D6E63] text-xs font-black mb-1 uppercase tracking-widest">{item.phase}</div>
             <div className={`text-2xl font-black mb-3 uppercase tracking-wider ${item.status[language] === 'In Progress' ? 'text-[#3E2723]' : 'text-[#5D4037]/60'}`}>{item.title[language]}</div>
@@ -261,33 +261,27 @@ const App: React.FC = () => {
 
         // Prevent self-referral
         if (referrerAddress === activeAddress) return;
+        if (startParam && startParam !== activeAddress && !profile.referredBy) {
+          // Valid referral code found, and I haven't been referred yet
+          console.log("[Referral] Linking to:", startParam);
+          const updatedProfile = { ...profile, referredBy: startParam };
+          setProfile(updatedProfile); // Update local state immediately
+          // Save immediately to ensure persistence
+          try {
+            // Valid referral code found, and I haven't been referred yet
+            console.log("[Referral] Linking to:", startParam);
+            const updatedProfile = { ...profile, referredBy: startParam };
+            setProfile(updatedProfile); // Update local state immediately
+            // Save immediately to ensure persistence
+            await db.saveUser(activeAddress, updatedProfile, plots);
 
-        // 1. Mark current user as referred
-        const updatedProfile = { ...profile, referredBy: referrerAddress };
-        setProfile(updatedProfile);
-
-        // Save immediately to prevent double counting
-        await db.saveUser(activeAddress, updatedProfile, plots);
-
-        // 2. Add to Referrer's list
-        try {
-          const referrerData = await db.loadUser(referrerAddress);
-          if (referrerData) {
-            const referrerProfile = referrerData.profile;
-            // Check if already in list (double safety)
-            if (!referrerProfile.referrals.includes(activeAddress)) {
-              const newReferrals = [...(referrerProfile.referrals || []), activeAddress];
-              const updatedReferrer = { ...referrerProfile, referrals: newReferrals };
-
-              // Add bonus to referrer? (Optional, maybe handled by quest claim later)
-              // For now just tracking
-
-              await db.saveUser(referrerAddress, updatedReferrer, referrerData.plots);
-              setNotification({ msg: "Referral Bonus Registered!", type: 'info' });
-            }
+            // Check if we can "ping" the referrer? 
+            // No, RLS prevents writing to them. We rely on them querying US.
+          } catch (e) {
+            console.error("Failed to update referrer", e);
           }
-        } catch (e) {
-          console.error("Failed to update referrer", e);
+        } else if (profile.referredBy) {
+          console.log("[Referral] Already referred by:", profile.referredBy);
         }
       }
     };
@@ -334,8 +328,30 @@ const App: React.FC = () => {
           if (!p.dailyQuests) p = questService.generateDailyQuests(p);
           else p = questService.checkDailyReset(p);
 
-          setProfile(p);
+          // 3. Load basic data
+          setProfile(p); // Use the processed 'p'
           setPlots(data.plots);
+
+          // 3.5 Fetch Incoming Referrals (Async)
+          // We don't block main load for this
+          db.getReferrals(activeAddress).then(refs => {
+            if (refs && refs.length > 0) {
+              // Merge with profile for UI display
+              setProfile(prev => {
+                if (!prev) return null;
+                // Use a Set to avoid duplicates if migration is mixed
+                const existingIds = new Set((prev.referrals || []).map((r: any) => typeof r === 'string' ? r : r.id));
+                const newRefs = refs.filter(r => !existingIds.has(r.id));
+
+                if (newRefs.length === 0) return prev;
+
+                return {
+                  ...prev,
+                  referrals: [...(prev.referrals || []), ...newRefs]
+                };
+              });
+            }
+          });
         } else {
           const baseProfile: UserProfile = {
             id: "farmer-1", walletAddress: activeAddress || "anonymous",
@@ -566,7 +582,18 @@ const App: React.FC = () => {
     if (!profile) return;
     const { profile: next, reward, bonus } = questService.claimReward(profile, questId);
     if (reward > 0) {
-      setProfile(next);
+      // Check Level Up from Quest XP
+      const newLevel = levelingService.calculateLevel(next.xp);
+      let finalProfile = next;
+
+      if (newLevel > next.level) {
+        finalProfile = { ...next, level: newLevel };
+        setNotification({ msg: t('levelUp', { level: newLevel }), type: 'info' });
+      } else {
+        finalProfile = next;
+      }
+
+      setProfile(finalProfile);
       setNotification({ msg: `+${reward} GOLD${bonus ? ' (BONUS!)' : ''}`, type: 'info' });
     }
   };
@@ -579,7 +606,7 @@ const App: React.FC = () => {
     // Costs - defaulting to 0 to prevent undefined errors
     const zenCost = EXPANSION_COSTS[plotId] || 0;
     const solCost = PLOT_SOL_PRICES[plotId] || 0;
-    const tonCost = solCost > 0 ? parseFloat((solCost * 30).toFixed(2)) : 0; // Approx 1 SOL = 30 TON
+    const tonCost = solCost > 0 ? parseFloat((solCost * 70).toFixed(2)) : 0; // Approx 1 SOL = 70 TON ($140 vs $2)
 
     // Check Level Requirement
     const levelReq = PLOT_LEVEL_REQUIREMENTS[plotId];
@@ -790,7 +817,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="h-screen w-full bg-f2e-black text-white font-sans overflow-hidden relative selection:bg-f2e-gold selection:text-black">
+    <div className="h-[100dvh] w-full bg-f2e-black text-white font-sans overflow-hidden relative selection:bg-f2e-gold selection:text-black">
 
       {/* --- BACKGROUND EFFECTS --- */}
       {/* --- BACKGROUND EFFECTS REMOVED --- */}
@@ -884,7 +911,7 @@ const App: React.FC = () => {
                   <i className="fas fa-landmark"></i> {t('farmstead')}
                 </span>
                 <span className="text-sm font-black text-[#5D4037] tracking-wide truncate mt-1">
-                  {HOUSE_TITLES[profile.upgrades[UpgradeType.HOUSE_ESTATE]]?.[language] || 'EMPIRE'}
+                  {HOUSE_TITLES[profile.upgrades[UpgradeType.HOUSE_ESTATE]]?.[language] || t('empire')}
                 </span>
               </div>
             </div>
@@ -947,7 +974,7 @@ const App: React.FC = () => {
                             width: pos.width,
                             height: pos.height,
                             transform: 'translate(-50%, -50%)', // Centered on coordinate
-                            zIndex: 30
+                            zIndex: 999 // Force Plots on Top (Fix for unclickable issue)
                           }}
                         >
                           <PlotComponent
@@ -966,19 +993,42 @@ const App: React.FC = () => {
                 </motion.div>
               )}
               {currentTab === 'shop' && <div className="pb-20"><Shop profile={profile} onPurchaseAnimal={handlePurchaseAnimal} onPurchaseWater={handlePurchaseWater} onUpgrade={handleUpgrade} onTonPayment={handleTonPayment} selectedSeed={selectedSeed} onSelectSeed={setSelectedSeed} totalCrops={(Object.values(profile.inventory) as number[]).reduce((a, b) => a + b, 0)} maxCapacity={BASE_BARN_CAPACITY + profile.upgrades[UpgradeType.BARN_CAPACITY] * CAPACITY_PER_LEVEL} onSell={(crop) => {
-                const count = profile.inventory[crop]; const earned = Math.floor(count * CROPS[crop].sellPrice * bonuses.market); setProfile(prev => {
+                const count = profile.inventory[crop];
+                const earned = Math.floor(count * CROPS[crop].sellPrice * bonuses.market);
+                const earnedXp = Math.floor(count * 1); // 1 XP per crop sold
+
+                setProfile(prev => {
                   if (!prev) return null;
-                  const next = { ...prev, balance: prev.balance + earned, inventory: { ...prev.inventory, [crop]: 0 } };
-                  const { profile: final, unlocked } = achievementService.checkAchievements(next);
+
+                  // 1. Add Gold & Remove Inventory & Add XP
+                  let next = {
+                    ...prev,
+                    balance: prev.balance + earned,
+                    xp: prev.xp + earnedXp,
+                    inventory: { ...prev.inventory, [crop]: 0 }
+                  };
+
+                  // 2. Check Achievements
+                  const { profile: withAchievements, unlocked } = achievementService.checkAchievements(next);
+                  next = withAchievements;
+
                   if (unlocked.length > 0) setNotification({ msg: "ACHIEVEMENT UNLOCKED!", type: 'info' });
-                  return final;
+
+                  // 3. Recalculate Level
+                  const newLevel = levelingService.calculateLevel(next.xp);
+                  if (newLevel > next.level) {
+                    next = { ...next, level: newLevel };
+                    setNotification({ msg: t('levelUp', { level: newLevel }), type: 'info' });
+                  }
+
+                  return next;
                 });
               }} /></div>}
               {currentTab === 'quests' && (
                 <div className="pb-20 h-full overflow-y-auto space-y-4 px-4 pt-4 custom-scroll">
                   <div className="bg-[#FFF8E1] border-[3px] border-[#8D6E63] p-6 rounded-2xl flex items-center justify-between shadow-[0_4px_0_#5D4037]">
                     <div>
-                      <div className="text-[10px] font-black uppercase tracking-widest text-[#8D6E63] mb-1">GOLD Balance</div>
+                      <div className="text-[10px] font-black uppercase tracking-widest text-[#8D6E63] mb-1">{t('goldBalance')}</div>
                       <div className="text-3xl font-black text-[#5D4037]">{profile?.gold || 0} G</div>
                     </div>
                     <i className="fas fa-coins text-4xl text-[#FBC02D] drop-shadow-sm"></i>
@@ -986,9 +1036,9 @@ const App: React.FC = () => {
 
                   <div className="bg-[#FFF8E1] border-[3px] border-[#8D6E63] p-6 rounded-2xl shadow-[0_4px_0_#5D4037]">
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-sm font-black text-[#5D4037] uppercase tracking-widest">Daily Quests</h3>
+                      <h3 className="text-sm font-black text-[#5D4037] uppercase tracking-widest">{t('dailyQuests')}</h3>
                       <div className="flex gap-2">
-                        <div className="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded border border-blue-200 font-bold">Reset in 24h</div>
+                        <div className="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded border border-blue-200 font-bold">{t('resetDaily')}</div>
                       </div>
                     </div>
 
@@ -997,7 +1047,7 @@ const App: React.FC = () => {
                         <div key={q.id} className="bg-[#FFFFF0] p-4 rounded-xl flex items-center justify-between border-[2px] border-[#D7CCC8]">
                           <div>
                             <div className="text-xs font-black text-[#5D4037] mb-1">{q.description[language]}</div>
-                            <div className="text-[10px] text-[#8D6E63] uppercase tracking-wide font-bold">Reward: <span className="text-[#FBC02D]">{q.rewardGold} GOLD</span></div>
+                            <div className="text-[10px] text-[#8D6E63] uppercase tracking-wide font-bold">{t('reward')}: <span className="text-[#FBC02D]">{q.rewardGold} GOLD</span></div>
                             <div className="w-32 h-2 bg-[#D7CCC8] rounded-full mt-2 overflow-hidden">
                               <div className="h-full bg-[#FFB74D]" style={{ width: `${Math.min(100, (q.progress / q.target) * 100)}%` }}></div>
                             </div>
@@ -1005,18 +1055,10 @@ const App: React.FC = () => {
                           </div>
                           <button
                             disabled={q.claimed || q.progress < q.target}
-                            onClick={() => {
-                              if (!profile) return;
-                              const res = questService.claimReward(profile, q.id);
-                              if (res.reward > 0) {
-                                setProfile(res.profile);
-                                const bonusMsg = res.bonus ? ' + 10 GOLD BONUS!' : '';
-                                setNotification({ msg: `+${res.reward} GOLD${bonusMsg}`, type: 'info' });
-                              }
-                            }}
+                            onClick={() => handleClaimQuest(q.id)}
                             className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all shadow-[0_2px_0_rgba(0,0,0,0.1)] active:translate-y-0.5 active:shadow-none ${q.claimed ? 'bg-green-100 text-green-600' : q.progress >= q.target ? 'bg-[#FFB74D] text-[#5D4037] animate-pulse' : 'bg-[#D7CCC8] text-[#5D4037]/40'}`}
                           >
-                            {q.claimed ? 'Claimed' : q.progress >= q.target ? 'Claim' : 'In Progress'}
+                            {q.claimed ? t('claimed') : q.progress >= q.target ? t('claim') : t('inProgress')}
                           </button>
                         </div>
                       ))}
@@ -1024,13 +1066,60 @@ const App: React.FC = () => {
                   </div>
 
                   <div className="bg-[#FFF8E1] border-[3px] border-[#8D6E63] p-6 rounded-2xl shadow-[0_4px_0_#5D4037]">
-                    <h3 className="text-sm font-black text-[#5D4037] uppercase tracking-widest mb-4">Referrals</h3>
-                    <button onClick={handleInvite} className="w-full py-3 bg-[#FFB74D] text-[#5D4037] font-black uppercase rounded-xl hover:bg-[#FFA726] active:translate-y-0.5 shadow-[0_4px_0_#E65100] active:shadow-none transition-all text-xs border border-[#E65100]">
-                      Invte a Friend (+10 Gold)
-                    </button>
-                    <div className="mt-4 text-center text-[10px] text-[#8D6E63] uppercase font-bold">
-                      You have invited {profile?.referrals?.length || 0} friends
+                    <h3 className="text-sm font-black text-[#5D4037] uppercase tracking-widest mb-4">{t('referrals')}</h3>
+                    <div className="bg-[#FFF3E0] p-4 rounded-xl border border-[#FFB74D] mb-4">
+                      <div className="text-[10px] text-[#8D6E63] font-bold uppercase mb-2">Your Invite Link:</div>
+                      <div className="flex gap-2">
+                        <code className="flex-1 bg-white p-2 rounded border border-[#D7CCC8] text-[10px] truncate text-[#5D4037]">
+                          {`https://t.me/Farm2EarnBot?start=${activeAddress || 'connect-wallet'}`}
+                        </code>
+                        <button
+                          onClick={() => {
+                            const link = `https://t.me/Farm2EarnBot?start=${activeAddress}`;
+                            navigator.clipboard.writeText(link);
+                            setNotification({ msg: "LINK COPIED!", type: 'info' });
+                          }}
+                          className="px-3 bg-[#FFB74D] rounded font-black text-[10px] border border-[#E65100]"
+                        >
+                          COPY
+                        </button>
+                      </div>
                     </div>
+
+                    <div className="mt-4 text-center text-[10px] text-[#8D6E63] uppercase font-bold">
+                      {t('invitedCount', { count: profile?.referrals?.length || 0 })}
+                    </div>
+
+                    {/* Relocated Referral List */}
+                    {profile?.referrals && profile.referrals.length > 0 && (
+                      <div className="mt-4 space-y-2 max-h-40 overflow-y-auto custom-scroll pr-1">
+                        {[...profile.referrals].reverse().map((ref: any, idx) => (
+                          <div key={idx} className="flex justify-between items-center bg-[#FFFFF0] p-3 rounded-xl border border-[#D7CCC8]">
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 bg-[#FFB74D] rounded-full flex items-center justify-center text-[10px] font-black text-[#5D4037] border border-[#E65100]">
+                                <div className="flex flex-col items-center leading-none">
+                                  <span>LVL</span>
+                                  <span className="text-[11px]">{ref.level || 1}</span>
+                                </div>
+                              </div>
+                              <div className="flex flex-col">
+                                <div className="font-bold text-[#5D4037] text-xs">
+                                  {typeof ref === 'string' ? t('unknownFarmer') : ref.name}
+                                </div>
+                                <div className="text-[9px] text-[#8D6E63] font-bold opacity-60">
+                                  {typeof ref === 'string' ? t('legacy') : new Date(ref.joinedAt || Date.now()).toLocaleDateString()}
+                                </div>
+                              </div>
+                            </div>
+                            {typeof ref !== 'string' && (
+                              <div className="text-[10px] font-black text-[#FBC02D]">
+                                +5% G
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -1169,6 +1258,13 @@ const App: React.FC = () => {
       {profile.securityStatus !== 'verified' && (
         <div className="fixed top-16 right-4 z-[100] bg-red-600/90 text-white text-[10px] font-black px-2 py-1 rounded border border-red-400 animate-pulse">
           {profile.securityStatus === 'banned' ? '🚫 BANNED' : '⚠️ FLAGGED'}
+        </div>
+      )}
+
+      {/* OFFLINE MODE BADGE (If ID is generated generic) */}
+      {(profile.id.startsWith('farmer-') || profile.id === 'guest-farmer') && (
+        <div className="fixed top-24 right-4 z-[100] bg-gray-800/90 text-white text-[10px] font-black px-2 py-1 rounded border border-gray-600">
+          📡 OFFLINE
         </div>
       )}
     </div>

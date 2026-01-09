@@ -160,6 +160,7 @@ export const questService = {
             profile: {
                 ...profile,
                 gold: (profile.gold || 0) + reward,
+                xp: (profile.xp || 0) + 50, // Fixed XP reward for quests for now
                 dailyQuests: newQuests
             },
             reward,

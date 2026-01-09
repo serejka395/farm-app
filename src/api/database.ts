@@ -2,9 +2,13 @@ import { UserProfile, Plot } from '../types';
 import { security } from './securityService';
 import { supabase } from './supabaseClient';
 
+// Module-level timer for debouncing
+let saveTimeout: any = null;
+
 export const db = {
   /**
    * Saves user progress to Supabase (and LocalStorage as backup)
+   * Implements DEBOUNCE strategy: LocalStorage is immediate, Cloud is delayed by 2s.
    */
   async saveUser(walletAddress: string, profile: UserProfile, plots: Plot[]) {
     // 1. Prepare data payload
@@ -17,28 +21,34 @@ export const db = {
     };
 
     // 2. LocalStorage Backup (Immediate & Offline support)
+    // This allows the UI to feel "instant" and survive reloads even if DB is lagging
     const stringified = JSON.stringify(dataToSave);
     const securedData = security.obfuscate(stringified);
     localStorage.setItem(`farm_v2_${walletAddress}`, securedData);
 
-    // 3. Supabase Sync (Cloud Persistence)
-    try {
-      const { error } = await supabase
-        .from('users')
-        .upsert({
-          wallet_address: walletAddress,
-          data: dataToSave,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'wallet_address' });
+    // 3. Supabase Sync (Debounced Cloud Persistence)
+    // Clear previous timer to prevent flood
+    if (saveTimeout) clearTimeout(saveTimeout);
 
-      if (error) {
-        // Silent fail for now to avoid console spam if DB is down
-        // console.error('[Supabase] Save failed:', error.message);
+    saveTimeout = setTimeout(async () => {
+      try {
+        const { error } = await supabase
+          .from('users')
+          .upsert({
+            wallet_address: walletAddress,
+            data: dataToSave,
+            updated_at: new Date().toISOString()
+          }, { onConflict: 'wallet_address' });
+
+        if (error) {
+          // Silent fail for now
+        } else {
+          // console.log("[db] Cloud synced");
+        }
+      } catch (e) {
+        // Suppress network errors
       }
-    } catch (e) {
-      // Suppress network errors (like DNS failure to Supabase)
-      // console.error('[Supabase] Connection error during save');
-    }
+    }, 2000); // 2 second delay
   },
 
   /**
@@ -99,5 +109,36 @@ export const db = {
     }
 
     return finalData;
+  },
+
+  /**
+   * Fetch list of users who referred this wallet.
+   * This uses the Reverse-Lookup pattern to avoid RLS write issues.
+   */
+  async getReferrals(myWalletAddress: string): Promise<any[]> {
+    try {
+      // Query users where data->profile->referredBy == myWalletAddress
+      // Note: This assumes 'data' is the JSONB column name
+      const { data, error } = await supabase
+        .from('users')
+        .select('data')
+        // Supabase JSON col filtering syntax:
+        .eq('data->profile->referredBy', myWalletAddress);
+
+      if (error) throw error;
+
+      if (data) {
+        return data.map((row: any) => ({
+          id: row.data.profile.walletAddress,
+          name: row.data.profile.name || 'Farmer',
+          level: row.data.profile.level || 1, // Fetch Level
+          joinedAt: row.data.profile.stats.joinDate || Date.now()
+        }));
+      }
+      return [];
+    } catch (e) {
+      console.error("[db] Error fetching referrals:", e);
+      return [];
+    }
   }
 };

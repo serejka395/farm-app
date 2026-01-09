@@ -7,6 +7,8 @@ import { ACHIEVEMENTS } from '../api/achievements';
 import { levelingService } from '../api/levelingService';
 import { useLanguage } from '../contexts/LanguageContext';
 
+import { useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
+
 interface ProfileModalProps {
   profile: UserProfile;
   onClose: () => void;
@@ -16,10 +18,16 @@ type Tab = 'main' | 'stats' | 'achievements' | 'referrals' | 'security';
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
   const { disconnect } = useWallet();
+  const [tonConnectUI] = useTonConnectUI();
+  const tonAddress = useTonAddress();
   const [activeTab, setActiveTab] = useState<Tab>('main');
   const { language, t } = useLanguage();
 
   const truncateAddress = (addr: string) => `${addr.slice(0, 4)}...${addr.slice(-4)}`;
+
+  // Determine Wallet Type
+  const isTon = !!tonAddress;
+  const isGuest = profile.id.startsWith('guest');
 
   // Level Progression Math
   const currentLevelBaseXP = levelingService.getXpRequiredForLevel(profile.level);
@@ -31,6 +39,15 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.95, y: 20 },
     visible: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', damping: 25, stiffness: 300 } }
+  };
+
+  const handleDisconnect = async () => {
+    if (isTon) {
+      await tonConnectUI.disconnect();
+    } else {
+      await disconnect();
+    }
+    onClose();
   };
 
   return (
@@ -63,10 +80,16 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
 
         {/* Wallet Badge */}
         <div className="mt-6 flex items-center gap-3 bg-[#EFEBE9] px-4 py-3 rounded-xl border-2 border-[#D7CCC8]">
-          <div className="w-8 h-8 bg-[#FFB74D] rounded-lg flex items-center justify-center text-xs text-[#5D4037] border border-[#E65100] shadow-sm">◎</div>
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs text-white border shadow-sm ${isTon ? 'bg-blue-500 border-blue-700' : 'bg-[#FFB74D] border-[#E65100]'}`}>
+            {isTon ? '💎' : '◎'}
+          </div>
           <div>
-            <p className="text-[9px] font-black text-[#8D6E63] uppercase tracking-widest leading-none mb-1">Solana Wallet</p>
-            <p className="text-xs font-black text-[#5D4037] tracking-tight font-mono">{truncateAddress(profile.walletAddress)}</p>
+            <p className="text-[9px] font-black text-[#8D6E63] uppercase tracking-widest leading-none mb-1">
+              {isTon ? 'TON Wallet' : (isGuest ? 'Guest Account' : 'Solana Wallet')}
+            </p>
+            <p className="text-xs font-black text-[#5D4037] tracking-tight font-mono">
+              {truncateAddress(profile.walletAddress)}
+            </p>
           </div>
         </div>
       </div>
@@ -143,10 +166,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
               </div>
 
               <button
-                onClick={() => { disconnect(); onClose(); }}
+                onClick={handleDisconnect}
                 className="w-full py-4 rounded-xl bg-[#FFEBEE] border-2 border-[#FFCDD2] text-[#C62828] text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#FFCDD2] transition-all shadow-[0_3px_0_#EF9A9A] active:shadow-none active:translate-y-0.5"
               >
-                Disconnect Wallet
+                {isTon ? 'Disconnect TON' : 'Disconnect Wallet'}
               </button>
             </motion.div>
           )}

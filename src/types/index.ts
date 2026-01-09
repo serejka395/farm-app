@@ -139,16 +139,6 @@ export interface Achievement {
   rewardXp: number;
 }
 
-export interface UserProfile {
-  id: string;
-  walletAddress: string;
-  name: string;
-  balance: number;
-  gold: number;
-  xp: number;
-  level: number;
-  inventory: Record<CropType, number>;
-
 export interface Referral {
   id: string; // Wallet Address
   name: string; // Telegram First Name or "Farmer"
