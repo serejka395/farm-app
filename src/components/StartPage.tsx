@@ -1,5 +1,6 @@
 import React from 'react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { motion } from 'framer-motion';
 import { useTonConnectUI } from '@tonconnect/ui-react';
 
@@ -35,13 +36,20 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
                 className="w-full flex flex-col gap-3 pb-8"
             >
 
+                import {useWalletModal} from '@solana/wallet-adapter-react-ui';
+
+                // ... (in component)
+                const {setVisible} = useWalletModal();
+
+                // ... (in render)
                 {/* 1. Connect Solana */}
                 <div className="w-full relative group">
-                    <div className="wallet-adapter-dropdown w-full relative">
-                        <WalletMultiButton className="!w-full !justify-center !bg-[#FFCA28] !border-b-[4px] !border-[#FFA000] !text-[#5D4037] !font-black !text-sm !uppercase !tracking-wider !py-4 !h-auto !rounded-xl transition-all !shadow-[0_4px_0_#FFA000] active:!translate-y-[2px] active:!shadow-none hover:!brightness-105 !transform-none">
-                            Connect Solana Wallet
-                        </WalletMultiButton>
-                    </div>
+                    <button
+                        onClick={() => setVisible(true)}
+                        className="relative w-full bg-[#FFCA28] border-b-[4px] border-[#FFA000] text-[#5D4037] font-black text-sm uppercase tracking-wider py-4 rounded-xl transition-all shadow-[0_4px_0_#FFA000] active:translate-y-[2px] active:shadow-none hover:brightness-105"
+                    >
+                        Connect Solana Wallet
+                    </button>
                 </div>
 
                 {/* 1.5 Connect TON */}
