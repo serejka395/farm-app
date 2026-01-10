@@ -17,8 +17,7 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
 
             {/* Full Screen Background */}
             <div className="absolute inset-0 z-0">
-                <img src="/assets/start_bg_snow.jpg" className="w-full h-full object-cover" alt="Background" />
-                <div className="absolute inset-0 bg-black/40" />
+                <img src="/assets/bg-start.png" className="w-full h-full object-cover" alt="Background" />
             </div>
 
 
@@ -27,7 +26,7 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
-                className="w-full flex flex-col gap-3 pb-8"
+                className="w-full flex flex-col gap-3 pb-8 absolute bottom-0 px-6"
             >
                 {/* 1. Connect Solana */}
                 <div className="w-full relative group">
@@ -35,7 +34,7 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
                         onClick={() => setVisible(true)}
                         className="relative w-full bg-[#FFCA28] border-b-[4px] border-[#FFA000] text-[#5D4037] font-black text-sm uppercase tracking-wider py-4 rounded-xl transition-all shadow-[0_4px_0_#FFA000] active:translate-y-[2px] active:shadow-none hover:brightness-105"
                     >
-                        Select Solana Wallet
+                        Select Wallet
                     </button>
                 </div>
 
@@ -46,7 +45,7 @@ const StartPage: React.FC<StartPageProps> = ({ onGuestLogin }) => {
                         className={`relative w-full bg-[#FFCA28] border-b-[4px] border-[#FFA000] text-[#5D4037] font-black text-sm uppercase tracking-wider py-4 rounded-xl transition-all shadow-[0_4px_0_#FFA000] active:translate-y-[2px] active:shadow-none hover:brightness-105 flex items-center justify-center gap-2`}
                     >
                         <span className="text-xl drop-shadow-sm">{tonConnectUI.connected ? '❌' : '💎'}</span>
-                        <span className="drop-shadow-sm">{tonConnectUI.connected ? 'Disconnect TON' : 'Connect TON Wallet'}</span>
+                        <span className="drop-shadow-sm">{tonConnectUI.connected ? 'Disconnect TON' : 'TON Connect'}</span>
                     </button>
                 </div>
 

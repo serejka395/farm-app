@@ -269,10 +269,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
 
                 <div className="bg-white p-3 rounded-xl border border-[#D7CCC8] flex items-center justify-between gap-3 mb-4">
                   <code className="text-[10px] text-[#E65100] font-mono truncate flex-1 text-left bg-[#FFF8E1] px-2 py-1 rounded">
-                    https://t.me/farm_appbot/farm2earn.space/ref...
+                    https://t.me/farm_appbot/app?startapp=ref...
                   </code>
                   <button
-                    onClick={() => navigator.clipboard.writeText(`https://t.me/farm_appbot/farm2earn.space?startapp=ref_${profile.walletAddress}`)}
+                    onClick={() => navigator.clipboard.writeText(`https://t.me/farm_appbot/app?startapp=ref_${profile.walletAddress}`)}
                     className="w-8 h-8 bg-[#FFB74D] rounded-lg flex items-center justify-center text-[#5D4037] hover:bg-[#FFA726] transition-all shadow-sm border border-[#E65100]"
                   >
                     <i className="fas fa-copy text-xs"></i>
