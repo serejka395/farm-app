@@ -208,131 +208,128 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ profile, onClose }) => {
                     {!isGuest && !isTon && <span className="text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded border border-green-200 font-bold">CONNECTED</span>}
                   </div>
 
-                  {!isGuest && !isTon ? (
-                    {/* Actually, let's just properly import useWalletModal in the next step */ }
-                    </div>
-                  )}
+
+                </div>
               </div>
-            </div>
             </motion.div>
           )}
 
-        {activeTab === 'stats' && (
-          <motion.div key="stats" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
-            {[
-              { label: 'Total Crops Harvested', val: profile.stats.totalCropsHarvested, icon: 'fa-wheat-awn', color: 'text-orange-500', bg: 'bg-orange-100' },
-              { label: 'Career Earnings', val: `◎ ${profile.stats.totalMoneyEarned.toLocaleString()}`, icon: 'fa-sack-dollar', color: 'text-[#FBC02D]', bg: 'bg-yellow-100' },
-              { label: 'Farming Streak', val: `${profile.stats.dailyStreak} Days`, icon: 'fa-fire', color: 'text-red-500', bg: 'bg-red-100' }
-            ].map((s, idx) => (
-              <div key={idx} className="bg-white p-5 rounded-2xl border-[3px] border-[#D7CCC8] shadow-[0_4px_0_rgba(93,64,55,0.1)] flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center text-lg ${s.color} border border-black/5`}><i className={`fas ${s.icon}`}></i></div>
-                  <span className="text-[10px] font-black text-[#8D6E63] uppercase tracking-widest">{s.label}</span>
+          {activeTab === 'stats' && (
+            <motion.div key="stats" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
+              {[
+                { label: 'Total Crops Harvested', val: profile.stats.totalCropsHarvested, icon: 'fa-wheat-awn', color: 'text-orange-500', bg: 'bg-orange-100' },
+                { label: 'Career Earnings', val: `◎ ${profile.stats.totalMoneyEarned.toLocaleString()}`, icon: 'fa-sack-dollar', color: 'text-[#FBC02D]', bg: 'bg-yellow-100' },
+                { label: 'Farming Streak', val: `${profile.stats.dailyStreak} Days`, icon: 'fa-fire', color: 'text-red-500', bg: 'bg-red-100' }
+              ].map((s, idx) => (
+                <div key={idx} className="bg-white p-5 rounded-2xl border-[3px] border-[#D7CCC8] shadow-[0_4px_0_rgba(93,64,55,0.1)] flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center text-lg ${s.color} border border-black/5`}><i className={`fas ${s.icon}`}></i></div>
+                    <span className="text-[10px] font-black text-[#8D6E63] uppercase tracking-widest">{s.label}</span>
+                  </div>
+                  <span className="text-lg font-black text-[#5D4037]">{s.val}</span>
                 </div>
-                <span className="text-lg font-black text-[#5D4037]">{s.val}</span>
-              </div>
-            ))}
-          </motion.div>
-        )}
+              ))}
+            </motion.div>
+          )}
 
-        {activeTab === 'achievements' && (
-          <motion.div key="achievements" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-3">
-            {ACHIEVEMENTS.map(ach => {
-              const isUnlocked = profile.achievements?.[ach.id];
-              return (
-                <div key={ach.id} className={`p-4 rounded-2xl flex items-center gap-4 border-[3px] transition-all ${isUnlocked
-                  ? 'bg-[#FFF3E0] border-[#FFB74D] shadow-[0_4px_0_#FFE0B2]'
-                  : 'bg-[#EFEBE9] border-[#D7CCC8] opacity-60 grayscale'
-                  }`}>
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-sm border border-black/5 ${isUnlocked ? 'bg-[#FFB74D] text-[#5D4037]' : 'bg-[#D7CCC8] text-[#8D6E63]'
+          {activeTab === 'achievements' && (
+            <motion.div key="achievements" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-3">
+              {ACHIEVEMENTS.map(ach => {
+                const isUnlocked = profile.achievements?.[ach.id];
+                return (
+                  <div key={ach.id} className={`p-4 rounded-2xl flex items-center gap-4 border-[3px] transition-all ${isUnlocked
+                    ? 'bg-[#FFF3E0] border-[#FFB74D] shadow-[0_4px_0_#FFE0B2]'
+                    : 'bg-[#EFEBE9] border-[#D7CCC8] opacity-60 grayscale'
                     }`}>
-                    <i className={`fas ${ach.icon}`}></i>
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-sm border border-black/5 ${isUnlocked ? 'bg-[#FFB74D] text-[#5D4037]' : 'bg-[#D7CCC8] text-[#8D6E63]'
+                      }`}>
+                      <i className={`fas ${ach.icon}`}></i>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className={`text-xs font-black uppercase tracking-widest ${isUnlocked ? 'text-[#5D4037]' : 'text-[#8D6E63]'}`}>{ach.name[language]}</h4>
+                      <p className="text-[10px] text-[#8D6E63] mt-1 font-medium">{ach.description[language]}</p>
+                    </div>
+                    {isUnlocked && <div className="text-[#FFB74D] text-lg drop-shadow-sm"><i className="fas fa-check-circle"></i></div>}
                   </div>
-                  <div className="flex-1">
-                    <h4 className={`text-xs font-black uppercase tracking-widest ${isUnlocked ? 'text-[#5D4037]' : 'text-[#8D6E63]'}`}>{ach.name[language]}</h4>
-                    <p className="text-[10px] text-[#8D6E63] mt-1 font-medium">{ach.description[language]}</p>
+                );
+              })}
+            </motion.div>
+          )}
+
+          {activeTab === 'referrals' && (
+            <motion.div key="referrals" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6">
+              <div className="bg-[#FFF3E0] p-6 rounded-2xl border-[3px] border-[#FFB74D] text-center relative overflow-hidden shadow-[0_4px_0_#FFE0B2]">
+                <div className="relative z-10">
+                  <i className="fas fa-users text-4xl text-[#FFB74D] mb-3 drop-shadow-sm"></i>
+                  <h4 className="text-lg font-black text-[#5D4037] uppercase tracking-tighter mb-2">Invite Friends</h4>
+                  <p className="text-[10px] text-[#8D6E63] mb-4 px-8 font-bold">Earn 10% of your friends' harvest value forever!</p>
+
+                  <div className="bg-white p-3 rounded-xl border border-[#D7CCC8] flex items-center justify-between gap-3 mb-4">
+                    <code className="text-[10px] text-[#E65100] font-mono truncate flex-1 text-left bg-[#FFF8E1] px-2 py-1 rounded">
+                      https://t.me/farm_appbot/app?startapp=ref...
+                    </code>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(`https://t.me/farm_appbot/app?startapp=ref_${profile.walletAddress}`)}
+                      className="w-8 h-8 bg-[#FFB74D] rounded-lg flex items-center justify-center text-[#5D4037] hover:bg-[#FFA726] transition-all shadow-sm border border-[#E65100]"
+                    >
+                      <i className="fas fa-copy text-xs"></i>
+                    </button>
                   </div>
-                  {isUnlocked && <div className="text-[#FFB74D] text-lg drop-shadow-sm"><i className="fas fa-check-circle"></i></div>}
-                </div>
-              );
-            })}
-          </motion.div>
-        )}
-
-        {activeTab === 'referrals' && (
-          <motion.div key="referrals" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6">
-            <div className="bg-[#FFF3E0] p-6 rounded-2xl border-[3px] border-[#FFB74D] text-center relative overflow-hidden shadow-[0_4px_0_#FFE0B2]">
-              <div className="relative z-10">
-                <i className="fas fa-users text-4xl text-[#FFB74D] mb-3 drop-shadow-sm"></i>
-                <h4 className="text-lg font-black text-[#5D4037] uppercase tracking-tighter mb-2">Invite Friends</h4>
-                <p className="text-[10px] text-[#8D6E63] mb-4 px-8 font-bold">Earn 10% of your friends' harvest value forever!</p>
-
-                <div className="bg-white p-3 rounded-xl border border-[#D7CCC8] flex items-center justify-between gap-3 mb-4">
-                  <code className="text-[10px] text-[#E65100] font-mono truncate flex-1 text-left bg-[#FFF8E1] px-2 py-1 rounded">
-                    https://t.me/farm_appbot/app?startapp=ref...
-                  </code>
-                  <button
-                    onClick={() => navigator.clipboard.writeText(`https://t.me/farm_appbot/app?startapp=ref_${profile.walletAddress}`)}
-                    className="w-8 h-8 bg-[#FFB74D] rounded-lg flex items-center justify-center text-[#5D4037] hover:bg-[#FFA726] transition-all shadow-sm border border-[#E65100]"
-                  >
-                    <i className="fas fa-copy text-xs"></i>
-                  </button>
                 </div>
               </div>
-            </div>
 
-            <div>
-              <h4 className="text-[10px] font-black text-[#8D6E63] uppercase tracking-[0.2em] mb-3 px-2">Your Squad ({profile.referrals?.length || 0})</h4>
-              {(!profile.referrals || profile.referrals.length === 0) ? (
-                <div className="text-center py-8 opacity-40 text-[10px] uppercase font-black text-[#8D6E63] border-2 border-dashed border-[#D7CCC8] rounded-xl">
-                  No farmers invited yet
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {profile.referrals.map((ref: any, i) => {
-                    // Handle both old string[] and new Referral[] format gracefully
-                    const isObj = typeof ref === 'object';
-                    const name = isObj ? ref.name : `Farmer #${i + 1}`;
-                    const date = isObj ? new Date(ref.joinedAt).toLocaleDateString() : 'Unknown Date';
+              <div>
+                <h4 className="text-[10px] font-black text-[#8D6E63] uppercase tracking-[0.2em] mb-3 px-2">Your Squad ({profile.referrals?.length || 0})</h4>
+                {(!profile.referrals || profile.referrals.length === 0) ? (
+                  <div className="text-center py-8 opacity-40 text-[10px] uppercase font-black text-[#8D6E63] border-2 border-dashed border-[#D7CCC8] rounded-xl">
+                    No farmers invited yet
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {profile.referrals.map((ref: any, i) => {
+                      // Handle both old string[] and new Referral[] format gracefully
+                      const isObj = typeof ref === 'object';
+                      const name = isObj ? ref.name : `Farmer #${i + 1}`;
+                      const date = isObj ? new Date(ref.joinedAt).toLocaleDateString() : 'Unknown Date';
 
-                    return (
-                      <div key={i} className="bg-white p-3 rounded-xl border border-[#D7CCC8] flex justify-between items-center shadow-sm">
-                        <div>
-                          <p className="text-[10px] font-black uppercase text-[#5D4037]">{name}</p>
-                          <p className="text-[8px] text-[#8D6E63] font-mono">{date}</p>
+                      return (
+                        <div key={i} className="bg-white p-3 rounded-xl border border-[#D7CCC8] flex justify-between items-center shadow-sm">
+                          <div>
+                            <p className="text-[10px] font-black uppercase text-[#5D4037]">{name}</p>
+                            <p className="text-[8px] text-[#8D6E63] font-mono">{date}</p>
+                          </div>
+                          <span className="text-[10px] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded border border-[#C8E6C9] font-bold">Active</span>
                         </div>
-                        <span className="text-[10px] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded border border-[#C8E6C9] font-bold">Active</span>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'security' && (
+            <motion.div key="security" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+              <div className="bg-[#E3F2FD] p-8 rounded-2xl border-[3px] border-[#90CAF9] text-center relative overflow-hidden shadow-[0_4px_0_#BBDEFB]">
+                <i className="fas fa-shield-check text-5xl text-[#2196F3] mb-4 opacity-80"></i>
+                <h4 className="text-lg font-black text-[#0D47A1] uppercase tracking-tighter mb-2">Protocol Verified</h4>
+                <p className="text-[10px] text-[#1976D2] uppercase leading-relaxed px-6 tracking-widest font-bold">Farm state cryptographically verified.</p>
+              </div>
+
+              <div className="space-y-2">
+                <div className="p-4 bg-white rounded-xl flex justify-between items-center text-[10px] font-black uppercase border-[2px] border-[#D7CCC8]">
+                  <span className="text-[#8D6E63] tracking-widest">Checksum</span>
+                  <span className="text-[#E65100] bg-[#FFF3E0] px-2 py-1 rounded">{profile.id.split('-')[0]}</span>
                 </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-
-        {activeTab === 'security' && (
-          <motion.div key="security" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <div className="bg-[#E3F2FD] p-8 rounded-2xl border-[3px] border-[#90CAF9] text-center relative overflow-hidden shadow-[0_4px_0_#BBDEFB]">
-              <i className="fas fa-shield-check text-5xl text-[#2196F3] mb-4 opacity-80"></i>
-              <h4 className="text-lg font-black text-[#0D47A1] uppercase tracking-tighter mb-2">Protocol Verified</h4>
-              <p className="text-[10px] text-[#1976D2] uppercase leading-relaxed px-6 tracking-widest font-bold">Farm state cryptographically verified.</p>
-            </div>
-
-            <div className="space-y-2">
-              <div className="p-4 bg-white rounded-xl flex justify-between items-center text-[10px] font-black uppercase border-[2px] border-[#D7CCC8]">
-                <span className="text-[#8D6E63] tracking-widest">Checksum</span>
-                <span className="text-[#E65100] bg-[#FFF3E0] px-2 py-1 rounded">{profile.id.split('-')[0]}</span>
+                <div className="p-4 bg-white rounded-xl flex justify-between items-center text-[10px] font-black uppercase border-[2px] border-[#D7CCC8]">
+                  <span className="text-[#8D6E63] tracking-widest">Network</span>
+                  <span className="text-[#1976D2] bg-[#E3F2FD] px-2 py-1 rounded">Mainnet Beta</span>
+                </div>
               </div>
-              <div className="p-4 bg-white rounded-xl flex justify-between items-center text-[10px] font-black uppercase border-[2px] border-[#D7CCC8]">
-                <span className="text-[#8D6E63] tracking-widest">Network</span>
-                <span className="text-[#1976D2] bg-[#E3F2FD] px-2 py-1 rounded">Mainnet Beta</span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.div >
   );
 };

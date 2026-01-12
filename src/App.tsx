@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { useTonConnectUI } from '@tonconnect/ui-react';
 import { Plot, CropType, UserProfile, ToolType, UpgradeType, AnimalType, Animal } from './types';
 import {
   CROPS, ANIMALS, EXPANSION_COSTS, INITIAL_PLOTS_COUNT, TOTAL_MAX_PLOTS,
@@ -10,7 +12,7 @@ import {
 } from './utils/constants';
 import PlotComponent from './components/PlotComponent';
 import Shop from './components/Shop';
-import Shop from './components/Shop';
+
 import ProfileModal from './components/ProfileModal';
 import UnlockModal from './components/UnlockModal';
 import StartPage from './components/StartPage';
@@ -289,6 +291,15 @@ const App: React.FC = () => {
   }, [profile, activeAddress, plots]);
 
   useEffect(() => {
+    // 1. Reset State on Disconnect
+    if (!activeAddress) {
+      setProfile(null);
+      setPlots([]);
+      setIsDemo(false); // Ensure we reset demo mode if we were in it (or if it lingered)
+      return;
+    }
+
+    // 2. Guest Mode
     if (isDemo) {
       // Guest Mode: Initialize transient profile immediately without loading from DB
       const baseProfile: UserProfile = {
@@ -317,6 +328,7 @@ const App: React.FC = () => {
       return;
     }
 
+    // 3. Real Wallet - Load from DB
     if (activeAddress) {
       db.loadUser(activeAddress).then(data => {
         if (data) {
@@ -327,33 +339,28 @@ const App: React.FC = () => {
           if (!p.dailyQuests) p = questService.generateDailyQuests(p);
           else p = questService.checkDailyReset(p);
 
-          // 3. Load basic data
-          setProfile(p); // Use the processed 'p'
+          // Data migration / defaults for existing users
+          if (!p.inventory) p.inventory = Object.values(CropType).reduce((acc, crop) => { acc[crop] = 0; return acc; }, {} as Record<CropType, number>);
+
+          setProfile(p);
           setPlots(data.plots);
 
-          // 3.5 Fetch Incoming Referrals (Async)
-          // We don't block main load for this
+          // Fetch Incoming Referrals (Async)
           db.getReferrals(activeAddress).then(refs => {
             if (refs && refs.length > 0) {
-              // Merge with profile for UI display
               setProfile(prev => {
                 if (!prev) return null;
-                // Use a Set to avoid duplicates if migration is mixed
                 const existingIds = new Set((prev.referrals || []).map((r: any) => typeof r === 'string' ? r : r.id));
                 const newRefs = refs.filter(r => !existingIds.has(r.id));
-
                 if (newRefs.length === 0) return prev;
-
-                return {
-                  ...prev,
-                  referrals: [...(prev.referrals || []), ...newRefs]
-                };
+                return { ...prev, referrals: [...(prev.referrals || []), ...newRefs] };
               });
             }
           });
         } else {
+          // New User
           const baseProfile: UserProfile = {
-            id: "farmer-1", walletAddress: activeAddress || "anonymous",
+            id: `farmer-${Date.now()}`, walletAddress: activeAddress || "anonymous",
             name: "Solana Pioneer", balance: 1000, xp: 0, level: 1, gold: 0,
             inventory: Object.values(CropType).reduce((acc, crop) => { acc[crop] = 0; return acc; }, {} as Record<CropType, number>),
             unlockedPlots: INITIAL_PLOTS_COUNT,
@@ -361,7 +368,7 @@ const App: React.FC = () => {
               [UpgradeType.SOIL_QUALITY]: 0, [UpgradeType.MARKET_CONTRACTS]: 0,
               [UpgradeType.IRRIGATION]: 0, [UpgradeType.FERTILIZER_TECH]: 0,
               [UpgradeType.BARN_CAPACITY]: 0, [UpgradeType.HOUSE_ESTATE]: 0,
-              [UpgradeType.WINTER_HOUSE]: 0 // Ensure this is initialized
+              [UpgradeType.WINTER_HOUSE]: 0
             },
             animals: [], securityStatus: 'verified', waterCharges: 0,
             referrals: [], achievements: {}, dailyQuests: [], lastDailyReset: 0,
@@ -839,7 +846,8 @@ const App: React.FC = () => {
           >
             {language}
           </button>
-          <div className="scale-90 origin-right">
+          <div className="scale-90 origin-right flex items-center gap-2">
+            {/* TON Connect/Disconnect */}
             {tonAddress ? (
               <button
                 onClick={() => tonConnectUI.disconnect()}
@@ -850,8 +858,16 @@ const App: React.FC = () => {
                 <i className="fas fa-sign-out-alt ml-1 opacity-60"></i>
               </button>
             ) : (
-              <WalletMultiButton className="!bg-[#FFB74D] !text-[#5D4037] !rounded-xl !h-10 !text-xs !font-black !px-5 hover:!bg-[#FFA726] !border-2 !border-[#E65100] !shadow-[0_2px_0_#E65100] !font-sans" />
+              <button
+                onClick={() => tonConnectUI.openModal()}
+                className="flex items-center gap-2 h-10 px-4 rounded-xl bg-[#0098EA] text-white border-2 border-[#0077B5] shadow-[0_2px_0_#005A8D] font-black text-xs uppercase hover:brightness-110 active:translate-y-0.5 active:shadow-none transition-all"
+              >
+                <span className="text-sm">💎</span>
+                <span>TON</span>
+              </button>
             )}
+
+            <WalletMultiButton className="!bg-[#FFB74D] !text-[#5D4037] !rounded-xl !h-10 !text-xs !font-black !px-5 hover:!bg-[#FFA726] !border-2 !border-[#E65100] !shadow-[0_2px_0_#E65100] !font-sans" />
           </div>
         </div>
       </header>
