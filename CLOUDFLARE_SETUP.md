@@ -23,3 +23,18 @@ Delete any existing A/CNAME records for your root domain. Add these exactly:
 
 **Go to Network**
 - **WebSockets**: **On** (Required for some Vercel features)
+
+## 4. Page Rules (Required for SSL Generation)
+**Go to Rules > Page Rules**
+Click **Create Page Rule**.
+
+**URL Pattern:**
+`*yourdomain.com/.well-known/acme-challenge/*`
+*(Replace `yourdomain.com` with your actual domain)*
+
+**Settings:**
+1. **SSL**: **Off**
+2. **Cache Level**: **Bypass**
+3. **Security Level**: **Essentially Off** (if available) or **Disable Performance**
+
+**Why:** This allows Vercel to validate your SSL certificate via HTTP without Cloudflare interfering or redirecting to HTTPS endlessly during the challenge.
